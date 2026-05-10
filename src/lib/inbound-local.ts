@@ -27,7 +27,9 @@ export async function crearRfqLocalDesdeEmail(event: EmailReceivedEvent): Promis
   }
 
   const email = emailResponse.data
-  const inboxId = `${timestampId()}-${slugify(email.subject || 'rfq')}-${emailId.slice(0, 8)}`
+  // emailId es único por email en Resend — lo usamos completo para evitar colisiones
+  const safeEmailId = emailId.replace(/[^a-zA-Z0-9]/g, '').slice(-16)
+  const inboxId = `${timestampId()}-${slugify(email.subject || 'rfq')}-${safeEmailId}`
   const inboxPath = resolve(pilotRoot, 'inbox', inboxId)
   await mkdir(inboxPath, { recursive: true })
 
@@ -70,6 +72,16 @@ export async function crearRfqLocalDesdeEmail(event: EmailReceivedEvent): Promis
       finished_at: new Date().toISOString(),
       message: 'El email llego, pero no habia planos adjuntos permitidos para procesar.',
     })
+    const fromAddress = extractEmailAddress(email.from)
+    if (fromAddress && process.env.RESEND_FROM_DOMAIN) {
+      const { enviarSolicitudInfo } = await import('@/lib/resend')
+      const ref = inboxId.slice(0, 24)
+      await enviarSolicitudInfo({
+        to: fromAddress,
+        refInterna: ref,
+        bodyHtml: `<p>Hemos recibido su email pero no encontramos ningun plano adjunto en formato valido (PDF, PNG, JPG).</p><p>Por favor, reenvie el mensaje incluyendo el plano tecnico como adjunto.</p><p>Referencia: ${ref}</p>`,
+      }).catch(() => undefined) // no bloquear si falla el envio
+    }
   }
 
   const processPid = attachmentsSaved > 0 ? await startPilotProcess(inboxPath) : null
@@ -144,9 +156,18 @@ async function saveAttachment(inboxPath: string, attachment: AttachmentData): Pr
 
   const buffer = Buffer.from(await response.arrayBuffer())
   if (buffer.length > maxAttachmentBytes) return false
+  if (!validarMagicBytes(buffer, extension)) return false
 
   await writeFile(join(inboxPath, filename), buffer)
   return true
+}
+
+function validarMagicBytes(buffer: Buffer, extension: string): boolean {
+  if (buffer.length < 4) return false
+  if (extension === '.pdf') return buffer.slice(0, 4).equals(Buffer.from([0x25, 0x50, 0x44, 0x46])) // %PDF
+  if (extension === '.png') return buffer.slice(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47])) // \x89PNG
+  if (extension === '.jpg' || extension === '.jpeg') return buffer[0] === 0xff && buffer[1] === 0xd8 // FFD8
+  return true // .step, .stp, .dxf — texto plano, no tienen magic bytes fijos
 }
 
 async function saveAttachmentById(
@@ -247,7 +268,7 @@ export async function startPilotProcess(inboxPath: string, providerOverride?: 'm
 }
 
 function isGeminiQuotaError(output: string): boolean {
-  return /429 Too Many Requests|Quota exceeded|generate_content_free_tier_requests/i.test(output)
+  return /429 Too Many Requests|Quota exceeded|generate_content_free_tier_requests|Timeout tras \d+s/i.test(output)
 }
 
 async function writeProcessStatus(inboxPath: string, value: Record<string, unknown>): Promise<void> {
@@ -327,6 +348,11 @@ function stripHtml(value: string): string {
     .replace(/&gt;/g, '>')
     .replace(/\s+\n/g, '\n')
     .replace(/[ \t]{2,}/g, ' ')
+}
+
+function extractEmailAddress(from: string): string | null {
+  const match = from.match(/<([^>]+)>/) ?? from.match(/([^\s@,]+@[^\s@,]+)/)
+  return match?.[1]?.trim() ?? null
 }
 
 function timestampId(): string {

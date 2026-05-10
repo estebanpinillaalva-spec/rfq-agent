@@ -35,9 +35,7 @@ export async function POST(request: NextRequest) {
 async function writeInboundDebug(kind: string, value: unknown): Promise<void> {
   const dir = join(pilotRoot, 'inbound-debug')
   await mkdir(dir, { recursive: true })
-  const line = `${JSON.stringify({ kind, value })}\n`
-  await appendFile(join(dir, 'events.jsonl'), line, 'utf8')
-  if (kind === 'error') {
-    await writeFile(join(dir, `last-error-${Date.now()}.json`), `${JSON.stringify(value, null, 2)}\n`, 'utf8')
-  }
+  // Un fichero por evento para evitar corrupción con escrituras concurrentes
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${kind}.json`
+  await writeFile(join(dir, filename), `${JSON.stringify({ kind, value }, null, 2)}\n`, 'utf8')
 }
