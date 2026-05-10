@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { LocalRfqSummary } from '@/lib/local-store'
 import { EmptyState, StatusBadge, formatMoney } from '@/components/ui'
 
@@ -45,6 +45,14 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
       bloqueado: filtered.filter((rfq) => rfq.status === 'BLOQUEADO_CON_MOTIVO'),
     }
   }, [filtered])
+
+  // Auto-polling: cuando hay RFQs procesando, refrescar cada 3s sin intervención del usuario
+  useEffect(() => {
+    const hasPending = rfqs.some((r) => r.status === 'PROCESANDO')
+    if (!hasPending || busy) return
+    const id = window.setInterval(() => { void fetchRfqs() }, 3000) // eslint-disable-line react-hooks/exhaustive-deps
+    return () => window.clearInterval(id)
+  }, [rfqs, busy]) // fetchRfqs es estable (no usa useState externo)
 
   async function fetchRfqs() {
     const response = await fetch('/api/local/rfqs', { cache: 'no-store' })

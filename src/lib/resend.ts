@@ -88,6 +88,9 @@ export function verificarWebhookResend(payload: string, headers: { get(name: str
   }
 
   if (process.env.ALLOW_UNVERIFIED_RESEND_WEBHOOKS === 'true') {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('ALLOW_UNVERIFIED_RESEND_WEBHOOKS no esta permitido en produccion. Configura RESEND_WEBHOOK_SECRET.')
+    }
     try {
       return JSON.parse(payload) as WebhookEventPayload
     } catch {
