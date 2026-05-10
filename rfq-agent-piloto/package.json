@@ -8,7 +8,9 @@
     "typecheck": "tsc --noEmit",
     "test": "ts-node src/scripts/smokeTest.ts",
     "test:fixtures": "ts-node src/scripts/testFixtures.ts",
-    "send:test": "ts-node src/scripts/sendTestEmail.ts"
+    "send:test": "ts-node src/scripts/sendTestEmail.ts",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
@@ -23,6 +25,7 @@
     "@types/node": "^20.14.0",
     "@types/pdf-parse": "^1.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "vitest": "^2.1.9"
   }
 }

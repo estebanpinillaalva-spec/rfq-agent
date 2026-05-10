@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { PageHeader } from '@/components/ui'
 import { readMaterialLibrary } from '@/lib/material-store'
+import { ConfigTallerPanel } from './config-taller-panel'
 import { MaterialsPanel } from './materials-panel'
 
 export const dynamic = 'force-dynamic'
@@ -63,6 +64,7 @@ ALLOW_UNVERIFIED_RESEND_WEBHOOKS=false`}</pre>
           Para pruebas locales, publica el puerto 3000 y usa la URL HTTPS generada con la ruta <code>/api/inbound-email</code>.
         </p>
       </section>
+      <ConfigTallerPanel />
       <MaterialsPanel initialLibrary={materialLibrary} />
     </div>
   )

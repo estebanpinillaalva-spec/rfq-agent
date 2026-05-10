@@ -222,6 +222,29 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
     }
   }
 
+  async function archiveOld() {
+    const confirmed = window.confirm('Ocultara RFQs con mas de 90 dias. Los datos siguen guardados en disco. Continuar?')
+    if (!confirmed) return
+    setBusy(true)
+    setLog('Archivando RFQs antiguos...')
+    try {
+      const response = await fetch('/api/local/rfqs/visibility', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'archive_old', older_than_days: 90 }),
+      })
+      const data = (await response.json()) as { archivedCount?: number; error?: string }
+      if (!response.ok) {
+        setLog(data.error || 'No se pudo archivar.')
+        return
+      }
+      await refresh()
+      setLog(`Archivados ${data.archivedCount ?? 0} RFQs con mas de 90 dias.`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
     <div className="grid gap-5">
       <section className="surface-card rounded-lg p-5">
@@ -268,6 +291,9 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
           </button>
           <button disabled={busy} onClick={restoreScreen} className="btn-secondary rounded-md px-3 py-2 text-xs font-bold disabled:opacity-50">
             Restaurar ocultos
+          </button>
+          <button disabled={busy} onClick={archiveOld} className="btn-secondary rounded-md px-3 py-2 text-xs font-bold disabled:opacity-50">
+            Archivar &gt;90 dias
           </button>
           <span className="self-center text-xs text-steel">Oculta la vista actual sin borrar archivos ni resultados.</span>
         </div>
