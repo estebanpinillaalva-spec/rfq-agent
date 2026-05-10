@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "week2-first-email-contact",
+  "prompt": "Oferta RFQ-2026-029 enviada hace 8 días, cliente nuevo David Fernández, 3.200€. Sin respuesta.",
+  "assertions": [
+    {"text": "Identifica que corresponde la Semana 2 (días 6-10) del protocolo"},
+    {"text": "Recomienda email como primer contacto (no llamada) para cliente nuevo"},
+    {"text": "Genera plantilla de email con RFQ-2026-029 completado"},
+    {"text": "El email menciona el precio 3.200€ o la oferta específica"},
+    {"text": "El saludo del email incluye 'David Fernández'"}
+  ]
+}

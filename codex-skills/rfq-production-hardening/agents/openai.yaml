@@ -1,0 +1,6 @@
+interface:
+  display_name: "RFQ Production Hardening"
+  short_description: "Prepare RFQ Agent for safe real pilots"
+  default_prompt: "Use $rfq-production-hardening to assess whether the RFQ Agent is ready for a real workshop pilot."
+policy:
+  allow_implicit_invocation: true

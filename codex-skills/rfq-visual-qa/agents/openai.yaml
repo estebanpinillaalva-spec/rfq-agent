@@ -1,0 +1,6 @@
+interface:
+  display_name: "RFQ Visual QA"
+  short_description: "Verify RFQ UI with screenshots and checks"
+  default_prompt: "Use $rfq-visual-qa to verify the RFQ dashboard visually on desktop and mobile."
+policy:
+  allow_implicit_invocation: true

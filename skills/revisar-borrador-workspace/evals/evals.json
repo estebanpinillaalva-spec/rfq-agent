@@ -1,0 +1,23 @@
+{
+  "skill_name": "revisar-borrador",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Revisa este presupuesto antes de enviarlo. RFQ-2026-033, cliente: Grupo Ferrominero SA.\n\nPieza: Árbol escalonado, 3 unidades, material: titanio Gr.5 (confianza: BAJA en base de datos), 280 min/pieza estimados, precio unitario 1.800€, total 5.400€, margen aplicado 12%, IVA 21%.\n\nTolerancias: IT5 en dos superficies de apoyo de rodamiento, sin operación de rectificado en el presupuesto. Plazo indicado: 4 días laborables.\n\nTaller: tiene torno CNC y fresa 5 ejes pero NO tiene rectificadora. Subcontrata de rectificado habitual: Rectificados Arenas (actualmente con 3 semanas de plazo por saturación).",
+      "expected_output": "Semáforo ROJO o AMARILLO con múltiples banderas rojas identificadas: margen <15%, IT5 sin rectificado imposible en taller, titanio con confianza BAJA en precio, plazo 4 días con subcontrata de 3 semanas es inviable",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Comprueba antes de enviar este presupuesto al cliente. RFQ-2026-041.\n\nCliente: Hidráulica del Norte SL, contacto: Marta Solano, marta.solano@hidranorte.es.\nPieza: Bloque hidráulico aluminio A6082, 10 unidades, 45 min/pieza, precio unitario 185€, total 1.850€, margen 22%, IVA calculado 388,50€, total con IVA 2.238,50€.\nTolerancia general ISO 2768-m, sin GD&T, rugosidad Ra 3.2 general. Material: aluminio 6082 (confianza: ALTA).\nPlazo: 8 días laborables. No hay subcontratas. Condiciones de pago: 50/50.\nEmail borrador preparado, asunto incluye RFQ-2026-041, firma con teléfono y CIF del taller.",
+      "expected_output": "Semáforo VERDE — presupuesto listo para enviar. Todos los checks pasan sin banderas rojas.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Qué puede fallar aquí antes de enviar. RFQ-2026-047.\n\nCliente: el email decía 'empresa XYZ' pero no conseguimos identificar el nombre real. Contacto: no especificado.\nPiezas: 2 referencias\n- Pieza A: 'eje de acero' (material no especificado en el plano, asumimos F-114), 5 uds, 95€/ud, 475€\n- Pieza B: 'brida inox' (¿304 o 316L? no está claro), 3 uds, 210€/ud, 630€\nTotal sin IVA: 1.105€, con IVA: 1.337€.\nOperaciones pieza B incluyen 'acabado espejo Ra 0.4' pero no hay operación de rectificado ni bruñido listada.\nAmbigüedades pendientes: ⚠️ material pieza A, ⚠️ grado inox pieza B, ⚠️ tratamiento superficial pieza B.",
+      "expected_output": "Semáforo ROJO — no enviar. Empresa/cliente no identificada (error de Bloque 1), 3 ambigüedades sin resolver con riesgo >±20%, operación de rectificado/bruñido faltante para Ra 0.4.",
+      "files": []
+    }
+  ]
+}

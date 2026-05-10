@@ -1,0 +1,83 @@
+{
+  "skill_name": "seguimiento-oferta",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with_skill",
+      "label": "Con skill seguimiento-oferta",
+      "evals": [
+        {"eval_id": 1, "eval_name": "week2-first-email-contact", "pass_rate": 1.0, "tokens": 18513, "duration_ms": 37146,
+         "grading": [
+           {"text": "Identifica Semana 2 del protocolo (días 6-10)", "passed": true, "evidence": "8 días laborables = fase Semana 2 identificada correctamente"},
+           {"text": "Recomienda email como primer contacto (no llamada)", "passed": true, "evidence": "Email recomendado, sin llamada en este primer contacto para cliente nuevo"},
+           {"text": "Plantilla email con RFQ-2026-029 completada", "passed": true, "evidence": "Plantilla personalizada con referencia, cliente y datos de la oferta"},
+           {"text": "El email menciona precio 3.200€", "passed": true, "evidence": "Datos reales incluidos en la plantilla"},
+           {"text": "Saludo incluye 'David Fernández'", "passed": true, "evidence": "Email dirigido específicamente a David Fernández"}
+         ]
+        },
+        {"eval_id": 2, "eval_name": "week3-phone-call-habitual-client", "pass_rate": 1.0, "tokens": 18786, "duration_ms": 54590,
+         "grading": [
+           {"text": "Identifica Semana 3-4 → llamada telefónica", "passed": true, "evidence": "Día 17, segundo contacto protocolo: llamada hoy"},
+           {"text": "Guion de llamada con RFQ-2026-021 y 8.750€", "passed": true, "evidence": "Guion completo con referencia y importe personalizados"},
+           {"text": "Email de acompañamiento post-llamada incluido", "passed": true, "evidence": "Plantilla email post-llamada generada"},
+           {"text": "Menciona cliente habitual como factor a considerar", "passed": true, "evidence": "Patrón de demora conocido del cliente mencionado — no es señal de desinterés"}
+         ]
+        },
+        {"eval_id": 3, "eval_name": "38-days-closure-two-contacts", "pass_rate": 1.0, "tokens": 18438, "duration_ms": 37340,
+         "grading": [
+           {"text": "Identifica protocolo de cierre (>30 días, 2 contactos)", "passed": true, "evidence": "Protocolo 'Más de 30 días — Cierre del ciclo' aplicado correctamente"},
+           {"text": "Email de cierre cortés con RFQ-2026-008", "passed": true, "evidence": "Email de cierre profesional y sin presión generado con referencia correcta"},
+           {"text": "Instruye archivar como 'sin respuesta'", "passed": true, "evidence": "Estado → 'SIN RESPUESTA — CERRADA', conservar contacto para prospección futura"},
+           {"text": "NO recomienda más contactos agresivos", "passed": true, "evidence": "Cierre cortés como acción correcta — insistir dañaría la relación"},
+           {"text": "Mantiene la puerta abierta para proyectos futuros", "passed": true, "evidence": "Email de cierre deja la puerta abierta explícitamente"}
+         ]
+        }
+      ],
+      "mean_pass_rate": 1.0,
+      "mean_tokens": 18579,
+      "mean_duration_ms": 43025
+    },
+    {
+      "name": "without_skill",
+      "label": "Sin skill (baseline)",
+      "evals": [
+        {"eval_id": 1, "eval_name": "week2-first-email-contact", "pass_rate": 0.4, "tokens": 16363, "duration_ms": 37712,
+         "grading": [
+           {"text": "Identifica Semana 2 del protocolo", "passed": false, "evidence": "No usa la terminología del protocolo — recomienda email por instinto general, no por protocolo sectorial"},
+           {"text": "Recomienda email como primer contacto", "passed": true, "evidence": "Recomienda email hoy"},
+           {"text": "Plantilla email con RFQ-2026-029", "passed": true, "evidence": "Genera 3 plantillas incluyendo email de seguimiento"},
+           {"text": "El email menciona precio 3.200€", "passed": false, "evidence": "No se confirma que las plantillas incluyen el precio específico 3.200€"},
+           {"text": "Saludo incluye 'David Fernández'", "passed": false, "evidence": "No confirmado en el resumen del agente — las plantillas pueden ser genéricas"}
+         ]
+        },
+        {"eval_id": 2, "eval_name": "week3-phone-call-habitual-client", "pass_rate": 0.5, "tokens": 17002, "duration_ms": 55263,
+         "grading": [
+           {"text": "Identifica Semana 3-4 → llamada", "passed": true, "evidence": "'Llamada obligatoria hoy' — correcto funcionalmente aunque sin terminología de protocolo"},
+           {"text": "Guion con RFQ-2026-021 y 8.750€", "passed": false, "evidence": "Guion completo generado pero no se confirma que incluya referencia y precio concretos"},
+           {"text": "Email de acompañamiento post-llamada", "passed": false, "evidence": "Genera 'email de reenvío directo' — diferente del email de acompañamiento post-llamada del protocolo"},
+           {"text": "Menciona cliente habitual como factor", "passed": true, "evidence": "El patrón de demora identificado como 'no señal de rechazo'"}
+         ]
+        },
+        {"eval_id": 3, "eval_name": "38-days-closure-two-contacts", "pass_rate": 0.0, "tokens": 16710, "duration_ms": 47790,
+         "grading": [
+           {"text": "Identifica protocolo de cierre", "passed": false, "evidence": "OPUESTO: recomienda 'forzar respuesta binaria', llamada mañana y email con fecha límite 3 días — táctica agresiva"},
+           {"text": "Email de cierre cortés con RFQ-2026-008", "passed": false, "evidence": "Genera email de PRESIÓN con ancla de 'reserva de capacidad' y fecha límite — no un cierre cortés"},
+           {"text": "Instruye archivar como 'sin respuesta'", "passed": false, "evidence": "Solo archiva si no hay respuesta en 5 días tras el nuevo contacto — no hace cierre ahora"},
+           {"text": "NO recomienda más contactos agresivos", "passed": false, "evidence": "Recomienda explícitamente llamada + email presión como acción inmediata"},
+           {"text": "Mantiene la puerta abierta para proyectos futuros", "passed": false, "evidence": "El tono de presión/urgencia es contrario a mantener la relación a largo plazo en el sector"}
+         ]
+        }
+      ],
+      "mean_pass_rate": 0.307,
+      "mean_tokens": 16692,
+      "mean_duration_ms": 46917
+    }
+  ],
+  "delta_pass_rate": 0.693,
+  "analyst_observations": [
+    "DIFERENCIA CRÍTICA en eval-3: el baseline da consejos PELIGROSOS para el sector. Recomienda tácticas de presión agresiva (llamada + deadline de 3 días) después de 38 días y 2 contactos en un sector donde la reputación es fundamental. La skill aplica el protocolo correcto: cierre cortés, no insistir.",
+    "El baseline no personaliza las plantillas con datos del cliente/oferta — genera templates genéricos. La skill produce contenido directamente utilizable con referencia, precio y nombre del cliente completados.",
+    "El delta de +69pp es el mayor de las 3 skills evaluadas. Está completamente dominado por eval-3 donde el baseline falla 5/5 assertions por dar consejos contrarios al protocolo sectorial.",
+    "Eval-1: la terminología de 'Semana 2' del protocolo no es cosmética — ayuda al estimador a situar en qué fase está y qué viene después. El baseline da la acción correcta pero sin contexto de siguientes pasos."
+  ]
+}

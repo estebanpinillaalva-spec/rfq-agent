@@ -1,0 +1,43 @@
+{
+  "eval_id": 1,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "El asunto del email contiene 'RFQ-2026-031'",
+      "passed": true,
+      "evidence": "Asunto: 'Oferta RFQ-2026-031 — Presupuesto mecanizado Eje de transmisión — Mecanizados García SL'"
+    },
+    {
+      "text": "El saludo usa 'Estimado/a Carlos Martínez' — no 'Hola' ni saludo genérico",
+      "passed": true,
+      "evidence": "'Estimado Carlos Martínez,' — nombre completo, tono formal"
+    },
+    {
+      "text": "El email muestra precio unitario 890€ y total 4.450€",
+      "passed": true,
+      "evidence": "Tabla muestra 890,00 € unitario y 4.450,00 € subtotal"
+    },
+    {
+      "text": "El email incluye IVA calculado (934,50€ al 21%)",
+      "passed": true,
+      "evidence": "Bloque de totales: 'IVA 21%: 934,50 €' y 'TOTAL OFERTA: 5.384,50 €'"
+    },
+    {
+      "text": "El plazo de entrega '10 días' es visible en el cuerpo del email",
+      "passed": true,
+      "evidence": "Tabla y bloque de totales: '10 días lab.' y '10 días laborables desde confirmación de pedido'"
+    },
+    {
+      "text": "La firma incluye el teléfono 944 123 456 y el CIF B-48123456",
+      "passed": true,
+      "evidence": "Firma: 'Tel: 944 123 456' y 'CIF: B-48123456'"
+    },
+    {
+      "text": "El email NO contiene el texto 'Hola' ni tuteo al cliente",
+      "passed": true,
+      "evidence": "Tono completamente formal, 'usted' implícito, no aparece 'Hola' en ningún lugar"
+    }
+  ],
+  "pass_rate": 1.0,
+  "notes": "Perfecto cumplimiento. El bloque de totales con IVA explícito es la diferencia clave vs baseline."
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "week3-phone-call-habitual-client",
+  "prompt": "Oferta RFQ-2026-021, 17 días, primer email enviado hace 9 días sin respuesta. Cliente habitual que siempre tarda. 8.750€.",
+  "assertions": [
+    {"text": "Identifica que corresponde la Semana 3-4 (días 11-20) — llamada telefónica"},
+    {"text": "Genera guion de llamada con referencia RFQ-2026-021 y precio 8.750€"},
+    {"text": "Genera email de acompañamiento post-llamada"},
+    {"text": "Menciona el contexto de cliente habitual que siempre tarda como factor a considerar"}
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "skill_name": "seguimiento-oferta",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "No han respondido a la oferta RFQ-2026-029. Se la enviamos hace 8 días laborables. Cliente nuevo: David Fernández, Construcciones Metálicas Levante SL. Oferta por 3.200€ (2 piezas, eje + tapa). ¿Cuándo y cómo hacemos el seguimiento?",
+      "expected_output": "Primer contacto por email (semana 2). Genera la plantilla de email de seguimiento con la referencia, precio y datos del cliente completados.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Necesito hacer el seguimiento de la oferta RFQ-2026-021. La enviamos hace 17 días. Hace 9 días enviamos un primer email de seguimiento — no respondieron. Cliente habitual: Talleres Prado e Hijos (los conocemos, pagan bien pero siempre tardan). Oferta: 8.750€, 6 piezas de mecanizado complejo. ¿Qué hago ahora?",
+      "expected_output": "Segundo contacto: llamada telefónica + email de acompañamiento. Guion de llamada personalizado. Pero nota que es cliente habitual que siempre tarda — puede ser señal de esperar más antes de llamar.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Haz el follow-up de RFQ-2026-008. Situación: oferta enviada hace 38 días, 12.400€. Primer contacto email (día 8): sin respuesta. Segundo contacto llamada (día 19): el cliente dijo 'lo estamos evaluando con otros proveedores, llamamos en unos días'. Nadie ha llamado. ¿Qué hacemos?",
+      "expected_output": "Email de cierre cortés del ciclo — más de 30 días, 2 contactos sin respuesta definitiva. Plantilla de cierre completada con referencia y datos. Instrucción de archivar como 'sin respuesta'.",
+      "files": []
+    }
+  ]
+}

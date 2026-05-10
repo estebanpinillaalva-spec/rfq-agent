@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "unknown-client-three-ambiguities",
+  "prompt": "Presupuesto RFQ-2026-047: cliente no identificado ('empresa XYZ'), 3 ambigüedades ⚠️ sin resolver, Ra 0.4 sin rectificado listado.",
+  "assertions": [
+    {"text": "Semáforo es ROJO — no enviar"},
+    {"text": "Detecta empresa/cliente no identificado (Bloque 1 — error imperdonable)"},
+    {"text": "Detecta Ra 0.4 sin operación de rectificado/bruñido listada"},
+    {"text": "Indica que hay >2 ambigüedades ⚠️ — recomienda email de aclaraciones primero"},
+    {"text": "Estima confianza en precio BAJA (incertidumbre >±25%)"}
+  ]
+}

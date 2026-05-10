@@ -1,0 +1,6 @@
+interface:
+  display_name: "RFQ Real Case Review"
+  short_description: "Review real RFQs like a machining estimator"
+  default_prompt: "Use $rfq-real-case-review to decide if this RFQ can be quoted professionally."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,31 @@
+{
+  "eval_id": 2,
+  "eval_name": "multi-piece-three-refs",
+  "prompt": "Prepara el email con el presupuesto para enviárselo al cliente. RFQ-2026-045. Hay 3 referencias: Brida de aluminio A6082 (10 uds × 45€ = 450€, plazo 6 días), Soporte inox AISI-316L (5 uds × 78€ = 390€, plazo 8 días), Tapa mecanizada F-114 (8 uds × 32€ = 256€, plazo 5 días). Total sin IVA 1.096€. Cliente: Ana López, Automatizaciones Bilbao SL, ana.lopez@autobilbao.es. Plazo de entrega conjunto 8 días laborables (el más largo). Taller: Mecanizados Izquierdo SA, María Izquierdo, Responsable Técnico, tel 943 456 789.",
+  "assertions": [
+    {
+      "text": "La tabla de piezas incluye las 3 referencias: Brida, Soporte y Tapa",
+      "check": "three_pieces_in_table"
+    },
+    {
+      "text": "Los subtotales por línea son correctos: 450€, 390€ y 256€",
+      "check": "correct_subtotals"
+    },
+    {
+      "text": "El total sin IVA mostrado es 1.096€",
+      "check": "correct_total_ex_vat"
+    },
+    {
+      "text": "El IVA (21%) y total con IVA están calculados y visibles",
+      "check": "iva_and_total_with_vat"
+    },
+    {
+      "text": "El plazo de entrega indicado es 8 días (el plazo máximo de los 3)",
+      "check": "correct_delivery_time"
+    },
+    {
+      "text": "El email NO inventa un CIF del taller (no se proporcionó)",
+      "check": "no_invented_cif"
+    }
+  ]
+}

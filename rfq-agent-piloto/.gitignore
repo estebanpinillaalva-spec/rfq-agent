@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.env.local
+.env.*.local
+
+# Salidas generadas y datos reales/anonymizados locales
+salidas/*
+!salidas/.gitkeep
+inbox/*
+!inbox/.gitkeep
+inbound-debug/*
+!inbound-debug/.gitkeep
+fixtures/reales-anonimizados/*
+!fixtures/reales-anonimizados/.gitkeep
+data/
+
+# Evita commitear archivos creados accidentalmente con nombres de claves API.
+AIza*
+sk-*
+re_*

@@ -1,0 +1,23 @@
+{
+  "skill_name": "email-comercial",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Redacta el email al cliente para la oferta RFQ-2026-031. Cliente: Carlos Martínez, empresa Industrias Metálicas del Norte SA, carlos.martinez@imn.es. Pieza: Eje de transmisión, 5 unidades, material F-114, precio unitario 890€, total 4.450€, plazo 10 días laborables. Taller: Mecanizados García SL, firmante Juan García (Director Comercial), email comercial@mecanizadosgarcia.es, teléfono 944 123 456, CIF B-48123456, dirección C/ Industrial 23, Bilbao.",
+      "expected_output": "Email profesional B2B con asunto correcto, tabla de piezas, bloque de totales con IVA, plazo y validez, firma completa del taller",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Prepara el email con el presupuesto para enviárselo al cliente. RFQ-2026-045. Hay 3 referencias: Brida de aluminio A6082 (10 uds × 45€ = 450€, plazo 6 días), Soporte inox AISI-316L (5 uds × 78€ = 390€, plazo 8 días), Tapa mecanizada F-114 (8 uds × 32€ = 256€, plazo 5 días). Total sin IVA 1.096€. Cliente: Ana López, Automatizaciones Bilbao SL, ana.lopez@autobilbao.es. Plazo de entrega conjunto 8 días laborables (el más largo). Taller: Mecanizados Izquierdo SA, María Izquierdo, Responsable Técnico, tel 943 456 789.",
+      "expected_output": "Email con tabla de 3 piezas con sus respectivos precios unitarios y subtotales, total + IVA, plazo común, condiciones de pago",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Haz el email comercial para este presupuesto. RFQ-2026-052, empresa cliente: TechMetal Ibérica SL, contacto no especificado. Pieza única: carcasa de aluminio 6061-T6, 1 unidad, 1.250€. Observación técnica importante: el precio del aluminio puede variar ±8% si la fecha de confirmación supera 30 días desde esta oferta. No tengo el nombre del contacto. Taller: Talleres Ibáñez SL, Pedro Ibáñez, Gerente, pedro@talleresibañez.es, 91 234 56 78, CIF B-28789012.",
+      "expected_output": "Email dirigido a 'equipo de compras' (sin nombre contacto), con la observación sobre variación de precio de aluminio, y todos los datos del taller completos",
+      "files": []
+    }
+  ]
+}

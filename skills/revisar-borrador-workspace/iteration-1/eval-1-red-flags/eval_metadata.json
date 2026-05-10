@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "multiple-red-flags-titanium-it5",
+  "prompt": "Presupuesto RFQ-2026-033: Árbol escalonado, titanio Gr.5 (confianza BAJA), IT5 sin rectificado, margen 12%, plazo 4 días con subcontrata a 3 semanas.",
+  "assertions": [
+    {"text": "Semáforo es ROJO — no VERDE ni AMARILLO"},
+    {"text": "Detecta margen 12% inferior al mínimo del 15%"},
+    {"text": "Detecta IT5 sin operación de rectificado — imposible técnicamente"},
+    {"text": "Detecta plazo 4 días incompatible con subcontrata de 3 semanas"},
+    {"text": "Alerta sobre titanio con confianza BAJA y precio >500€"}
+  ]
+}

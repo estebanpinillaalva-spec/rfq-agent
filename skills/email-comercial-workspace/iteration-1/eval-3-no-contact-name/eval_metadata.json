@@ -1,0 +1,27 @@
+{
+  "eval_id": 3,
+  "eval_name": "no-contact-name-material-warning",
+  "prompt": "Haz el email comercial para este presupuesto. RFQ-2026-052, empresa cliente: TechMetal Ibérica SL, contacto no especificado. Pieza única: carcasa de aluminio 6061-T6, 1 unidad, 1.250€. Observación técnica importante: el precio del aluminio puede variar ±8% si la fecha de confirmación supera 30 días desde esta oferta. No tengo el nombre del contacto. Taller: Talleres Ibáñez SL, Pedro Ibáñez, Gerente, pedro@talleresibañez.es, 91 234 56 78, CIF B-28789012.",
+  "assertions": [
+    {
+      "text": "El saludo usa 'equipo de compras de TechMetal Ibérica' — NO inventa un nombre de contacto",
+      "check": "generic_greeting_no_invented_name"
+    },
+    {
+      "text": "El email menciona la variación de precio del aluminio (±8% / 30 días)",
+      "check": "aluminum_price_warning_included"
+    },
+    {
+      "text": "El precio 1.250€ es visible en el cuerpo del email",
+      "check": "price_visible"
+    },
+    {
+      "text": "La firma incluye el CIF B-28789012",
+      "check": "cif_in_signature"
+    },
+    {
+      "text": "El asunto contiene 'RFQ-2026-052'",
+      "check": "subject_contains_ref"
+    }
+  ]
+}

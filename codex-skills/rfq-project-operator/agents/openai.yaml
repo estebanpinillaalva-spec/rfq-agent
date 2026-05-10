@@ -1,0 +1,6 @@
+interface:
+  display_name: "RFQ Project Operator"
+  short_description: "Resume RFQ Agent work with project context"
+  default_prompt: "Use $rfq-project-operator to continue the RFQ Agent project from the current repo state."
+policy:
+  allow_implicit_invocation: true

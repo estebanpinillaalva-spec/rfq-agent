@@ -1,0 +1,83 @@
+{
+  "skill_name": "revisar-borrador",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with_skill",
+      "label": "Con skill revisar-borrador",
+      "evals": [
+        {"eval_id": 1, "eval_name": "multiple-red-flags-titanium-it5", "pass_rate": 1.0, "tokens": 19042, "duration_ms": 56822,
+         "grading": [
+           {"text": "Semáforo ROJO", "passed": true, "evidence": "Semáforo explícito ROJO con 4 correcciones obligatorias"},
+           {"text": "Detecta margen 12% < 15%", "passed": true, "evidence": "Margen 12% identificado como por debajo del umbral mínimo rentable"},
+           {"text": "Detecta IT5 sin rectificado — imposible", "passed": true, "evidence": "IT5 sin rectificado listado como imposible técnicamente"},
+           {"text": "Detecta plazo 4 días incompatible con subcontrata 3 semanas", "passed": true, "evidence": "Incompatibilidad plazo/subcontrata correctamente identificada"},
+           {"text": "Alerta titanio confianza BAJA >500€", "passed": true, "evidence": "Titanio Gr.5 BAJA + precio >500€ → bloquea semáforo verde por regla explícita"}
+         ]
+        },
+        {"eval_id": 2, "eval_name": "clean-budget-green-light", "pass_rate": 1.0, "tokens": 19400, "duration_ms": 55431,
+         "grading": [
+           {"text": "Semáforo VERDE", "passed": true, "evidence": "Semáforo VERDE con confianza ALTA en precio"},
+           {"text": "Sin correcciones obligatorias", "passed": true, "evidence": "0 correcciones obligatorias, solo 3 mejoras recomendadas no bloqueantes"},
+           {"text": "Confirma margen 22% > 15%", "passed": true, "evidence": "Margen 22% validado como por encima del umbral mínimo"},
+           {"text": "Confirma aritmética IVA correcta", "passed": true, "evidence": "IVA 388,50€ y total 2.238,50€ verificados correctamente"}
+         ]
+        },
+        {"eval_id": 3, "eval_name": "unknown-client-three-ambiguities", "pass_rate": 1.0, "tokens": 18841, "duration_ms": 50291,
+         "grading": [
+           {"text": "Semáforo ROJO", "passed": true, "evidence": "Semáforo ROJO — 5 bloqueadores identificados"},
+           {"text": "Detecta empresa/cliente no identificado", "passed": true, "evidence": "Bloque 1 fallido: 'empresa XYZ sin identificar — imperdonable'"},
+           {"text": "Detecta Ra 0.4 sin rectificado/bruñido", "passed": true, "evidence": "Ra 0.4 en Pieza B sin operaciones de acabado fino → coste subestimado"},
+           {"text": ">2 ambigüedades → recomienda email aclaraciones primero", "passed": true, "evidence": "Regla de oro aplicada: >2 ⚠️ → enviar email de aclaraciones antes que presupuesto"},
+           {"text": "Confianza en precio BAJA (>±25%)", "passed": true, "evidence": "Confianza BAJA explícita con incertidumbre >±25%"}
+         ]
+        }
+      ],
+      "mean_pass_rate": 1.0,
+      "mean_tokens": 19094,
+      "mean_duration_ms": 54181
+    },
+    {
+      "name": "without_skill",
+      "label": "Sin skill (baseline)",
+      "evals": [
+        {"eval_id": 1, "eval_name": "multiple-red-flags-titanium-it5", "pass_rate": 1.0, "tokens": 16995, "duration_ms": 45948,
+         "grading": [
+           {"text": "Semáforo ROJO (o equivalente)", "passed": true, "evidence": "'NO APTO PARA ENVÍO' — equivalente a rojo"},
+           {"text": "Detecta margen 12% insuficiente", "passed": true, "evidence": "Margen identificado como insuficiente para el perfil de riesgo"},
+           {"text": "Detecta IT5 sin rectificado", "passed": true, "evidence": "Operación faltante identificada"},
+           {"text": "Detecta plazo 4 días incompatible", "passed": true, "evidence": "Plazo imposible correctamente detectado"},
+           {"text": "Alerta titanio confianza BAJA", "passed": true, "evidence": "Tiempo estimado puede estar 30-80% por debajo del real"}
+         ]
+        },
+        {"eval_id": 2, "eval_name": "clean-budget-green-light", "pass_rate": 0.75, "tokens": 17009, "duration_ms": 46586,
+         "grading": [
+           {"text": "Semáforo VERDE", "passed": true, "evidence": "'GREEN LIGHT — no blocking errors found'"},
+           {"text": "Sin correcciones obligatorias", "passed": true, "evidence": "No blocking errors detected"},
+           {"text": "Confirma margen 22% > mínimo", "passed": false, "evidence": "No valida explícitamente el margen contra un umbral mínimo — solo dice 'coherent'"},
+           {"text": "Confirma aritmética IVA correcta", "passed": true, "evidence": "IVA 388,50€ y total 2.238,50€ verificados"}
+         ]
+        },
+        {"eval_id": 3, "eval_name": "unknown-client-three-ambiguities", "pass_rate": 0.6, "tokens": 16627, "duration_ms": 39265,
+         "grading": [
+           {"text": "Semáforo ROJO", "passed": false, "evidence": "No usa formato semáforo — solo lista 'bloqueadores críticos' sin veredicto estructurado"},
+           {"text": "Detecta empresa/cliente no identificado", "passed": true, "evidence": "Cliente no identificado listado como bloqueador crítico"},
+           {"text": "Detecta Ra 0.4 sin rectificado/bruñido", "passed": true, "evidence": "Operación de acabado fino faltante detectada"},
+           {"text": ">2 ambigüedades → recomienda email aclaraciones", "passed": false, "evidence": "Lista los problemas pero no recomienda explícitamente enviar email de aclaraciones primero como protocolo"},
+           {"text": "Estimación confianza en precio BAJA", "passed": false, "evidence": "No da estimación de confianza estructurada — solo menciona que los totales pueden cambiar"}
+         ]
+        }
+      ],
+      "mean_pass_rate": 0.783,
+      "mean_tokens": 16877,
+      "mean_duration_ms": 43933
+    }
+  ],
+  "delta_pass_rate": 0.217,
+  "analyst_observations": [
+    "El baseline es fuerte en detección técnica (eval-1 perfecto), pero falla en el OUTPUT ESTRUCTURADO que hace la revisión accionable: semáforo visual, estimación de confianza en precio, y recomendaciones concretas de acción post-revisión.",
+    "La diferencia clave es la REGLA DE GOLD: >2 ambigüedades → email aclaraciones primero. El baseline lista los problemas pero no da la instrucción de qué hacer a continuación.",
+    "Eval-2 (verde): el baseline añade 2 observaciones extra ('Ra en superficies de sellado', 'añadir cláusula de tolerancias') que no pedía el estimador y que pueden crear confusión innecesaria antes de un envío ya aprobado.",
+    "La skill produce reportes con formato semáforo + bloques numerados + confianza en precio — el baseline produce texto libre que el estimador tiene que interpretar."
+  ]
+}

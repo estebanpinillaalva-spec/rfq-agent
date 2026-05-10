@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Review — revisar-borrador — Iteración 1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; }
+  header { background: #1a2733; color: #fff; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  .tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+  .tag-green { background: #2d7a3f; color: #fff; }
+  .tag-amber { background: #b45a00; color: #fff; }
+  .benchmark { background: #fff; margin: 24px 32px 0; border-radius: 8px; border: 1px solid #e0ddd8; padding: 24px; }
+  .benchmark h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { padding: 8px 12px; background: #f5f4f0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #666; text-align: left; }
+  td { padding: 9px 12px; border-top: 1px solid #eee; }
+  tr:hover td { background: #faf9f7; }
+  .hi { color: #2d7a3f; font-weight: 700; }
+  .mid { color: #b45a00; font-weight: 700; }
+  .delta { background: #e8f5ec; color: #2d7a3f; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .obs { margin-top: 16px; padding: 14px 16px; background: #faf9f7; border-left: 3px solid #1a2733; border-radius: 0 6px 6px 0; font-size: 13px; color: #444; line-height: 1.6; }
+  .obs ul { padding-left: 18px; }
+  .obs li { margin: 5px 0; }
+  .evals { margin: 20px 32px; display: grid; gap: 16px; }
+  .card { background: #fff; border-radius: 8px; border: 1px solid #e0ddd8; overflow: hidden; }
+  .card-head { padding: 14px 20px; background: #f5f4f0; border-bottom: 1px solid #e0ddd8; display: flex; justify-content: space-between; align-items: center; }
+  .card-head h3 { font-size: 14px; font-weight: 600; }
+  .card-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .col { padding: 18px 20px; }
+  .col + .col { border-left: 1px solid #e0ddd8; }
+  .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 10px; }
+  .output-block { background: #f8f7f5; border: 1px solid #e0ddd8; border-radius: 6px; padding: 14px; font-size: 12.5px; line-height: 1.65; max-height: 340px; overflow-y: auto; white-space: pre-wrap; }
+  .assertions { margin-top: 12px; }
+  .assertion { display: flex; gap: 8px; padding: 6px 0; border-top: 1px solid #f0ede8; font-size: 12.5px; }
+  .assertion:first-child { border-top: none; }
+  .icon { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-top: 1px; }
+  .icon.pass { background: #e8f5ec; color: #2d7a3f; }
+  .icon.fail { background: #fde8e8; color: #c0392b; }
+  .assertion .text { color: #444; }
+  .evidence { color: #888; font-size: 11.5px; font-style: italic; margin-top: 2px; }
+  .score { margin-top: 12px; padding-top: 10px; border-top: 2px solid #e0ddd8; font-size: 13px; font-weight: 700; }
+  .score.green { color: #2d7a3f; }
+  .score.amber { color: #b45a00; }
+  .semaforo { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .semaforo.rojo { background: #fde8e8; color: #c0392b; }
+  .semaforo.verde { background: #e8f5ec; color: #2d7a3f; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Eval Review — revisar-borrador</h1>
+  <span class="tag tag-green">Iteración 1</span>
+  <span class="tag tag-amber">3 evals · 6 runs</span>
+</header>
+
+<div class="benchmark">
+  <h2>Benchmark — Tasa de acierto</h2>
+  <table>
+    <thead>
+      <tr><th>Eval</th><th>Con skill</th><th>Sin skill</th><th>Delta</th><th>Tokens (con/sin)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Eval 1 — Titanio IT5 margen bajo plazo imposible</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="delta">+0pp</span></td>
+        <td>19.042 / 16.995</td>
+      </tr>
+      <tr>
+        <td>Eval 2 — Presupuesto limpio (verde)</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="mid">75%</span></td>
+        <td><span class="delta">+25pp</span></td>
+        <td>19.400 / 17.009</td>
+      </tr>
+      <tr>
+        <td>Eval 3 — Cliente desconocido + 3 ambigüedades</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="mid">60%</span></td>
+        <td><span class="delta">+40pp</span></td>
+        <td>18.841 / 16.627</td>
+      </tr>
+      <tr style="background:#f0f7f2; font-weight:700;">
+        <td>MEDIA</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="mid">78%</span></td>
+        <td><span class="delta">+22pp</span></td>
+        <td>19.094 / 16.877</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="obs">
+    <strong>Análisis:</strong>
+    <ul>
+      <li>Eval-1 (banderas rojas obvias): empate. Los problemas son tan claros que el baseline los detecta igualmente.</li>
+      <li>Eval-2 (verde): el baseline falla al no validar el margen contra el umbral del 15% — declara "OK" pero sin confirmar que 22% > mínimo rentable.</li>
+      <li>Eval-3 (diferenciador clave): la skill aplica la "regla de oro" (>2 ambigüedades → email aclaraciones primero) y da una estimación de confianza en precio BAJA. El baseline lista los problemas pero no da el veredicto estructurado ni la acción recomendada.</li>
+      <li>La skill siempre produce el formato 🔴/🟡/🟢 + bloque de correcciones obligatorias + confianza en precio. El baseline produce texto libre que el estimador debe interpretar.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="evals">
+
+  <!-- EVAL 1 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Eval 1 — Titanio Gr.5 · IT5 sin rectificado · Margen 12% · Plazo 4 días vs subcontrata 3 semanas</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="tag tag-green">Con skill: 5/5 ✓</span>
+        <span class="tag tag-green">Sin skill: 5/5 ✓</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="col">
+        <div class="col-title">Con skill — informe de revisión</div>
+        <div class="output-block">🔴 SEMÁFORO: ROJO — NO ENVIAR
+
+CORRECCIONES OBLIGATORIAS (4):
+1. IT5 en superficies de rodamiento sin operación de rectificado → imposible técnicamente (el taller NO tiene rectificadora)
+2. Plazo 4 días incompatible con subcontrata Rectificados Arenas (3 semanas de cola actual)
+3. Material titanio Gr.5 con confianza BAJA y precio >500€ → regla explícita prohíbe semáforo verde sin confirmar precio
+4. Margen 12% por debajo del umbral mínimo rentable (15%)
+
+CONFIANZA EN PRECIO: BAJA
+Incertidumbre estimada >±30% por titanio sin precio confirmado
+
+CORRECCIONES ANTES DE REENVIAR:
+- Incluir subcontrata rectificado en presupuesto y ajustar plazo
+- Confirmar precio titanio Gr.5 con proveedor
+- Recalcular margen objetivo (mínimo 18-20% para material difícil)
+- Revisar viabilidad del plazo con Rectificados Arenas</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Semáforo ROJO</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta margen 12% &lt; 15%</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta IT5 sin rectificado — imposible</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta plazo 4 días incompatible con subcontrata 3 semanas</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Alerta titanio confianza BAJA &gt;500€</div></div></div>
+          <div class="score green">5 / 5 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill — informe de revisión</div>
+        <div class="output-block">VEREDICTO: NO APTO PARA ENVÍO
+
+3 banderas rojas críticas:
+
+1. PLAZO IMPOSIBLE — 4 días ofertados vs. 3 semanas mínimas por saturación de Rectificados Arenas.
+
+2. TOLERANCIAS IT5 SIN RECTIFICADO — operación crítica no incluida ni costeada; la pieza no cumplirá especificaciones.
+
+3. TITANIO GR.5 CON CONFIANZA BAJA — tiempo estimado de 280 min/pieza puede estar un 30-80% por debajo del real; margen del 12% se destruye con cualquier desviación.
+
+Adicionalmente: margen insuficiente para el perfil de riesgo real (recomendado 18-25%)</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Equivalente a ROJO ("NO APTO PARA ENVÍO")</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta margen insuficiente</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta IT5 sin rectificado</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta plazo imposible</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Alerta sobre titanio</div></div></div>
+          <div class="score green">5 / 5 pasadas — mismo resultado que con skill en este caso obvio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVAL 2 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Eval 2 — Presupuesto limpio · A6082 · Margen 22% · IVA correcto · Sin subcontratas</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="tag tag-green">Con skill: 4/4 ✓</span>
+        <span class="tag tag-amber">Sin skill: 3/4</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="col">
+        <div class="col-title">Con skill</div>
+        <div class="output-block">🟢 SEMÁFORO: VERDE — LISTO PARA ENVIAR
+
+CORRECCIONES OBLIGATORIAS: Ninguna.
+
+MEJORAS RECOMENDADAS (no bloquean envío):
+1. Verificar CTA explícita en el cuerpo del email
+2. Confirmar Ra en superficies de sellado hidráulico (Ra 3.2 puede ser insuficiente en juntas)
+3. Confirmar stock de A6082 para entrega en 8 días
+
+VALIDACIÓN ECONÓMICA:
+✓ Margen 22% — por encima del mínimo rentable (15%)
+✓ IVA 21%: 388,50€ — CORRECTO
+✓ Total con IVA: 2.238,50€ — CORRECTO
+✓ Material A6082: confianza ALTA
+
+CONFIANZA EN PRECIO: ALTA</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Semáforo VERDE</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Sin correcciones obligatorias</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Confirma margen 22% &gt; umbral 15%</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">IVA 388,50€ y total 2.238,50€ verificados</div></div></div>
+          <div class="score green">4 / 4 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill</div>
+        <div class="output-block">GREEN LIGHT — no blocking errors found
+
+Arithmetic verified: 185 x 10 = 1.850€, IVA 21% = 388,50€, total 2.238,50€ — all correct
+Material A6082, ISO 2768-m, Ra 3.2, 8 working days, 50/50 payment — all coherent
+Email draft: reference RFQ-2026-041 in subject, correct recipient, signature — confirmed
+
+Two non-blocking observations:
+(1) Ra 3.2 may be insufficient on sealing surfaces — clarify before production
+(2) Recommend adding a tolerance clause covering individual fits beyond ISO 2768-m scope</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Equivalente a VERDE ("GREEN LIGHT")</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Sin correcciones bloqueantes</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">NO valida el margen 22% contra umbral mínimo</div>
+            <div class="evidence">Solo dice "coherent" — no confirma que 22% &gt; 15% mínimo rentable</div>
+          </div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">IVA verificado</div></div></div>
+          <div class="score amber">3 / 4 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVAL 3 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Eval 3 — Cliente desconocido · 3 ambigüedades ⚠️ · Ra 0.4 sin rectificado</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="tag tag-green">Con skill: 5/5 ✓</span>
+        <span class="tag tag-amber">Sin skill: 3/5</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="col">
+        <div class="col-title">Con skill</div>
+        <div class="output-block">🔴 SEMÁFORO: ROJO — NO ENVIAR
+
+CORRECCIONES OBLIGATORIAS (5):
+1. [BLOQUE 1 — CRÍTICO] Empresa cliente = "empresa XYZ" sin identificar — IMPERDONABLE enviar así
+2. Contacto no especificado — no hay destinatario real del email
+3. Material Pieza A asumido (F-114) sin validar — incertidumbre ±30%
+4. Grado inox Pieza B sin definir (304 vs 316L) — diferencia de precio y mecanizabilidad significativa
+5. Ra 0.4 en Pieza B sin rectificado ni bruñido — FÍSICAMENTE IMPOSIBLE con las operaciones listadas
+
+REGLA DE ORO APLICADA: >2 ambigüedades ⚠️ sin resolver → ENVIAR EMAIL DE ACLARACIONES antes que presupuesto
+
+CONFIANZA EN PRECIO: BAJA
+Incertidumbre total >±25% con 3 ambigüedades no resueltas</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Semáforo ROJO explícito</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta empresa/cliente no identificado (Bloque 1)</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta Ra 0.4 sin rectificado/bruñido</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">&gt;2 ambigüedades → recomienda email aclaraciones primero</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Confianza en precio BAJA (&gt;±25%)</div></div></div>
+          <div class="score green">5 / 5 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill</div>
+        <div class="output-block">4 bloqueadores críticos que impiden el envío:
+- Cliente no identificado ("empresa XYZ")
+- Material Pieza A no confirmado
+- Grado inox Pieza B ambiguo (304 vs 316L)
+- Acabado Ra 0.4 sin operación de rectificado/bruñido listada
+
+El riesgo mayor es la Pieza B: falta la operación de acabado fino.
+Los totales pueden cambiar al corregir materiales y operaciones faltantes.</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">No usa formato semáforo — lista problemas sin veredicto estructurado</div>
+          </div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta empresa/cliente no identificado</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Detecta Ra 0.4 sin operación de acabado</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">NO recomienda email de aclaraciones primero — solo lista problemas</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">Sin estimación de confianza en precio</div>
+          </div></div>
+          <div class="score amber">3 / 5 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div style="padding: 20px 32px; color: #888; font-size: 12px;">revisar-borrador · Iteración 1 · 2026-05-09</div>
+</body>
+</html>

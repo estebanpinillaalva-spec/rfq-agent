@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "38-days-closure-two-contacts",
+  "prompt": "Oferta RFQ-2026-008, 38 días, 12.400€. 2 contactos sin respuesta definitiva. Cliente dijo 'lo evaluamos' hace 19 días.",
+  "assertions": [
+    {"text": "Identifica protocolo de cierre (>30 días, 2 contactos)"},
+    {"text": "Genera email de cierre cortés con RFQ-2026-008 completado"},
+    {"text": "Instruye archivar como 'sin respuesta' en el pipeline"},
+    {"text": "NO recomienda más contactos agresivos — acepta el silencio"},
+    {"text": "Mantiene la puerta abierta para proyectos futuros"}
+  ]
+}

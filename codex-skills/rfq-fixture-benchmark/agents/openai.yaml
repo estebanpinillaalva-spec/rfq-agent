@@ -1,0 +1,6 @@
+interface:
+  display_name: "RFQ Fixture Benchmark"
+  short_description: "Build repeatable RFQ pilot test coverage"
+  default_prompt: "Use $rfq-fixture-benchmark to test the RFQ pilot against anonymized real cases."
+policy:
+  allow_implicit_invocation: true

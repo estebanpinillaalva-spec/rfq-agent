@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "clean-budget-green-light",
+  "prompt": "Presupuesto RFQ-2026-041: Bloque hidráulico A6082, margen 22%, IVA correcto, plazo 8 días, material confianza ALTA, sin subcontratas, email borrador correcto.",
+  "assertions": [
+    {"text": "Semáforo es VERDE — listo para enviar"},
+    {"text": "No hay correcciones obligatorias que bloqueen el envío"},
+    {"text": "Confirma que el margen 22% está por encima del mínimo rentable"},
+    {"text": "Confirma la aritmética IVA correcta (388,50€ y total 2.238,50€)"}
+  ]
+}

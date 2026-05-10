@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Review — email-comercial — Iteración 1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; }
+  header { background: #1a1a1a; color: #fff; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header .tag { background: #4a7c59; color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+  .benchmark { background: #fff; margin: 24px 32px 0; border-radius: 8px; border: 1px solid #e0ddd8; padding: 24px; }
+  .benchmark h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #555; text-transform: uppercase; letter-spacing: 0.05em; }
+  .bench-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .bench-table th { text-align: left; padding: 8px 12px; background: #f5f4f0; font-weight: 600; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.04em; }
+  .bench-table td { padding: 10px 12px; border-top: 1px solid #eee; }
+  .bench-table tr:hover td { background: #faf9f7; }
+  .pass-rate { font-weight: 700; }
+  .pass-rate.high { color: #2d7a3f; }
+  .pass-rate.mid { color: #b45a00; }
+  .delta { color: #2d7a3f; font-weight: 700; background: #e8f5ec; padding: 2px 8px; border-radius: 4px; }
+  .observations { margin: 16px 0 0; padding: 16px; background: #faf9f7; border-radius: 6px; border-left: 3px solid #b45a28; font-size: 13px; line-height: 1.6; color: #444; }
+  .observations li { margin: 6px 0 6px 16px; }
+  .evals { margin: 24px 32px; display: grid; gap: 20px; }
+  .eval-card { background: #fff; border-radius: 8px; border: 1px solid #e0ddd8; overflow: hidden; }
+  .eval-header { padding: 16px 20px; background: #faf9f7; border-bottom: 1px solid #e0ddd8; display: flex; justify-content: space-between; align-items: center; }
+  .eval-header h3 { font-size: 15px; font-weight: 600; }
+  .eval-header .badges { display: flex; gap: 8px; }
+  .badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+  .badge.green { background: #e8f5ec; color: #2d7a3f; }
+  .badge.amber { background: #fef3e2; color: #b45a00; }
+  .eval-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .col { padding: 20px; }
+  .col + .col { border-left: 1px solid #e0ddd8; }
+  .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 12px; }
+  .email-block { background: #fafaf9; border: 1px solid #e8e5e0; border-radius: 6px; padding: 16px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; font-family: Georgia, serif; max-height: 420px; overflow-y: auto; }
+  .email-block strong { font-weight: 600; }
+  .assertions { margin-top: 14px; }
+  .assertion { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-top: 1px solid #f0ede8; font-size: 13px; }
+  .assertion:first-child { border-top: none; }
+  .assertion .icon { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-top: 1px; }
+  .icon.pass { background: #e8f5ec; color: #2d7a3f; }
+  .icon.fail { background: #fde8e8; color: #c0392b; }
+  .assertion .text { color: #444; }
+  .assertion .evidence { color: #888; font-size: 12px; margin-top: 2px; font-style: italic; }
+  .score-line { margin-top: 12px; padding-top: 12px; border-top: 2px solid #e0ddd8; font-size: 13px; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; margin: 8px 0; }
+  th, td { border: 1px solid #ddd; padding: 5px 8px; text-align: left; }
+  th { background: #f5f4f0; }
+  code { background: #1f2933; color: #f0ebe3; padding: 8px 12px; border-radius: 4px; display: block; font-family: 'Courier New', monospace; font-size: 12px; margin: 8px 0; white-space: pre; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Eval Review — email-comercial</h1>
+  <span class="tag">Iteración 1</span>
+  <span class="tag" style="background:#b45a28;">3 evals · 6 runs</span>
+</header>
+
+<!-- BENCHMARK -->
+<div class="benchmark">
+  <h2>Benchmark — Tasa de acierto por configuración</h2>
+  <table class="bench-table">
+    <thead>
+      <tr>
+        <th>Eval</th>
+        <th>Con skill</th>
+        <th>Sin skill (baseline)</th>
+        <th>Delta</th>
+        <th>Tokens (con/sin)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Eval 1 — pieza única, datos completos</td>
+        <td><span class="pass-rate high">100%</span></td>
+        <td><span class="pass-rate mid">71%</span></td>
+        <td><span class="delta">+29pp</span></td>
+        <td>17.796 / 15.596</td>
+      </tr>
+      <tr>
+        <td>Eval 2 — 3 piezas</td>
+        <td><span class="pass-rate high">100%</span></td>
+        <td><span class="pass-rate mid">83%</span></td>
+        <td><span class="delta">+17pp</span></td>
+        <td>17.899 / 15.831</td>
+      </tr>
+      <tr>
+        <td>Eval 3 — sin nombre contacto + aviso material</td>
+        <td><span class="pass-rate high">100%</span></td>
+        <td><span class="pass-rate mid">80%</span></td>
+        <td><span class="delta">+20pp</span></td>
+        <td>17.885 / 15.793</td>
+      </tr>
+      <tr style="background:#f0f7f2; font-weight:700;">
+        <td>MEDIA</td>
+        <td><span class="pass-rate high">100%</span></td>
+        <td><span class="pass-rate mid">78%</span></td>
+        <td><span class="delta">+22pp</span></td>
+        <td>17.860 / 15.740</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="observations">
+    <strong>Análisis:</strong>
+    <ul>
+      <li>La skill mejora +22pp de media. El gap principal: el baseline <em>nunca</em> calcula el IVA explícitamente — siempre dice "IVA no incluido" en lugar de mostrar el bloque de totales con la cifra calculada.</li>
+      <li>El baseline inventa condiciones de pago (30 días factura) y validez (30 días) que no se proporcionaron. La skill produce solo lo que el estimador ha confirmado.</li>
+      <li>El baseline usa "Estimado Ana" / "Estimado Carlos" (solo nombre de pila) en lugar de nombre + apellido, menos formal para B2B con cliente nuevo.</li>
+      <li>La skill tiene un coste de +2.120 tokens de media (+13.5%) — completamente justificado por la mejora en calidad.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- EVAL 1 -->
+<div class="evals">
+  <div class="eval-card">
+    <div class="eval-header">
+      <h3>Eval 1 — Pieza única, datos completos</h3>
+      <div class="badges">
+        <span class="badge green">Con skill: 7/7 ✓</span>
+        <span class="badge amber">Sin skill: 5/7</span>
+      </div>
+    </div>
+    <div class="eval-body">
+      <div class="col">
+        <div class="col-title">Con skill — email generado</div>
+        <div class="email-block">Asunto: Oferta RFQ-2026-031 — Presupuesto mecanizado Eje de transmisión — Mecanizados García SL
+
+Estimado Carlos Martínez,
+
+Nos complace haber recibido su solicitud de oferta (RFQ-2026-031) y agradecemos el interés de Industrias Metálicas del Norte SA en nuestros servicios. Adjuntamos a continuación nuestro presupuesto para la fabricación de las piezas requeridas.
+
+| Pieza              | Cant. | Material | Plazo        | PVP unit. | Subtotal   |
+|--------------------|-------|----------|--------------|-----------|------------|
+| Eje de transmisión | 5     | F-114    | 10 días lab. | 890,00 €  | 4.450,00 € |
+
+Subtotal:      4.450,00 €
+IVA 21%:         934,50 €
+─────────────────────────────
+TOTAL OFERTA:  5.384,50 €
+Plazo: 10 días laborables desde confirmación de pedido
+Validez: 15 días
+
+Condiciones de pago: 50% confirmación, 50% antes del envío.
+
+Para confirmar, contacte en comercial@mecanizadosgarcia.es o 944 123 456.
+
+Atentamente,
+Juan García
+Director Comercial — Mecanizados García SL
+Tel: 944 123 456 | CIF: B-48123456
+C/ Industrial 23, Bilbao</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Asunto contiene 'RFQ-2026-031'</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Saludo formal con nombre completo "Estimado Carlos Martínez,"</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Precios unitario 890€ y total 4.450€ visibles</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">IVA calculado: 934,50€ y TOTAL 5.384,50€</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Plazo 10 días visible</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Firma con teléfono 944 123 456 y CIF B-48123456</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Sin "Hola" ni tuteo</div></div></div>
+          <div class="score-line" style="color:#2d7a3f;">7 / 7 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill — email generado</div>
+        <div class="email-block">Asunto: Oferta RFQ-2026-031 – Eje de transmisión (5 uds.) | Mecanizados García SL
+
+Estimado Carlos,
+
+En respuesta a su solicitud de presupuesto, nos complace presentarle la siguiente oferta...
+
+| Pieza              | Material   | Cantidad | Precio unit. | Total      | Plazo |
+|--------------------|------------|----------|--------------|------------|-------|
+| Eje de transmisión | Acero F-114| 5 uds    | 890,00 €     | 4.450,00 € | 10 días lab. |
+
+Precios expresados en euros, IVA no incluido.
+
+Validez: 30 días naturales.
+
+...
+
+Juan García
+Director Comercial — Mecanizados García SL
+CIF: B-48123456 | Tel.: 944 123 456</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Asunto contiene 'RFQ-2026-031'</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div><div class="text">Saludo: "Estimado Carlos," — solo nombre de pila, falta apellido</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Precios visibles</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div><div class="text">IVA NO calculado — "IVA no incluido" sin cifra</div><div class="evidence">El cliente B2B necesita ver el total con IVA para tramitar la aprobación interna</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Plazo 10 días visible</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Firma completa</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Sin "Hola" ni tuteo</div></div></div>
+          <div class="score-line" style="color:#b45a00;">5 / 7 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVAL 2 -->
+  <div class="eval-card">
+    <div class="eval-header">
+      <h3>Eval 2 — 3 piezas distintas</h3>
+      <div class="badges">
+        <span class="badge green">Con skill: 6/6 ✓</span>
+        <span class="badge amber">Sin skill: 5/6</span>
+      </div>
+    </div>
+    <div class="eval-body">
+      <div class="col">
+        <div class="col-title">Con skill — email generado</div>
+        <div class="email-block">Asunto: Oferta RFQ-2026-045 — Presupuesto 3 piezas mecanizado CNC — Mecanizados Izquierdo SA
+
+Estimada Ana López,
+
+Acusamos recibo de su solicitud RFQ-2026-045...
+
+| Pieza                   | Cant. | Material       | Plazo  | PVP unit. | Subtotal   |
+|-------------------------|-------|----------------|--------|-----------|------------|
+| Brida de aluminio A6082 | 10    | Aluminio 6082  | 6 días | 45,00 €   | 450,00 €   |
+| Soporte inox AISI-316L  | 5     | Inox AISI-316L | 8 días | 78,00 €   | 390,00 €   |
+| Tapa mecanizada F-114   | 8     | F-114          | 5 días | 32,00 €   | 256,00 €   |
+
+Subtotal (sin IVA):  1.096,00 €
+IVA 21%:               230,16 €
+──────────────────────────────────
+TOTAL OFERTA:        1.326,16 €
+Plazo: 8 días laborables desde confirmación
+Validez: 15 días
+
+Condiciones de pago: 50% confirmación, 50% antes del envío.
+
+María Izquierdo
+Responsable Técnico — Mecanizados Izquierdo SA
+Tel: 943 456 789</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Tabla incluye las 3 referencias (Brida, Soporte, Tapa)</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Subtotales correctos: 450€, 390€, 256€</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Total sin IVA: 1.096,00€</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">IVA 230,16€ y TOTAL 1.326,16€ calculados</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Plazo 8 días (el máximo de los 3)</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">No inventa CIF (no se proporcionó)</div></div></div>
+          <div class="score-line" style="color:#2d7a3f;">6 / 6 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill — email generado</div>
+        <div class="email-block">Asunto: Presupuesto RFQ-2026-045 – Mecanizados Izquierdo SA
+
+Estimada Ana,
+
+PRESUPUESTO RFQ-2026-045 (BORRADOR – pendiente de revisión)
+
+| Ref. | Descripción             | Cant.  | Precio unit. | Importe  | Plazo      |
+|------|-------------------------|--------|--------------|----------|------------|
+| 1    | Brida de aluminio A6082 | 10 uds | 45,00 €      | 450,00 € | 6 días lab.|
+| 2    | Soporte inox AISI-316L  | 5 uds  | 78,00 €      | 390,00 € | 8 días lab.|
+| 3    | Tapa mecanizada F-114   | 8 uds  | 32,00 €      | 256,00 € | 5 días lab.|
+
+Total sin IVA: 1.096,00 €
+(IVA 21% no incluido; se añadirá en factura)
+
+Plazo conjunto: 8 días laborables
+
+Condiciones: Validez 30 días, pago 30 días factura...
+
+María Izquierdo — Mecanizados Izquierdo SA
+Tel.: 943 456 789</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Tabla incluye las 3 referencias</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Subtotales correctos</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Total sin IVA: 1.096€</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div><div class="text">IVA NO calculado — "se añadirá en factura" sin cifra</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Plazo 8 días correcto</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">No inventa CIF</div></div></div>
+          <div class="score-line" style="color:#b45a00;">5 / 6 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVAL 3 -->
+  <div class="eval-card">
+    <div class="eval-header">
+      <h3>Eval 3 — Sin nombre de contacto + aviso precio material</h3>
+      <div class="badges">
+        <span class="badge green">Con skill: 5/5 ✓</span>
+        <span class="badge amber">Sin skill: 4/5</span>
+      </div>
+    </div>
+    <div class="eval-body">
+      <div class="col">
+        <div class="col-title">Con skill — email generado</div>
+        <div class="email-block">Asunto: Oferta RFQ-2026-052 — Presupuesto mecanizado Carcasa de aluminio — Talleres Ibáñez SL
+
+Estimado/a equipo de compras de TechMetal Ibérica SL,
+
+Tras la recepción de su solicitud RFQ-2026-052, les trasladamos nuestra propuesta...
+
+| Pieza               | Cant. | Material         | Plazo   | PVP unit.  | Subtotal   |
+|---------------------|-------|------------------|---------|------------|------------|
+| Carcasa de aluminio | 1     | Aluminio 6061-T6 | 15 días | 1.250,00 € | 1.250,00 € |
+
+Subtotal:    1.250,00 €
+IVA 21%:       262,50 €
+──────────────────────────
+TOTAL OFERTA: 1.512,50 €
+Validez: 15 días
+
+Observaciones técnicas:
+• El precio del aluminio 6061-T6 puede variar ±8% si la confirmación supera los 30 días desde esta oferta.
+
+Pedro Ibáñez
+Gerente — Talleres Ibáñez SL
+Tel: 91 234 56 78 | CIF: B-28789012</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Saludo "equipo de compras de TechMetal Ibérica SL" — no inventa nombre</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Aviso variación aluminio ±8% / 30 días incluido</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Precio 1.250€ visible</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">CIF B-28789012 en la firma</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Asunto contiene 'RFQ-2026-052'</div></div></div>
+          <div class="score-line" style="color:#2d7a3f;">5 / 5 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill — email generado</div>
+        <div class="email-block">Asunto: Presupuesto RFQ-2026-052 – Carcasa de aluminio 6061-T6
+
+Estimado/a responsable de compras,
+
+Me dirijo a usted en nombre de Talleres Ibáñez SL...
+
+| Concepto        | Detalle             |
+|-----------------|---------------------|
+| Pieza           | Carcasa aluminio    |
+| Cantidad        | 1 unidad            |
+| Precio unitario | 1.250,00 €          |
+| Total oferta    | 1.250,00 €          |
+
+Precios indicados sin IVA.
+
+Variación de material: si la confirmación supera 30 días, el precio podría ajustarse ±8%.
+
+Condiciones de pago: A convenir. Plazo: A confirmar.
+
+Pedro Ibáñez
+Talleres Ibáñez SL | CIF: B-28789012
+Tel.: 91 234 56 78</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon fail">✗</span><div><div class="text">Saludo "responsable de compras" — no menciona el nombre de la empresa (TechMetal Ibérica SL)</div><div class="evidence">La skill especifica: "equipo de compras de [Empresa]"</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Aviso variación aluminio incluido</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Precio 1.250€ visible</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">CIF B-28789012 en la firma</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Asunto contiene 'RFQ-2026-052'</div></div></div>
+          <div class="score-line" style="color:#b45a00;">4 / 5 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding: 24px 32px; color: #888; font-size: 12px;">
+  Skill: email-comercial · Iteración 1 · 2026-05-08 · Generado por skill-creator
+</div>
+
+</body>
+</html>

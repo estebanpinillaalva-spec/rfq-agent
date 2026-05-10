@@ -1,0 +1,33 @@
+{
+  "eval_id": 3,
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "El saludo usa 'equipo de compras de TechMetal Ibérica' — NO inventa un nombre de contacto",
+      "passed": true,
+      "evidence": "'Estimado/a equipo de compras de TechMetal Ibérica SL,' — exacto"
+    },
+    {
+      "text": "El email menciona la variación de precio del aluminio (±8% / 30 días)",
+      "passed": true,
+      "evidence": "Sección Observaciones técnicas: 'el precio de la materia prima podría variar en un ±8% respecto al importe indicado' y '30 días desde la emisión de esta oferta'"
+    },
+    {
+      "text": "El precio 1.250€ es visible en el cuerpo del email",
+      "passed": true,
+      "evidence": "Tabla: '1.250,00 €' unitario y subtotal"
+    },
+    {
+      "text": "La firma incluye el CIF B-28789012",
+      "passed": true,
+      "evidence": "'CIF: B-28789012' en la firma"
+    },
+    {
+      "text": "El asunto contiene 'RFQ-2026-052'",
+      "passed": true,
+      "evidence": "Asunto: 'Oferta RFQ-2026-052 — Presupuesto mecanizado Carcasa de aluminio — Talleres Ibáñez SL'"
+    }
+  ],
+  "pass_rate": 1.0,
+  "notes": "Perfecto manejo del caso sin contacto y de la observación técnica sobre variabilidad de precio de material."
+}

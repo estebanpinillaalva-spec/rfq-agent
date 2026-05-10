@@ -1,0 +1,33 @@
+{
+  "eval_id": 3,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "El saludo usa 'equipo de compras de TechMetal Ibérica' — NO inventa un nombre de contacto",
+      "passed": false,
+      "evidence": "'Estimado/a responsable de compras' — no menciona el nombre de la empresa en el saludo (la skill exige 'equipo de compras de [Empresa]')"
+    },
+    {
+      "text": "El email menciona la variación de precio del aluminio (±8% / 30 días)",
+      "passed": true,
+      "evidence": "Sección condiciones: variación ±8% si la confirmación supera 30 días — bien explicado"
+    },
+    {
+      "text": "El precio 1.250€ es visible en el cuerpo del email",
+      "passed": true,
+      "evidence": "Tabla: '1.250,00 €'"
+    },
+    {
+      "text": "La firma incluye el CIF B-28789012",
+      "passed": true,
+      "evidence": "'CIF: B-28789012' en la firma"
+    },
+    {
+      "text": "El asunto contiene 'RFQ-2026-052'",
+      "passed": true,
+      "evidence": "Asunto: 'Presupuesto RFQ-2026-052 – Carcasa de aluminio 6061-T6'"
+    }
+  ],
+  "pass_rate": 0.8,
+  "notes": "Sin la skill: el saludo genérico no nombra la empresa. También: IVA no calculado y plazo 'a confirmar' cuando se podría haber puesto el estimado."
+}

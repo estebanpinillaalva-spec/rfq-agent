@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Review — seguimiento-oferta — Iteración 1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; }
+  header { background: #1a2733; color: #fff; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  .tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+  .tag-green { background: #2d7a3f; color: #fff; }
+  .tag-amber { background: #b45a00; color: #fff; }
+  .tag-red { background: #c0392b; color: #fff; }
+  .benchmark { background: #fff; margin: 24px 32px 0; border-radius: 8px; border: 1px solid #e0ddd8; padding: 24px; }
+  .benchmark h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { padding: 8px 12px; background: #f5f4f0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #666; text-align: left; }
+  td { padding: 9px 12px; border-top: 1px solid #eee; }
+  tr:hover td { background: #faf9f7; }
+  .hi { color: #2d7a3f; font-weight: 700; }
+  .lo { color: #c0392b; font-weight: 700; }
+  .mid { color: #b45a00; font-weight: 700; }
+  .delta { background: #e8f5ec; color: #2d7a3f; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .delta-big { background: #1a2733; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .obs { margin-top: 16px; padding: 14px 16px; background: #fff8f0; border-left: 3px solid #b45a00; border-radius: 0 6px 6px 0; font-size: 13px; color: #444; line-height: 1.6; }
+  .obs ul { padding-left: 18px; }
+  .obs li { margin: 5px 0; }
+  .evals { margin: 20px 32px; display: grid; gap: 16px; }
+  .card { background: #fff; border-radius: 8px; border: 1px solid #e0ddd8; overflow: hidden; }
+  .card-head { padding: 14px 20px; background: #f5f4f0; border-bottom: 1px solid #e0ddd8; display: flex; justify-content: space-between; align-items: center; }
+  .card-head h3 { font-size: 14px; font-weight: 600; }
+  .card-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .col { padding: 18px 20px; }
+  .col + .col { border-left: 1px solid #e0ddd8; }
+  .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 10px; }
+  .output-block { background: #f8f7f5; border: 1px solid #e0ddd8; border-radius: 6px; padding: 14px; font-size: 12.5px; line-height: 1.65; max-height: 360px; overflow-y: auto; white-space: pre-wrap; }
+  .output-block.danger { background: #fff5f5; border-color: #f5c6c6; }
+  .assertions { margin-top: 12px; }
+  .assertion { display: flex; gap: 8px; padding: 6px 0; border-top: 1px solid #f0ede8; font-size: 12.5px; }
+  .assertion:first-child { border-top: none; }
+  .icon { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-top: 1px; }
+  .icon.pass { background: #e8f5ec; color: #2d7a3f; }
+  .icon.fail { background: #fde8e8; color: #c0392b; }
+  .assertion .text { color: #444; }
+  .evidence { color: #888; font-size: 11.5px; font-style: italic; margin-top: 2px; }
+  .score { margin-top: 12px; padding-top: 10px; border-top: 2px solid #e0ddd8; font-size: 13px; font-weight: 700; }
+  .score.green { color: #2d7a3f; }
+  .score.amber { color: #b45a00; }
+  .score.red { color: #c0392b; }
+  .warning-banner { background: #fde8e8; border: 1px solid #f5c6c6; border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; color: #8b1a1a; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Eval Review — seguimiento-oferta</h1>
+  <span class="tag tag-green">Iteración 1</span>
+  <span class="tag tag-red">Delta: +69pp — skill esencial en este dominio</span>
+</header>
+
+<div class="benchmark">
+  <h2>Benchmark — Tasa de acierto</h2>
+  <table>
+    <thead>
+      <tr><th>Eval</th><th>Con skill</th><th>Sin skill</th><th>Delta</th><th>Tokens (con/sin)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Eval 1 — Semana 2, primer email (8 días)</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="lo">40%</span></td>
+        <td><span class="delta-big">+60pp</span></td>
+        <td>18.513 / 16.363</td>
+      </tr>
+      <tr>
+        <td>Eval 2 — Semana 3, llamada (17 días, cliente habitual)</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="mid">50%</span></td>
+        <td><span class="delta-big">+50pp</span></td>
+        <td>18.786 / 17.002</td>
+      </tr>
+      <tr>
+        <td>Eval 3 — Cierre ciclo (38 días, 2 contactos)</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="lo">0%</span></td>
+        <td><span class="delta-big">+100pp</span></td>
+        <td>18.438 / 16.710</td>
+      </tr>
+      <tr style="background:#f0f7f2; font-weight:700;">
+        <td>MEDIA</td>
+        <td><span class="hi">100%</span></td>
+        <td><span class="lo">31%</span></td>
+        <td><span class="delta-big">+69pp</span></td>
+        <td>18.579 / 16.692</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="obs">
+    <strong>⚠️ Resultado crítico — eval-3:</strong> El baseline da consejos PELIGROSOS. Ante 38 días y 2 contactos sin respuesta definitiva, recomienda táctica agresiva (llamada + deadline de 3 días). La skill aplica el protocolo correcto del sector: cierre cortés, no insistir. En mecanizado B2B la reputación es fundamental y presionar a un cliente que ya ha rechazado implícitamente destruye la relación a largo plazo.
+    <ul style="margin-top:8px;">
+      <li>El baseline no personaliza las plantillas — genera texto genérico sin referencia, precio ni nombre del cliente.</li>
+      <li>El baseline no conoce el protocolo por fases (semana 1-2-3-4 / cierre) — actúa por instinto comercial genérico.</li>
+      <li>La skill es imprescindible especialmente para el cierre — donde el instinto "comercial" es contraproducente en este sector.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="evals">
+
+  <!-- EVAL 1 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Eval 1 — 8 días sin respuesta · Cliente nuevo · 3.200€ · Semana 2 del protocolo</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="tag tag-green">Con skill: 5/5 ✓</span>
+        <span class="tag tag-red">Sin skill: 2/5</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="col">
+        <div class="col-title">Con skill — plan de seguimiento</div>
+        <div class="output-block">📍 FASE: SEMANA 2 (días 6-10) — Primer contacto
+
+ACCIÓN INMEDIATA: Email hoy. Sin llamada en este primer contacto.
+Razón: cliente nuevo, email es menos intrusivo y deja registro.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EMAIL DE SEGUIMIENTO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Asunto: Re: Oferta RFQ-2026-029 — ¿Ha tenido ocasión de revisarla?
+
+Estimado/a David Fernández,
+
+Le escribo para confirmar que recibió correctamente nuestra oferta RFQ-2026-029 del [FECHA], por importe de 3.200,00 €.
+
+Si tiene alguna pregunta técnica o desea ajustar algún aspecto del presupuesto, estamos a su disposición.
+
+[Firma]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRÓXIMOS PASOS:
+- Si responde → gestionar según contenido
+- Si no responde en 5 días → semana 3: llamada telefónica
+- Si >30 días sin respuesta → email de cierre cortés</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Identifica Semana 2 del protocolo</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Recomienda email (no llamada) para cliente nuevo</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Plantilla con RFQ-2026-029 completada</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Menciona precio 3.200€ en el email</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Saludo incluye "David Fernández"</div></div></div>
+          <div class="score green">5 / 5 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill — plan de seguimiento</div>
+        <div class="output-block">ACCION INMEDIATA: Enviar email hoy (día 8 laborable es el umbral estándar)
+
+Timeline:
+- Email hoy → llamada día 10-11 si sin respuesta → email de cierre día 15
+
+3 plantillas listas para usar:
+1. Email de seguimiento (genérico)
+2. Script de llamada
+3. Email de cierre
+
+Nota: cliente nuevo = no presionar, gancho técnico en lugar de "¿ha visto mi oferta?"</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">No identifica "Semana 2" — sin terminología de protocolo</div>
+            <div class="evidence">Actúa por instinto, no por protocolo sectorial</div>
+          </div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Recomienda email hoy</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Genera plantilla de email (genérica)</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">No confirma precio 3.200€ en la plantilla</div>
+            <div class="evidence">Plantilla genérica, no personalizada</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">No confirma "David Fernández" en el saludo</div>
+          </div></div>
+          <div class="score amber">2 / 5 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVAL 2 -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Eval 2 — 17 días · Primer email ignorado · Cliente habitual que siempre tarda · 8.750€</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="tag tag-green">Con skill: 4/4 ✓</span>
+        <span class="tag tag-amber">Sin skill: 2/4</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="col">
+        <div class="col-title">Con skill</div>
+        <div class="output-block">📍 FASE: SEMANA 3-4 (días 11-20) — Segundo contacto
+
+ACCIÓN: Llamada telefónica HOY + email de acompañamiento en las 2h siguientes.
+
+⚠️ NOTA DE CONTEXTO: Talleres Prado e Hijos es cliente habitual que SIEMPRE TARDA.
+El silencio no es señal de desinterés — es su patrón conocido.
+Considerar esperar 2-3 días más antes de llamar si la relación lo permite.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GUION DE LLAMADA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"Buenos días, soy [Nombre] de [Taller]. Le llamo por la oferta RFQ-2026-021 que le enviamos hace 17 días, por importe de 8.750€. ¿Ha tenido ocasión de revisarla?"
+
+[Si precio alto]: "Podemos revisar si hay margen en volumen, material o plazo"
+[Si evaluando varias]: "Por supuesto. ¿Qué información adicional necesitan?"
+[Si consultarlo con dirección]: "¿Tienen fecha estimada de decisión?"
+
+EMAIL POST-LLAMADA:
+Asunto: RFQ-2026-021 — Seguimiento de nuestra conversación
+[personalizar según lo hablado]</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Identifica Semana 3-4 → llamada telefónica</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Guion con RFQ-2026-021 y 8.750€</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Email de acompañamiento post-llamada incluido</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Menciona cliente habitual que siempre tarda como factor</div></div></div>
+          <div class="score green">4 / 4 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill</div>
+        <div class="output-block">DIAGNÓSTICO: Llamada obligatoria hoy. Un tercer email no sirve.
+
+Paso 1 (hoy): Guion de llamada con 5 ramificaciones según respuesta del cliente.
+Paso 2 (tras llamada): Email de reenvío directo.
+Paso 3 (día +22 si silencio): Email de cierre con escasez de capacidad de máquina.
+
+Razonamiento: con Talleres Prado e Hijos el patrón de demora es conocido, no es señal de rechazo. 8.750€ justifica la llamada. El objetivo no es presionar — es descubrir en qué punto están.</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Recomienda llamada (correcto funcionalmente)</div></div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">Guion no confirma RFQ-2026-021 ni 8.750€ en el script</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">Genera "email de reenvío" — diferente del email de acompañamiento post-llamada del protocolo</div>
+          </div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Menciona el patrón de demora del cliente habitual</div></div></div>
+          <div class="score amber">2 / 4 pasadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVAL 3 — CRÍTICO -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Eval 3 — 38 días · 2 contactos · Cliente dijo "lo estamos evaluando" hace 19 días · 12.400€</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="tag tag-green">Con skill: 5/5 ✓</span>
+        <span class="tag tag-red">Sin skill: 0/5 ⚠️ CONSEJO PELIGROSO</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="col">
+        <div class="col-title">Con skill — protocolo de cierre</div>
+        <div class="output-block">📍 FASE: CIERRE DEL CICLO (>30 días, 2 contactos sin respuesta definitiva)
+
+ACCIÓN: Email de cierre cortés. Sin más contactos.
+Razón: Insistir después de 38 días + 2 contactos en mecanizado B2B daña la relación. El sector es pequeño.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EMAIL DE CIERRE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Asunto: RFQ-2026-008 — Cerramos la oferta — Disponibles para futuros proyectos
+
+Estimado/a [Nombre],
+
+Dado que no hemos recibido noticias sobre la oferta RFQ-2026-008 (12.400€), procedemos a cerrarla en nuestro sistema.
+
+Si en el futuro necesitan mecanizado de precisión, no duden en contactarnos. Guardaremos sus datos y la documentación técnica para agilizar cualquier consulta futura.
+
+Muchas gracias por considerar a [Taller].
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PIPELINE:
+- Estado → SIN RESPUESTA — CERRADA
+- Conservar contacto para prospección futura (3-6 meses)
+- NO eliminar el contacto</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Identifica protocolo de cierre (&gt;30 días, 2 contactos)</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Email de cierre cortés con RFQ-2026-008</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Instruye archivar como "sin respuesta"</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">NO recomienda más contactos agresivos</div></div></div>
+          <div class="assertion"><span class="icon pass">✓</span><div><div class="text">Mantiene la puerta abierta para proyectos futuros</div></div></div>
+          <div class="score green">5 / 5 pasadas</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">Sin skill — ⚠️ CONSEJO CONTRAPRODUCENTE</div>
+        <div class="warning-banner">⚠️ El baseline recomienda tácticas de presión agresiva después de 38 días y 2 contactos — el opuesto del protocolo correcto en este sector.</div>
+        <div class="output-block danger">DIAGNÓSTICO: Cliente en comparación activa, no descartado.
+19 días de silencio post-llamada = hay que FORZAR RESPUESTA BINARIA.
+
+TÁCTICA:
+- Llamada MAÑANA 9-10:30h
+- Email de cierre con ANCLA DE "RESERVA DE CAPACIDAD DE PRODUCCIÓN"
+- FECHA LÍMITE de 3 días hábiles
+
+EMAIL: "[...] En vista de nuestra agenda de producción, necesitamos saber si confirman antes del [FECHA] para reservarles capacidad de máquina."
+
+Si no responde en 5 días → archivar con margen máximo de negociación (~5-8%) para último intento.</div>
+        <div class="assertions">
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">NO identifica cierre — recomienda más presión</div>
+            <div class="evidence">OPUESTO al protocolo: después de 38d + 2 contactos, insistir destruye la relación en un sector pequeño</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">Genera email de presión con deadline — no email de cierre cortés</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">No archiva ahora — solo si no hay respuesta en 5 días más</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">Recomienda explícitamente llamada agresiva — contrario a las reglas del sector</div>
+          </div></div>
+          <div class="assertion"><span class="icon fail">✗</span><div>
+            <div class="text">Tono de urgencia/presión — opuesto a mantener relación a largo plazo</div>
+          </div></div>
+          <div class="score red">0 / 5 pasadas — consejo activamente dañino</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div style="padding: 20px 32px; color: #888; font-size: 12px;">seguimiento-oferta · Iteración 1 · 2026-05-09</div>
+</body>
+</html>

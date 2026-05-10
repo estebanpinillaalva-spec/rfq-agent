@@ -1,0 +1,38 @@
+{
+  "eval_id": 2,
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "La tabla de piezas incluye las 3 referencias: Brida, Soporte y Tapa",
+      "passed": true,
+      "evidence": "Tabla con Brida A6082, Soporte inox AISI-316L, Tapa mecanizada F-114"
+    },
+    {
+      "text": "Los subtotales por línea son correctos: 450€, 390€ y 256€",
+      "passed": true,
+      "evidence": "450,00 € / 390,00 € / 256,00 € — todos correctos"
+    },
+    {
+      "text": "El total sin IVA mostrado es 1.096€",
+      "passed": true,
+      "evidence": "'Total sin IVA: 1.096,00 €'"
+    },
+    {
+      "text": "El IVA (21%) y total con IVA están calculados y visibles",
+      "passed": false,
+      "evidence": "'IVA 21 % no incluido; se añadirá en factura' — no calcula ni muestra el total con IVA"
+    },
+    {
+      "text": "El plazo de entrega indicado es 8 días (el plazo máximo de los 3)",
+      "passed": true,
+      "evidence": "'Plazo de entrega conjunto: 8 días laborables'"
+    },
+    {
+      "text": "El email NO inventa un CIF del taller (no se proporcionó)",
+      "passed": true,
+      "evidence": "No incluye CIF porque no se proporcionó"
+    }
+  ],
+  "pass_rate": 0.833,
+  "notes": "Buen email pero sin IVA calculado. Añade marca BORRADOR y condiciones de pago inventadas (30 días) que no se proporcionaron."
+}
