@@ -1,6 +1,7 @@
 import type { AiClient } from '../llm/aiClient'
 import { analisisRFQSchema, type AnalisisRFQ, type LlmResult, type PlanoEntrada, type ValidacionPlano } from '../types'
 import { parseJsonDefensivo, RETRY_JSON_SUFFIX } from '../utils/json'
+import { normalize } from '../utils/normalize'
 import { cargarPromptSkill, cargarReferencia } from '../utils/prompts'
 import { mockAnalisis, mockUsage } from './mock'
 
@@ -202,10 +203,3 @@ function limpiarCampoNoEncontrado(campos: string[], campoARetirar: string): stri
     .filter((campo) => campo && normalize(campo) !== normalize(campoARetirar))
 }
 
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '')
-}

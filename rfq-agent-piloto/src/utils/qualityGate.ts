@@ -10,6 +10,7 @@ import type {
   QualityVerdict,
   ValidacionPlano,
 } from '../types'
+import { normalize } from './normalize'
 
 const categories: QualityCategory[] = ['Datos comerciales', 'Plano/cajetin', 'Fabricacion', 'Riesgos DFM', 'Coste/plazo']
 
@@ -233,14 +234,6 @@ function hasAnyPositiveQuantity(cantidades: Record<string, number>): boolean {
 
 function isInferredQuantity(value: string): boolean {
   return /asum|infer|no hay indicacion|no especificad|por defecto/i.test(value)
-}
-
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '')
 }
 
 function scoreFromIssues(issues: QualityIssue[]): number {

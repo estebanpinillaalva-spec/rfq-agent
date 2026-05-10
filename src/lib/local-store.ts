@@ -251,6 +251,40 @@ export async function appendPipelineRow(row: PipelineRow): Promise<void> {
   await writeFile(pipelinePath, `${csv}\n`, 'utf8')
 }
 
+// Crea una entrada de pipeline desde un RFQ completado. Usa inboxId como clave de deduplicación.
+export async function appendPipelineRowFromRfq(inboxId: string): Promise<void> {
+  const dedupeTag = `[RFQ:${inboxId}]`
+  const { rows } = await readPipeline()
+  if (rows.some((r) => (r.observaciones ?? '').includes(dedupeTag))) return
+
+  const entries = await readdir(salidasRoot, { withFileTypes: true }).catch(() => [])
+  const salidaEntry = entries.find(
+    (e) => e.isDirectory() && e.name.toLowerCase().includes(inboxId.toLowerCase()) && !e.name.endsWith('-bloqueado')
+  )
+  if (!salidaEntry) return
+
+  const dir = join(salidasRoot, salidaEntry.name)
+  const analysis = await readJsonSafe(join(dir, 'analisis.json'))
+  const combined = asRecord(analysis)
+  const analisis = asRecord(combined?.analisis)
+  const presupuesto = asRecord(combined?.presupuesto)
+  const cliente = asRecord(analisis?.cliente)
+
+  const row: PipelineRow = {
+    empresa: typeof cliente?.empresa === 'string' ? cliente.empresa : '',
+    contacto: typeof cliente?.contacto === 'string' ? cliente.contacto : '',
+    email: typeof cliente?.email === 'string' ? cliente.email : '',
+    canal_contacto: 'Email RFQ',
+    fecha_contacto_1: new Date().toISOString().slice(0, 10),
+    estado: 'Oferta borrador',
+    proxima_accion: 'Revisar y enviar presupuesto',
+    ticket_estimado: numberOrNull(presupuesto?.total) !== null ? String(numberOrNull(presupuesto?.total)) : '',
+    observaciones: `${dedupeTag} Generado automaticamente desde email entrante`,
+  }
+
+  await appendPipelineRow(row)
+}
+
 export function safeSalidaDir(id: string): string {
   const clean = basename(id)
   const dir = resolve(salidasRoot, clean)

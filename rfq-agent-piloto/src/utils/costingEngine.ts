@@ -1,5 +1,6 @@
 import type { AnalisisRFQ, ConfigTaller, LineaPresupuesto, NivelComplejidad, PresupuestoRFQ } from '../types'
 import { cargarBibliotecaMateriales, estimarCosteMaterial } from './materiales'
+import { normalize } from './normalize'
 
 export function generarPresupuestoDeterminista(analisis: AnalisisRFQ, config: ConfigTaller): PresupuestoRFQ {
   const biblioteca = cargarBibliotecaMateriales()
@@ -241,14 +242,6 @@ function roundCommercial(value: number): number {
 
 function roundCurrency(value: number): number {
   return Math.round(value * 100) / 100
-}
-
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '')
 }
 
 function unique(values: string[]): string[] {

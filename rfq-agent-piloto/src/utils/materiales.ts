@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { normalize } from './normalize'
 import {
   materialBibliotecaSchema,
   type MaterialBiblioteca,
@@ -140,13 +141,6 @@ function volumeToKg(volumeMm3: number, densidadGCm3: number): number {
   return (volumeCm3 * densidadGCm3) / 1000
 }
 
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '')
-}
 
 function isStale(date: string, staleAfterDays: number): boolean {
   const parsed = Date.parse(date)

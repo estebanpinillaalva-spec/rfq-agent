@@ -3,7 +3,7 @@ import { createWriteStream } from 'fs'
 import { access, copyFile, mkdir, writeFile } from 'fs/promises'
 import { basename, extname, join, resolve } from 'path'
 import type { AttachmentData, EmailReceivedEvent } from 'resend'
-import { pilotRoot } from '@/lib/local-store'
+import { appendPipelineRowFromRfq, pilotRoot } from '@/lib/local-store'
 import { resend } from '@/lib/resend'
 
 const allowedPlanExtensions = new Set(['.pdf', '.png', '.jpg', '.jpeg', '.step', '.stp', '.dxf'])
@@ -263,6 +263,10 @@ export async function startPilotProcess(inboxPath: string, providerOverride?: 'm
       signal,
       message: ok ? 'Proceso completado. Revisa salidas/ para el RFQ generado.' : 'El proceso fallo. Revisa process.log.',
     })
+
+    if (ok) {
+      void appendPipelineRowFromRfq(basename(resolvedInboxPath)).catch(() => undefined)
+    }
   })
   return child.pid ?? null
 }
