@@ -49,10 +49,19 @@ Equivalencias entre designaciones europeas (EN), españolas (UNE F-), americanas
 | **X2CrNiMo17-12-2** (1.4404) | F-3533 | **316L** | 3.60–4.60 | 0.45 | ×2.0–2.3 | Austenítico Mo bajo C |
 | **X6Cr17** (1.4016) | F-3113 | **430** | 2.20–2.80 | 0.65 | ×1.5–1.7 | Ferrítico |
 | **X20Cr13** (1.4021) | F-3401 | **420** | 2.80–3.50 | 0.55 | ×1.8–2.0 | Martensítico |
+| **X2CrNiMoN22-5-3** (1.4462) | — | **Duplex 2205** | 5.50–7.50 | 0.35 | ×2.5–3.0 | Dúplex — alta resistencia + corrosión |
+| **X17CrNi16-2** (1.4057) | — | **431** | 3.20–4.00 | 0.55 | ×1.8–2.0 | Martensítico mejorado |
+| **X10CrNiS18-9** (1.4305) | F-3508 | **303** | 3.00–3.80 | 0.65 | ×1.6–1.8 | Austenítico fácil maquinado |
+| **X12CrNiS17-2** (1.4104) | — | **416** | 2.80–3.50 | 0.75 | ×1.5–1.7 | Martensítico libre mecanizado |
+| **X5CrNiCuNb16-4** (1.4542) | — | **17-4PH** | 7.00–10.00 | 0.45 | ×2.2–2.5 | Endurecible por precipitación — aero |
 
 **Nomenclatura habitual en talleres:**
 - "Inox 304" = AISI 304 = 1.4301
 - "Inox 316" = AISI 316 = 1.4401
+- "Duplex" o "2205" = 1.4462 — precio y dificultad de mecanizado muy superiores al 316
+- "303" o "inox libre mecanizado" = AISI 303 = 1.4305 (el inox más fácil de tornear)
+- "416" = martensítico libre mecanizado, mecaniza mejor que 420 pero menor corrosión
+- "17-4PH" = acero de precipitación, muy usado en aeronáutica y alimentaria
 - Si dice "inox" sin grado → **SIEMPRE preguntar** (304 vs 316 cambia precio material ~30% + surcharge)
 
 ---
@@ -100,7 +109,27 @@ Equivalencias entre designaciones europeas (EN), españolas (UNE F-), americanas
 
 ---
 
+## Titanio
+
+⚠️ **Muy difícil de mecanizar** — requiere herramientas específicas, velocidades bajas, abundante refrigeración. Surcharge de mecanizado muy elevado. Verificar siempre capacidad del taller antes de ofertar.
+
+| Designación | Nombre / Grado | Precio bruto €/kg | Factor maquinab. | Surcharge mecanizado | Aplicación |
+|-------------|---------------|-------------------|-----------------|---------------------|------------|
+| **Grade 1** (Ti-CP1) | Titanio CP grado 1 | 35–55 | 0.30 | ×3.5–4.5 | Química, intercambiadores — más blando |
+| **Grade 2** (Ti-CP2) | Titanio CP grado 2 | 35–55 | 0.28 | ×3.5–4.5 | Marino, médico — el más usado CP |
+| **Grade 5** (Ti-6Al-4V) | Titanio 6-4 | 60–100 | 0.22 | ×4.0–6.0 | **Aeronáutica, implantes — el más usado en mecanizado** |
+| **Grade 23** (Ti-6Al-4V ELI) | Titanio 6-4 ELI | 80–130 | 0.20 | ×4.5–6.5 | Implantes médicos — pureza extra |
+
+**Nomenclatura habitual:**
+- "Ti-6Al-4V", "Ti64", "Grade 5" = el titanio más habitual en mecanizado de precisión
+- "Titanio" sin grado → **SIEMPRE preguntar** (CP vs 6-4 cambia precio ×2 y maquinabilidad ×1.5)
+- Densidad: 4.43 g/cm³ (aprox. la mitad del acero → piezas ligeras pero caras)
+
+---
+
 ## Plásticos técnicos
+
+⚠️ **PEEK y PTFE**: verificar disponibilidad en barra/placa del tamaño requerido — el mínimo de compra puede dominar el coste en piezas pequeñas.
 
 | Designación | Nombre comercial | Precio bruto €/kg | Factor maquinab. | Aplicación |
 |-------------|-----------------|-------------------|-----------------|------------|
@@ -108,9 +137,16 @@ Equivalencias entre designaciones europeas (EN), españolas (UNE F-), americanas
 | **POM-H** | Ertacetal H | 4.00–5.50 | 3.2 | Mayor dureza que POM-C |
 | **PA6 / PA66** | Nylon | 2.80–4.00 | 2.8 | Engranajes, casquillos |
 | **PA6 GF30** | Nylon cargado vidrio | 3.50–5.00 | 2.0 | Piezas estructurales |
-| **PEEK** | PEEK | 80.00–150.00 | 1.8 | Aero, alta temperatura — precio muy elevado |
-| **PTFE** | Teflón | 10.00–18.00 | 4.0 | Antifricción, química |
+| **PEEK** | Ketron, Vestakeep | 80.00–150.00 | 1.8 | Aero, alta temperatura (+250°C continuo), alimentaria — precio muy elevado |
+| **PEEK GF30** | PEEK cargado vidrio | 100.00–180.00 | 1.4 | PEEK reforzado — mayor rigidez, menor impacto |
+| **PTFE** | Teflón | 10.00–18.00 | 4.0 | Antifricción, química agresiva, alimentaria — no adhesivo |
+| **UHMW-PE** | Tivar, Polystone | 2.50–4.50 | 4.5 | Guías, deslizadores, desgaste — muy buena relación calidad-precio |
 | **PVC** | PVC rígido | 1.80–2.80 | 3.5 | Tubería, química |
+
+**Nomenclatura habitual:**
+- "PEEK" sin más = PEEK natural (beige/marrón). Con "CF" = cargado carbono; con "GF" = cargado vidrio
+- "UHMW" o "UHMWPE" = polietileno de ultra-alto peso molecular — confundido a veces con HDPE (mucho más blando)
+- "Teflón" = PTFE siempre (marca Chemours, pero uso genérico)
 
 ---
 
@@ -119,20 +155,51 @@ Equivalencias entre designaciones europeas (EN), españolas (UNE F-), americanas
 | Material | Densidad g/cm³ |
 |----------|----------------|
 | Acero al carbono (todos) | 7.85 |
-| Acero inoxidable 304/316 | 8.00 |
-| Acero inoxidable ferrítico 430 | 7.74 |
+| Acero inoxidable 304/316/303 | 8.00 |
+| Acero inoxidable 17-4PH | 7.78 |
+| Acero inoxidable Duplex 2205 | 7.80 |
+| Acero inoxidable ferrítico 430/416 | 7.74 |
 | Aluminio (todos) | 2.70 |
 | Cobre electrolítico | 8.90 |
 | Latón (CuZn37/39) | 8.50 |
 | Bronce estaño | 8.80 |
 | Bronce aluminio | 7.60 |
-| Titanio grade 5 | 4.43 |
+| Titanio grade 2 (CP) | 4.51 |
+| Titanio grade 5 (Ti-6Al-4V) | 4.43 |
 | POM-C / POM-H | 1.41 |
 | PA6 | 1.14 |
 | PA66 | 1.14 |
 | PEEK | 1.32 |
 | PTFE | 2.20 |
+| UHMW-PE | 0.93 |
 | PVC | 1.40 |
+
+---
+
+## Tabla de equivalencias rápida — Designaciones en planos internacionales
+
+Cuando el plano llega de un cliente alemán, francés, americano o con norma antigua española, usar esta tabla para identificar el material:
+
+| Material común | EN (europeo) | AISI/SAE (USA) | DIN (alemán) | AFNOR (francés) | UNE F- (España) |
+|----------------|-------------|----------------|-------------|-----------------|-----------------|
+| Acero C45 | C45E (1.1191) | 1045 | Ck45 | XC48 | F-114 |
+| Acero 42CrMo4 | 42CrMo4 (1.7225) | 4140 | 42CrMo4 | 42CD4 | F-1252 |
+| Inox 304 | X5CrNi18-10 (1.4301) | 304 | X5CrNi18-10 | Z6CN18-09 | F-3504 |
+| Inox 316L | X2CrNiMo17-12-2 (1.4404) | 316L | X2CrNiMo17-12-2 | Z2CND17-12 | F-3533 |
+| Inox 303 | X10CrNiS18-9 (1.4305) | 303 | X10CrNiS18-9 | Z10CNF18-09 | F-3508 |
+| Inox 416 | X12CrNiS17-2 (1.4104) | 416 | X12CrS17 | Z11CF17 | — |
+| Duplex 2205 | X2CrNiMoN22-5-3 (1.4462) | 2205 / S31803 | X2CrNiMoN22-5-3 | Z2CND22-05Az | — |
+| 17-4PH | X5CrNiCuNb16-4 (1.4542) | 630 / 17-4PH | X5CrNiCuNb17-4 | Z7CNU17-04 | — |
+| Aluminio 6082 | EN AW-6082 (Al Si1MgMn) | 6082 | AlMgSi1 | A-GSU | L-3453 |
+| Aluminio 7075-T6 | EN AW-7075 (Al Zn5.5MgCu) | 7075 | AlZnMgCu1.5 | A-Z5GU | L-3710 |
+| Aluminio 2024-T3 | EN AW-2024 (Al Cu4Mg1) | 2024 | AlCuMg2 | A-U4G1 | L-3145 |
+| Titanio 6-4 | Ti-6Al-4V (Grade 5) | UNS R56400 | TiAl6V4 | TA6V | — |
+
+**Cómo usar esta tabla:**
+- Si el plano dice "Ck45" (alemán) → equivale a C45 / F-114 → precio acero al carbono ~0.85–1.20 €/kg
+- Si dice "42CD4" (francés) → equivale a 42CrMo4 / AISI 4140 → precio ~1.40–1.90 €/kg
+- Si dice "Z6CN18-09" (francés) → es Inox 304 → precio ~2.80–3.50 €/kg
+- Si la designación no aparece aquí → buscar por número EN (1.xxxx) o preguntar al cliente
 
 ---
 

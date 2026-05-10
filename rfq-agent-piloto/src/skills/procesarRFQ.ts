@@ -50,9 +50,24 @@ REGLAS PARA PDF MULTIPAGINA Y VARIOS PLANOS:
 - Usa "trazabilidad_confianza" para explicar brevemente por que asignas esa pieza a ese archivo/pagina.
 - Si no puedes separar piezas con seguridad, manten requires_human_review=true y anade un blocking_reason concreto.
 
+REGLA UNREADABLE — PLANO ILEGIBLE O DE BAJA CALIDAD:
+- Si una imagen o pagina PDF esta completamente ilegible (borrosa, muy oscura, corrompida, resolucion insuficiente para leer cotas o cajetin) → marca esa pieza con flag "PLANO_ILEGIBLE", pon requires_human_review=true, confidence_score<0.2, y anade blocking_reason="Plano ilegible: [motivo especifico]".
+- NO inventes cotas, materiales ni tolerancias cuando el plano no es legible. Deja los campos vacios y pon cajetin_texto="ILEGIBLE: [motivo]".
+- Si el plano es PARCIALMENTE legible, extrae lo que puedas y precede cada valor dudoso con "?" (ej: "?C45", "?ISO 2768-m"). Anade flag "LECTURA_PARCIAL".
+
+DETECCION MULTI-IDIOMA EN CAJETINES:
+- Los planos pueden venir en ES, EN, DE, FR o PT. Detecta el idioma del cajetin automaticamente y extrae el valor independientemente de la etiqueta.
+- Equivalencias de campos por idioma:
+  ES: Material / Denominacion / Escala / Revision / N° Plano / Peso / Cantidad
+  EN: Material / Title / Scale / Revision / Drawing No. / Weight / Qty
+  DE: Werkstoff / Benennung / Massstab / Anderung / Zeichnungsnr. / Gewicht / Anzahl
+  FR: Matiere / Designation / Echelle / Indice / N° Plan / Masse / Quantite
+  PT: Material / Denominacao / Escala / Revisao / N° Desenho / Peso / Quantidade
+- Si el cajetin esta en otro idioma no listado, aplica el mismo razonamiento semantico.
+
 METODO DE EXTRACCION EXHAUSTIVA OBLIGATORIO:
 - Trabaja como estimador mecanico. Antes de declarar "No especificado", revisa de forma explicita: cajetin/title block, tabla de revisiones, notas generales, tabla de materiales/listado de piezas, vistas/cortes/detalles, llamadas de mecanizado y el email.
-- El material suele estar en cajetin, notas, tabla de lista de piezas o email. Busca variantes como "Material", "Mat.", "MATERIAL:", "Acero", "F-114", "F114", "AISI", "Al", "6082", "7075", "Inox", "1.4301", "C45", "S275". Si aparece en cualquier zona, extraelo y explica la fuente.
+- El material suele estar en cajetin, notas, tabla de lista de piezas o email. Busca variantes como "Material", "Mat.", "MATERIAL:", "Werkstoff:", "Matiere:", "Acero", "F-114", "F114", "AISI", "Al", "6082", "7075", "Inox", "1.4301", "C45", "S275", "Ti-6Al-4V", "Grade 5", "PEEK", "PTFE". Si aparece en cualquier zona, extraelo y explica la fuente.
 - Para cada pieza, rellena "cajetin_texto" con los textos legibles clave del cajetin aunque sean parciales: denominacion, material, revision, escala, peso, numero de plano.
 - Para cada campo critico rellena su fuente: material_fuente, cantidad_fuente, dimensiones_fuente, tolerancias_fuente, acabado_fuente, revision_fuente. Ejemplo: "cajetin inferior derecho pagina 3", "nota general pagina 1", "email del cliente".
 - Extrae tambien: revision_plano, escala, tratamientos, recubrimientos, roscas, agujeros, ajustes, chaflanes_radios, rugosidades y notas_plano.
