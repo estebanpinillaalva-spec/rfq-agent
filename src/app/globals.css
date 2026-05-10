@@ -43,6 +43,15 @@ select {
   font: inherit;
 }
 
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--workshop) !important;
+  box-shadow: 0 0 0 3px rgba(180, 90, 40, 0.12);
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -76,6 +85,12 @@ main > div {
   animation: fade-up 200ms ease both;
 }
 
+/* Stagger grid children for a premium cascade effect */
+.grid > *:nth-child(1) { animation: fade-up 220ms ease both; animation-delay: 0ms; }
+.grid > *:nth-child(2) { animation: fade-up 220ms ease both; animation-delay: 40ms; }
+.grid > *:nth-child(3) { animation: fade-up 220ms ease both; animation-delay: 80ms; }
+.grid > *:nth-child(4) { animation: fade-up 220ms ease both; animation-delay: 120ms; }
+
 /* ─── App shell ───────────────────────────────────────────────── */
 
 .app-shell {
@@ -102,25 +117,23 @@ main > div {
   gap: 0.6rem;
   border-radius: 0.4rem;
   padding: 0.65rem 0.85rem;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--steel);
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.nav-item:hover {
+  background: rgba(180, 90, 40, 0.07);
   color: var(--ink);
-  transition: background 120ms ease, color 120ms ease;
 }
 
-.nav-item:hover,
 .nav-item-active {
-  background: #f8e7d8;
+  background: rgba(180, 90, 40, 0.10);
   color: var(--workshop-dark);
-}
-
-.nav-item-active {
-  border-left: 2px solid var(--workshop);
-  padding-left: calc(0.85rem - 2px);
-}
-
-.nav-dot {
-  display: none;
+  border-left: 3px solid var(--workshop);
+  padding-left: calc(0.85rem - 3px);
+  font-weight: 700;
 }
 
 /* ─── Cards ───────────────────────────────────────────────────── */
@@ -129,7 +142,12 @@ main > div {
   border: 1px solid rgba(222, 214, 202, 0.95);
   background: rgba(255, 253, 248, 0.9);
   box-shadow: 0 18px 45px rgba(45, 42, 36, 0.08);
-  transition: box-shadow 150ms ease, transform 150ms ease;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.surface-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 56px rgba(45, 42, 36, 0.13);
 }
 
 /* ─── Buttons ─────────────────────────────────────────────────── */
@@ -138,23 +156,39 @@ main > div {
   border: 1px solid var(--workshop);
   background: var(--workshop);
   color: white;
-  transition: background 120ms ease, border-color 120ms ease;
+  transition: background 120ms ease, border-color 120ms ease, transform 100ms ease, box-shadow 120ms ease;
 }
 
 .btn-primary:hover {
   background: var(--workshop-dark);
   border-color: var(--workshop-dark);
+  box-shadow: 0 4px 14px rgba(180, 90, 40, 0.28);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(180, 90, 40, 0.28);
 }
 
 .btn-secondary {
   border: 1px solid var(--border);
   background: rgba(255, 253, 248, 0.92);
   color: var(--ink);
-  transition: border-color 120ms ease, background 120ms ease;
+  transition: border-color 120ms ease, background 120ms ease, transform 100ms ease;
 }
 
 .btn-secondary:hover {
   border-color: var(--workshop);
+  background: rgba(255, 253, 248, 1);
+}
+
+.btn-secondary:active {
+  transform: scale(0.97);
 }
 
 /* ─── Tables ──────────────────────────────────────────────────── */

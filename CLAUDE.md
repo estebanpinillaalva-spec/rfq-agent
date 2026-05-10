@@ -14,3 +14,10 @@ Reglas rapidas:
 - Tras cambios de UI, ejecutar checks y QA visual segun `AGENTS.md`.
 
 Si algun documento de `docs/` contradice `AGENTS.md`, tratelo como historico y actualicelo antes de implementar.
+
+## Coordinacion con Codex
+
+- Leer `.planning/WORKING.md` antes de editar cualquier archivo
+- Escribir tu nombre + archivos bloqueados al empezar, borrar al terminar
+- Division de areas en ese mismo archivo
+- En caso de conflicto de areas: preguntar al usuario antes de proceder

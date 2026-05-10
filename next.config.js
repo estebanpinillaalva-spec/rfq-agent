@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Necesario para Puppeteer en Vercel
   experimental: {
     serverComponentsExternalPackages: ['puppeteer'],
+  },
+  async redirects() {
+    return [{ source: '/', destination: '/dashboard', permanent: false }]
   },
 }
 

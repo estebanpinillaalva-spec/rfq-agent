@@ -242,6 +242,15 @@ export async function updatePipelineRow(index: number, patch: PipelineRow): Prom
   await writeFile(pipelinePath, `${csv}\n`, 'utf8')
 }
 
+export async function appendPipelineRow(row: PipelineRow): Promise<void> {
+  const { headers, rows } = await readPipeline()
+  rows.push(row)
+  const csv = [headers, ...rows.map((r) => headers.map((h) => r[h] ?? ''))]
+    .map((record) => record.map(escapeCsv).join(','))
+    .join('\n')
+  await writeFile(pipelinePath, `${csv}\n`, 'utf8')
+}
+
 export function safeSalidaDir(id: string): string {
   const clean = basename(id)
   const dir = resolve(salidasRoot, clean)

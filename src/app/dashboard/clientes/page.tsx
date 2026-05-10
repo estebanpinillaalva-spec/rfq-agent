@@ -28,6 +28,10 @@ function formatDate(iso: string): string {
   return new Intl.DateTimeFormat('es-ES', { dateStyle: 'short' }).format(new Date(iso))
 }
 
+function formatDateShort(iso: string): string {
+  return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' }).format(new Date(iso))
+}
+
 export default async function ClientesPage() {
   const rfqs = await listRfqs()
 
@@ -77,40 +81,48 @@ export default async function ClientesPage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {clientes.map((cliente) => (
-              <div key={cliente.slug} className="surface-card rounded-lg p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h2 className="break-words font-black text-ink">{cliente.empresa}</h2>
-                    <p className="mt-1 text-xs text-steel">Última actividad: {cliente.ultimaActividadLabel}</p>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <div className="text-lg font-black text-ink">{cliente.rfqCount}</div>
-                    <div className="text-xs text-steel">RFQ{cliente.rfqCount !== 1 ? 's' : ''}</div>
+              <div key={cliente.slug} className="surface-card rounded-lg overflow-hidden flex flex-col">
+                {/* Header */}
+                <div className="p-4 border-b border-[var(--border)]">
+                  <h2 className="truncate font-black text-ink text-base" title={cliente.empresa}>
+                    {cliente.empresa}
+                  </h2>
+                  <div className="mt-2 flex items-center gap-2 flex-wrap">
+                    <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[11px] font-bold text-ink">
+                      {cliente.rfqCount} RFQ{cliente.rfqCount !== 1 ? 's' : ''}
+                    </span>
+                    {cliente.valorTotal > 0 && (
+                      <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-2 py-0.5 text-[11px] font-bold text-[var(--ok)]">
+                        {formatMoney(cliente.valorTotal)}
+                      </span>
+                    )}
+                    <span className="text-[11px] text-steel ml-auto">{cliente.ultimaActividadLabel}</span>
                   </div>
                 </div>
 
-                {cliente.valorTotal > 0 && (
-                  <div className="mt-3 rounded-md bg-[var(--surface-2)] border border-[var(--border)] px-3 py-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-steel">Valor total cotizado</span>
-                    <div className="mt-0.5 font-black text-ink">{formatMoney(cliente.valorTotal)}</div>
-                  </div>
-                )}
-
-                <div className="mt-4 grid gap-2">
+                {/* Lista de RFQs */}
+                <div className="flex flex-col divide-y divide-[var(--border)]">
                   {cliente.rfqs.slice(0, 3).map((rfq) => (
                     <Link
                       key={rfq.id}
                       href={`/dashboard/rfqs/${rfq.id}`}
-                      className="flex items-center justify-between gap-3 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs hover:border-workshop transition-colors"
+                      className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-[var(--surface-2)] transition-colors"
                     >
-                      <span className="min-w-0 truncate font-mono font-bold text-ink">{rfq.refInterna}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-xs font-semibold text-ink">
+                          {rfq.emailSubject || rfq.cliente || rfq.emailFrom || rfq.id}
+                        </div>
+                        <div className="text-[10px] text-steel mt-0.5">{formatDateShort(rfq.createdAt)}</div>
+                      </div>
                       <span className="shrink-0">
                         <StatusBadge status={rfq.status} />
                       </span>
                     </Link>
                   ))}
                   {cliente.rfqs.length > 3 && (
-                    <p className="text-xs font-bold text-steel">+{cliente.rfqs.length - 3} más</p>
+                    <div className="px-4 py-2 text-[11px] text-steel">
+                      +{cliente.rfqs.length - 3} más
+                    </div>
                   )}
                 </div>
               </div>
