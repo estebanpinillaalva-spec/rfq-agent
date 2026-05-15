@@ -11,15 +11,7 @@ async function main(): Promise<void> {
   const salidaDir = resolve(salidaArg)
   const apiKey = requireEnv('RESEND_API_KEY')
   const from = requireEnv('RESEND_FROM')
-  const testTo = requireEnv('TEST_EMAIL_TO')
-  const rawRecipient = process.argv[3]
-  const extracted = extractEmail(rawRecipient)
-  const to = extracted || testTo
-  const isRealRecipient = extracted.length > 0
-
-  console.log(`[DEBUG] rawRecipient="${rawRecipient}" extracted="${extracted}" to="${to}"`)
-  console.log(`[DEBUG] from="${from}"`)
-  console.log(`[DEBUG] isRealRecipient=${isRealRecipient}`)
+  const to = requireEnv('TEST_EMAIL_TO')
 
   const emailBody = await readFile(join(salidaDir, 'email-respuesta.md'), 'utf8')
   const pdf = await readFile(join(salidaDir, 'presupuesto.pdf'))
@@ -41,18 +33,11 @@ async function main(): Promise<void> {
   })
 
   if (result.error) {
-    throw new Error(`Resend rechazo el envio (to=${to}, from=${from}): ${result.error.message} | code=${JSON.stringify(result.error)}`)
+    throw new Error(`Resend rechazo el envio: ${result.error.message}`)
   }
 
-  const label = isRealRecipient ? '(destinatario real)' : '(TEST_EMAIL_TO fallback)'
-  console.log(`Email enviado a: ${maskEmail(to)} ${label}`)
+  console.log(`Email enviado a: ${maskEmail(to)}`)
   console.log(`ID Resend: ${result.data?.id ?? 'no disponible'}`)
-}
-
-function extractEmail(raw?: string): string {
-  if (!raw) return ''
-  const match = raw.match(/<([^>]+)>/) ?? raw.match(/([^\s]+@[^\s]+)/)
-  return match?.[1]?.trim() ?? ''
 }
 
 function maskEmail(email: string): string {
