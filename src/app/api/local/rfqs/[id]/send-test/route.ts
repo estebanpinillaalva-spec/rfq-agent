@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server'
 import { spawnSync } from 'child_process'
 import { safeSalidaDir, pilotRoot } from '@/lib/local-store'
 
-export async function POST(_request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
     safeSalidaDir(params.id)
-    const result = spawnSync(process.execPath, ['-r', 'ts-node/register', 'src/scripts/sendTestEmail.ts', `salidas/${params.id}`], {
+    const body = await request.json().catch(() => ({})) as { recipientEmail?: string }
+    const recipientEmail = typeof body.recipientEmail === 'string' ? body.recipientEmail : ''
+    const result = spawnSync(process.execPath, ['-r', 'ts-node/register', 'src/scripts/sendTestEmail.ts', `salidas/${params.id}`, recipientEmail], {
       cwd: pilotRoot,
       encoding: 'utf8',
       env: { ...process.env },

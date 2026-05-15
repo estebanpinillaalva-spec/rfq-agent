@@ -12,6 +12,9 @@ async function main(): Promise<void> {
   const apiKey = requireEnv('RESEND_API_KEY')
   const from = requireEnv('RESEND_FROM')
   const testTo = requireEnv('TEST_EMAIL_TO')
+  const rawRecipient = process.argv[3]
+  const to = extractEmail(rawRecipient) || testTo
+  const isRealRecipient = to !== testTo
 
   const emailBody = await readFile(join(salidaDir, 'email-respuesta.md'), 'utf8')
   const pdf = await readFile(join(salidaDir, 'presupuesto.pdf'))
@@ -21,7 +24,7 @@ async function main(): Promise<void> {
   const resend = new Resend(apiKey)
   const result = await resend.emails.send({
     from,
-    to: testTo,
+    to,
     subject,
     text: emailBody,
     attachments: [
@@ -36,8 +39,15 @@ async function main(): Promise<void> {
     throw new Error(`Resend rechazo el envio: ${result.error.message}`)
   }
 
-  console.log(`Email de prueba enviado solo a TEST_EMAIL_TO: ${maskEmail(testTo)}`)
+  const label = isRealRecipient ? '(destinatario real)' : '(TEST_EMAIL_TO fallback)'
+  console.log(`Email enviado a: ${maskEmail(to)} ${label}`)
   console.log(`ID Resend: ${result.data?.id ?? 'no disponible'}`)
+}
+
+function extractEmail(raw?: string): string {
+  if (!raw) return ''
+  const match = raw.match(/<([^>]+)>/) ?? raw.match(/([^\s]+@[^\s]+)/)
+  return match?.[1]?.trim() ?? ''
 }
 
 function maskEmail(email: string): string {

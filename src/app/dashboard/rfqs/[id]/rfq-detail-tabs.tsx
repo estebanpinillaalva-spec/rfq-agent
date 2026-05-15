@@ -20,6 +20,7 @@ interface RfqDetailTabsProps {
   id: string
   hasPdf: boolean
   hasEmail: boolean
+  emailFrom: string
   planos: LocalPlano[]
   extracciones: PlanoExtractionSummary[]
   completitud: CompletenessCheck[]
@@ -72,7 +73,7 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
           </div>
           <aside className="grid content-start gap-5">
             <CompletenessPanel checks={props.completitud} compact />
-            <SafeActions id={props.id} disabled={!props.hasPdf || !props.hasEmail} />
+            <SafeActions id={props.id} disabled={!props.hasPdf || !props.hasEmail} emailFrom={props.emailFrom} />
           </aside>
         </div>
       )}
@@ -599,12 +600,12 @@ function CompletenessPanel({ checks, compact = false }: { checks: CompletenessCh
   )
 }
 
-function SafeActions({ id, disabled }: { id: string; disabled: boolean }) {
+function SafeActions({ id, disabled, emailFrom }: { id: string; disabled: boolean; emailFrom: string }) {
   return (
     <div className="surface-card rounded-lg p-5">
-      <h2 className="text-lg font-black">Acciones seguras</h2>
-      <p className="mt-2 text-sm leading-6 text-steel">El envio esta limitado por codigo a TEST_EMAIL_TO. No manda a clientes finales.</p>
-      <SendTestButton id={id} disabled={disabled} />
+      <h2 className="text-lg font-black">Enviar presupuesto</h2>
+      <p className="mt-2 text-sm leading-6 text-steel">Envía el PDF de presupuesto por email al remitente original del RFQ.</p>
+      <SendTestButton id={id} disabled={disabled} recipientEmail={emailFrom} />
     </div>
   )
 }

@@ -45,6 +45,7 @@ export default async function RfqDetailPage({ params }: { params: { id: string }
         id={rfq.id}
         hasPdf={rfq.hasPdf}
         hasEmail={rfq.hasEmail}
+        emailFrom={rfq.emailFrom}
         planos={rfq.planos}
         extracciones={rfq.extracciones}
         completitud={rfq.completitud}
