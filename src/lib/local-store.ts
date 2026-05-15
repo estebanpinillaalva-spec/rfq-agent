@@ -305,7 +305,9 @@ async function readRfqSummary(id: string): Promise<LocalRfqSummary | null> {
   const analisis = asRecord(combined?.analisis)
   const presupuesto = asRecord(combined?.presupuesto)
   const cliente = asRecord(analisis?.cliente)
-  const emailFrom = extractEmailValue(sourceEmailText, 'De')
+  const emailFromRaw = extractEmailValue(sourceEmailText, 'De')
+  const clienteEmailFallback = typeof cliente?.email === 'string' ? cliente.email : ''
+  const emailFrom = emailFromRaw || clienteEmailFallback
   const emailSubject = extractEmailValue(sourceEmailText, 'Asunto')
   const emailDate = extractEmailValue(sourceEmailText, 'Fecha')
 

@@ -13,8 +13,13 @@ async function main(): Promise<void> {
   const from = requireEnv('RESEND_FROM')
   const testTo = requireEnv('TEST_EMAIL_TO')
   const rawRecipient = process.argv[3]
-  const to = extractEmail(rawRecipient) || testTo
-  const isRealRecipient = to !== testTo
+  const extracted = extractEmail(rawRecipient)
+  const to = extracted || testTo
+  const isRealRecipient = extracted.length > 0
+
+  console.log(`[DEBUG] rawRecipient="${rawRecipient}" extracted="${extracted}" to="${to}"`)
+  console.log(`[DEBUG] from="${from}"`)
+  console.log(`[DEBUG] isRealRecipient=${isRealRecipient}`)
 
   const emailBody = await readFile(join(salidaDir, 'email-respuesta.md'), 'utf8')
   const pdf = await readFile(join(salidaDir, 'presupuesto.pdf'))
@@ -36,7 +41,7 @@ async function main(): Promise<void> {
   })
 
   if (result.error) {
-    throw new Error(`Resend rechazo el envio: ${result.error.message}`)
+    throw new Error(`Resend rechazo el envio (to=${to}, from=${from}): ${result.error.message} | code=${JSON.stringify(result.error)}`)
   }
 
   const label = isRealRecipient ? '(destinatario real)' : '(TEST_EMAIL_TO fallback)'
