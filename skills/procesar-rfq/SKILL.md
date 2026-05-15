@@ -80,6 +80,12 @@ Para cada plano, extrae las 7 dimensiones de análisis:
 
 **C. Dimensiones**: generales (largo×ancho×alto o ø×longitud) tomadas de las vistas principales. Incluye cotas de agujeros, profundidades y geometrías interiores si son relevantes para el mecanizado.
 
+**REGLA DE UNIDADES (obligatoria):** Toda cota numérica DEBE ir acompañada de su unidad.
+- Si el plano indica unidades en el cajetín o notas → úsalas.
+- Si el plano no indica unidades → asume mm, documéntalo en flags como "Unidades asumidas: mm (no especificadas en plano)".
+- NUNCA escribas solo el número. Incorrecto: `"25"`. Correcto: `"25 mm"`.
+- Si detectas mezcla de unidades (cotas métricas + cotas en pulgadas) → añade flag `UNIDADES_MIXTAS` y blocking_reason explicando la inconsistencia.
+
 **D. Tolerancias**: 
 - Tolerancia general (ISO 2768 clase m/f/c/v o equivalente DIN/ASME)
 - Tolerancias específicas cota a cota (H7, k6, f7, etc. o ±0.0x mm)
@@ -128,7 +134,7 @@ Indica:
 
 **Subcontrataciones necesarias**: tratamientos térmicos, recubrimientos, operaciones que el taller no realice in-house (verificar contra `config-taller.md` si está disponible).
 
-**Tiempo estimado por pieza**: rangos en minutos, sin valor monetario.
+**Tiempo estimado por pieza**: en minutos, sin valor monetario. Usa la TABLA DE TIEMPOS como referencia obligatoria. Si tu estimación supera el 100% del rango de la tabla, justifícalo en flags con el motivo específico.
 
 ### Paso 6 — Borrador de respuesta al cliente
 
@@ -188,3 +194,4 @@ Antes de devolver el análisis, verifica:
 - `references/tabla-operaciones.md` — Lista completa de operaciones de fabricación con nomenclatura
 - `references/tabla-materiales.md` — Designaciones normalizadas de materiales y equivalencias
 - `references/tabla-gdt.md` — Símbolos GD&T y su significado
+- `references/tabla-tiempos.md` — Rangos de tiempo estimado por operación y complejidad (referencia OBLIGATORIA)

@@ -1,6 +1,7 @@
 import type { AiClient } from '../llm/aiClient'
 import { analisisRFQSchema, type AnalisisRFQ, type LlmResult, type PlanoEntrada, type ValidacionPlano } from '../types'
 import { parseJsonDefensivo, RETRY_JSON_SUFFIX } from '../utils/json'
+import { buscarMaterial, cargarBibliotecaMateriales } from '../utils/materiales'
 import { normalize } from '../utils/normalize'
 import { cargarPromptSkill, cargarReferencia } from '../utils/prompts'
 import { mockAnalisis, mockUsage } from './mock'
@@ -23,11 +24,13 @@ export async function procesarRFQ(
   const tablaOperaciones = cargarReferencia('procesar-rfq', 'tabla-operaciones.md')
   const tablaMateriales = cargarReferencia('procesar-rfq', 'tabla-materiales.md')
   const tablaGdt = cargarReferencia('procesar-rfq', 'tabla-gdt.md')
+  const tablaTiempos = cargarReferencia('procesar-rfq', 'tabla-tiempos.md')
 
   const referenciasSufijo = [
     tablaOperaciones ? `\n\n---\nREFERENCIA — TABLA DE OPERACIONES:\n${tablaOperaciones}` : '',
     tablaMateriales ? `\n\n---\nREFERENCIA — TABLA DE MATERIALES:\n${tablaMateriales}` : '',
     tablaGdt ? `\n\n---\nREFERENCIA — TABLA GD&T:\n${tablaGdt}` : '',
+    tablaTiempos ? `\n\n---\nREFERENCIA — TIEMPOS ESTIMADOS (OBLIGATORIO):\n${tablaTiempos}` : '',
   ].join('')
 
   const prompt = `${cargarPromptSkill('procesar-rfq')}${referenciasSufijo}
@@ -140,7 +143,7 @@ Devuelve SOLO JSON valido que cumpla este contrato:
     const retryResponse = await ai.visionJson(prompt + RETRY_JSON_SUFFIX, planos)
     parsed = parseJsonDefensivo(retryResponse.raw, analisisRFQSchema, 'procesarRFQ') as AnalisisRFQ
   }
-  const data = normalizarAnalisis(parsed)
+  const data = validarMateriales(normalizarAnalisis(parsed))
   return { ...response, data }
 }
 
@@ -201,5 +204,34 @@ function limpiarCampoNoEncontrado(campos: string[], campoARetirar: string): stri
   return campos
     .flatMap((campo) => campo.split(',').map((item) => item.trim()))
     .filter((campo) => campo && normalize(campo) !== normalize(campoARetirar))
+}
+
+function validarMateriales(analisis: AnalisisRFQ): AnalisisRFQ {
+  const biblioteca = cargarBibliotecaMateriales()
+  return {
+    ...analisis,
+    piezas: analisis.piezas.map((pieza) => {
+      const materialTexto = pieza.material.trim()
+      if (!materialTexto || /no especificado|sin fuente|no aplica/i.test(materialTexto)) return pieza
+
+      const encontrado = buscarMaterial(materialTexto, biblioteca)
+      if (encontrado) {
+        return {
+          ...pieza,
+          flags: [
+            ...pieza.flags.filter((f) => !f.startsWith('Material verificado:')),
+            `Material verificado en BD: ${encontrado.nombre} (${encontrado.id})`,
+          ],
+        }
+      }
+
+      // Material devuelto por Gemini no está en la base de datos local
+      return {
+        ...pieza,
+        requires_human_review: true,
+        flags: [...pieza.flags, `MATERIAL_NO_VERIFICADO_EN_BD: "${materialTexto}" — confirmar designacion normalizada`],
+      }
+    }),
+  }
 }
 

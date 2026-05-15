@@ -48,7 +48,7 @@ class GeminiClient implements AiClient {
 
   async visionJson(prompt: string, planos: PlanoEntrada[]): Promise<LlmResult<string>> {
     const start = Date.now()
-    const model = this.client.getGenerativeModel({ model: this.modelName })
+    const model = this.client.getGenerativeModel({ model: this.modelName, generationConfig: { temperature: 0.2 } })
     const fuentesPrincipales = planos.filter((plano) => plano.esFuentePrincipal)
     const contextoCad = planos
       .filter((plano) => !plano.esFuentePrincipal)
@@ -71,7 +71,7 @@ class GeminiClient implements AiClient {
 
   async textJson(prompt: string): Promise<LlmResult<string>> {
     const start = Date.now()
-    const model = this.client.getGenerativeModel({ model: this.modelName })
+    const model = this.client.getGenerativeModel({ model: this.modelName, generationConfig: { temperature: 0.2 } })
     const result = await withRetry(() => withTimeout(model.generateContent(prompt), 120000), 'Gemini text')
     const text = result.response.text()
     return {

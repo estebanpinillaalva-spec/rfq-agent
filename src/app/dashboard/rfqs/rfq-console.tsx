@@ -6,11 +6,16 @@ import type { LocalRfqSummary } from '@/lib/local-store'
 import { EmptyState, StatusBadge, formatMoney } from '@/components/ui'
 
 type DateFilter = 'all' | 'today' | 'week' | 'month'
+type StatusFilter = 'all' | 'PROCESANDO' | 'COMPLETADO' | 'REVISAR' | 'ERROR_RECUPERABLE' | 'BLOQUEADO_CON_MOTIVO'
+type ScoreFilter = 'all' | 'high' | 'medium' | 'low' | 'none'
 
 function matchesSearch(rfq: LocalRfqSummary, q: string): boolean {
   if (!q) return true
   const haystack = [rfq.emailSubject, rfq.cliente, rfq.refInterna, rfq.emailFrom].join(' ').toLowerCase()
-  return q.toLowerCase().split(' ').every((term) => haystack.includes(term))
+  const normalized = q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  return normalized.split(/\s+/).filter(Boolean).every((term) =>
+    haystack.normalize('NFD').replace(/[̀-ͯ]/g, '').includes(term)
+  )
 }
 
 function matchesDate(rfq: LocalRfqSummary, filter: DateFilter): boolean {
@@ -24,6 +29,21 @@ function matchesDate(rfq: LocalRfqSummary, filter: DateFilter): boolean {
   return true
 }
 
+function matchesStatus(rfq: LocalRfqSummary, filter: StatusFilter): boolean {
+  if (filter === 'all') return true
+  return rfq.status === filter
+}
+
+function matchesScore(rfq: LocalRfqSummary, filter: ScoreFilter): boolean {
+  if (filter === 'all') return true
+  if (filter === 'none') return rfq.qualityScore === null
+  if (rfq.qualityScore === null) return false
+  if (filter === 'high') return rfq.qualityScore >= 85
+  if (filter === 'medium') return rfq.qualityScore >= 70 && rfq.qualityScore < 85
+  if (filter === 'low') return rfq.qualityScore < 70
+  return true
+}
+
 export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) {
   const [rfqs, setRfqs] = useState(initialRfqs)
   const [inputPath, setInputPath] = useState('./ejemplos/rfq-simple')
@@ -32,10 +52,17 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
   const [log, setLog] = useState('')
   const [search, setSearch] = useState('')
   const [dateFilter, setDateFilter] = useState<DateFilter>('all')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+  const [scoreFilter, setScoreFilter] = useState<ScoreFilter>('all')
 
   const filtered = useMemo(
-    () => rfqs.filter((rfq) => matchesSearch(rfq, search) && matchesDate(rfq, dateFilter)),
-    [rfqs, search, dateFilter]
+    () => rfqs.filter((rfq) =>
+      matchesSearch(rfq, search) &&
+      matchesDate(rfq, dateFilter) &&
+      matchesStatus(rfq, statusFilter) &&
+      matchesScore(rfq, scoreFilter)
+    ),
+    [rfqs, search, dateFilter, statusFilter, scoreFilter]
   )
 
   const groups = useMemo(() => {
@@ -302,7 +329,8 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
 
       <section className="surface-card rounded-lg p-4">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-48">
+          {/* Búsqueda texto */}
+          <div className="relative min-w-48 flex-1">
             <input
               type="search"
               placeholder="Buscar por cliente, asunto, referencia…"
@@ -315,6 +343,8 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
+
+          {/* Filtro fecha */}
           <div className="flex gap-1">
             {(['all', 'today', 'week', 'month'] as DateFilter[]).map((f) => (
               <button
@@ -326,10 +356,46 @@ export function RfqConsole({ initialRfqs }: { initialRfqs: LocalRfqSummary[] }) 
               </button>
             ))}
           </div>
-          {(search || dateFilter !== 'all') && (
+
+          {/* Filtro estado */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+            className="rounded-md border px-2 py-1.5 text-xs font-bold"
+            style={{ borderColor: 'var(--border-strong)', background: 'var(--surface)', color: 'var(--ink)' }}
+          >
+            <option value="all">Todos los estados</option>
+            <option value="PROCESANDO">Procesando</option>
+            <option value="REVISAR">Revisar</option>
+            <option value="COMPLETADO">Completado</option>
+            <option value="ERROR_RECUPERABLE">Error</option>
+            <option value="BLOQUEADO_CON_MOTIVO">Bloqueado</option>
+          </select>
+
+          {/* Filtro score calidad */}
+          <select
+            value={scoreFilter}
+            onChange={(e) => setScoreFilter(e.target.value as ScoreFilter)}
+            className="rounded-md border px-2 py-1.5 text-xs font-bold"
+            style={{ borderColor: 'var(--border-strong)', background: 'var(--surface)', color: 'var(--ink)' }}
+          >
+            <option value="all">Cualquier score</option>
+            <option value="high">≥85 (Borrador)</option>
+            <option value="medium">70–84 (Aclarar)</option>
+            <option value="low">&lt;70 (Revisar)</option>
+            <option value="none">Sin quality gate</option>
+          </select>
+
+          {/* Contador y limpiar */}
+          {(search || dateFilter !== 'all' || statusFilter !== 'all' || scoreFilter !== 'all') && (
             <span className="text-xs text-steel">
               {filtered.length} de {rfqs.length} RFQs
-              <button onClick={() => { setSearch(''); setDateFilter('all') }} className="ml-2 underline hover:text-ink">Limpiar</button>
+              <button
+                onClick={() => { setSearch(''); setDateFilter('all'); setStatusFilter('all'); setScoreFilter('all') }}
+                className="ml-2 underline hover:text-ink"
+              >
+                Limpiar filtros
+              </button>
             </span>
           )}
         </div>

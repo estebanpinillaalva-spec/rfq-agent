@@ -17,14 +17,20 @@ const LABEL: Record<string, string> = {
 }
 
 const ESTADO_STYLE: Record<string, string> = {
-  nuevo:        'bg-blue-50 text-blue-700 border border-blue-200',
-  contactado:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
-  propuesta:    'bg-orange-50 text-orange-700 border border-orange-200',
-  'negociación':'bg-purple-50 text-purple-700 border border-purple-200',
-  negociacion:  'bg-purple-50 text-purple-700 border border-purple-200',
-  cerrado:      'bg-green-50 text-green-700 border border-green-200',
-  ganado:       'bg-green-50 text-green-700 border border-green-200',
-  descartado:   'bg-gray-100 text-gray-400 border border-gray-200',
+  nuevo:             'bg-blue-50 text-blue-700 border border-blue-200',
+  contactado:        'bg-yellow-50 text-yellow-700 border border-yellow-200',
+  propuesta:         'bg-orange-50 text-orange-700 border border-orange-200',
+  'negociación':     'bg-purple-50 text-purple-700 border border-purple-200',
+  negociacion:       'bg-purple-50 text-purple-700 border border-purple-200',
+  cerrado:           'bg-green-50 text-green-700 border border-green-200',
+  ganado:            'bg-green-50 text-green-700 border border-green-200',
+  descartado:        'bg-gray-100 text-gray-400 border border-gray-200',
+  'oferta borrador': 'bg-amber-50 text-amber-700 border border-amber-200',
+}
+
+function extractRfqId(observaciones: string | undefined): string | null {
+  const match = (observaciones ?? '').match(/\[RFQ:([^\]]+)\]/)
+  return match?.[1] ?? null
 }
 
 function estadoStyle(estado: string): string {
@@ -152,7 +158,7 @@ export function PipelineTable({
                             onChange={(e) => update(realIndex, header, e.target.value)}
                             className={`w-full rounded-full px-2.5 py-1 text-xs font-semibold cursor-pointer ${estadoStyle(row[header] ?? '')}`}
                           >
-                            {['nuevo', 'contactado', 'propuesta', 'negociación', 'cerrado', 'descartado', row[header] ?? '']
+                            {['nuevo', 'contactado', 'propuesta', 'negociación', 'cerrado', 'descartado', 'Oferta borrador', row[header] ?? '']
                               .filter((v, i, a) => v && a.indexOf(v) === i)
                               .map((v) => <option key={v} value={v}>{v}</option>)}
                           </select>
@@ -179,6 +185,7 @@ export function PipelineTable({
                     }
 
                     if (header === 'empresa') {
+                      const rfqId = extractRfqId(row.observaciones)
                       return (
                         <td key={header} className="p-2 align-top min-w-[140px]">
                           <textarea
@@ -187,6 +194,14 @@ export function PipelineTable({
                             value={row[header] ?? ''}
                             onChange={(e) => update(realIndex, header, e.target.value)}
                           />
+                          {rfqId && (
+                            <a
+                              href={`/dashboard/rfqs/${rfqId}`}
+                              className="mt-0.5 flex items-center gap-1 text-[10px] font-semibold text-[var(--workshop)] hover:opacity-75 transition-opacity"
+                            >
+                              Ver RFQ →
+                            </a>
+                          )}
                         </td>
                       )
                     }
