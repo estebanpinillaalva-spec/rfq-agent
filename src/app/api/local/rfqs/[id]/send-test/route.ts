@@ -49,10 +49,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
       windowsHide: true,
     })
 
+    const output = [result.stdout, result.stderr, result.error?.message].filter(Boolean).join('\n')
     return NextResponse.json(
       {
         ok: result.status === 0,
-        stdout: result.stdout,
+        stdout: output,
         stderr: result.stderr,
         error: result.error?.message,
       },
