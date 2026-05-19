@@ -61,6 +61,7 @@ export async function guardarSalida(params: {
     'utf8'
   )
   await writeFile(presupuestoPath, params.presupuesto.markdown, 'utf8')
+  await writeFile(join(directorio, 'config-taller.json'), JSON.stringify(params.config, null, 2), 'utf8')
   const html = buildPresupuestoHtml(params.presupuesto, params.analisis, params.config)
   await writeHtmlAndPdf(htmlPath, pdfPath, html)
   await writeFile(emailPath, buildEmailRespuesta(params.analisis, params.presupuesto, params.config), 'utf8')
@@ -161,7 +162,7 @@ export async function guardarError(params: { nombreCarpeta: string; error: strin
   return directorio
 }
 
-function buildEmailRespuesta(analisis: AnalisisRFQ, presupuesto: PresupuestoRFQ, config: ConfigTaller): string {
+export function buildEmailRespuesta(analisis: AnalisisRFQ, presupuesto: PresupuestoRFQ, config: ConfigTaller): string {
   return `Asunto: [${analisis.ref_interna}] Presupuesto BORRADOR para revision
 
 Hola ${analisis.cliente.contacto},

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { DocLink, formatMoney } from '@/components/ui'
 import type {
   CompletenessCheck,
@@ -159,12 +160,13 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
 }
 
 function EditableBudgetPanel({ id, lineas }: { id: string; lineas: LocalBudgetLine[] }) {
+  const router = useRouter()
   const [prices, setPrices] = useState<Record<number, string>>(() =>
     Object.fromEntries(lineas.map((l, i) => [i, String(l.pvp_unitario)]))
   )
   const [observaciones, setObservaciones] = useState('')
   const [saving, setSaving] = useState(false)
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'ok' | 'error'>('idle')
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'ok' | 'warn' | 'error'>('idle')
   const [saveMsg, setSaveMsg] = useState('')
 
   const IVA = 0.21
@@ -197,11 +199,18 @@ function EditableBudgetPanel({ id, lineas }: { id: string; lineas: LocalBudgetLi
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      const data = (await res.json()) as { ok?: boolean; total?: number; error?: string }
-      if (!res.ok || data.error) throw new Error(data.error ?? 'Error al guardar')
-      setSaveStatus('ok')
-      setSaveMsg(`Guardado. Total: ${formatMoney(data.total ?? total)}`)
+      const data = (await res.json()) as { ok?: boolean; total?: number; error?: string; regenError?: string }
+      if (!res.ok && data.regenError) {
+        setSaveStatus('warn')
+        setSaveMsg(`Cambios guardados pero PDF NO regenerado. Reprocesa el RFQ. Detalle: ${data.regenError}`)
+      } else if (!res.ok || data.error) {
+        throw new Error(data.error ?? 'Error al guardar')
+      } else {
+        setSaveStatus('ok')
+        setSaveMsg(`Guardado y PDF regenerado. Total: ${formatMoney(data.total ?? total)}`)
+      }
       setObservaciones('')
+      router.refresh()
     } catch (err) {
       setSaveStatus('error')
       setSaveMsg(err instanceof Error ? err.message : 'Error desconocido')
@@ -227,6 +236,7 @@ function EditableBudgetPanel({ id, lineas }: { id: string; lineas: LocalBudgetLi
           <p className="mt-1 text-sm leading-6 text-steel">Ajusta los precios antes de generar el PDF final. Los totales se recalculan en tiempo real.</p>
         </div>
         {saveStatus === 'ok' && <span className="rounded-md bg-[#dff0e8] px-3 py-1.5 text-xs font-black text-ok">{saveMsg}</span>}
+        {saveStatus === 'warn' && <span className="rounded-md bg-[#f8e7d8] px-3 py-1.5 text-xs font-black text-[#8a4a20]">{saveMsg}</span>}
         {saveStatus === 'error' && <span className="rounded-md bg-[#f7dfd8] px-3 py-1.5 text-xs font-black text-danger">{saveMsg}</span>}
       </div>
 

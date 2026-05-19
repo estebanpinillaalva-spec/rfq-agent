@@ -34,7 +34,7 @@ export async function crearRfqLocalDesdeEmail(event: EmailReceivedEvent): Promis
   await mkdir(inboxPath, { recursive: true })
 
   await writeFile(join(inboxPath, 'email.txt'), buildEmailText(email), 'utf8')
-  await copyDefaultConfig(inboxPath)
+  await copyDefaultConfig(inboxPath, email.to)
 
   const attachmentsResponse = await resend.emails.receiving.attachments.list({ emailId })
   const attachments = attachmentsResponse.data?.data ?? []
@@ -180,7 +180,20 @@ async function saveAttachmentById(
   return saveAttachment(inboxPath, attachmentResponse.data)
 }
 
-async function copyDefaultConfig(inboxPath: string): Promise<void> {
+async function copyDefaultConfig(inboxPath: string, toAddresses: string[] = []): Promise<void> {
+  // Buscar config por cliente: rfq-[cliente]@dominio → config/clientes/[cliente].json
+  const clientesDir = resolve(pilotRoot, 'config', 'clientes')
+  for (const address of toAddresses) {
+    const localPart = address.split('@')[0]?.toLowerCase() ?? ''
+    const clientKey = localPart.startsWith('rfq-') ? localPart.slice(4) : localPart
+    const clientConfig = resolve(clientesDir, `${clientKey}.json`)
+    const found = await access(clientConfig).then(() => true).catch(() => false)
+    if (found) {
+      await copyFile(clientConfig, join(inboxPath, 'config-taller.json'))
+      return
+    }
+  }
+  // Fallback: env var o config por defecto
   const configured = process.env.RFQ_INBOUND_CONFIG_PATH?.trim()
   const source = configured
     ? resolve(configured)

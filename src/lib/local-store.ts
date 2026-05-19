@@ -311,10 +311,17 @@ async function readRfqSummary(id: string): Promise<LocalRfqSummary | null> {
   const emailSubject = extractEmailValue(sourceEmailText, 'Asunto')
   const emailDate = extractEmailValue(sourceEmailText, 'Fecha')
 
-  const status: RfqStatus = error ? 'BLOQUEADO_CON_MOTIVO' : 'REVISAR'
   const createdAt = info.mtime.toISOString()
   const pdfPath = join(dir, 'presupuesto.pdf')
   const emailPath = join(dir, 'email-respuesta.md')
+  const hasPdf = await access(pdfPath).then(() => true).catch(() => false)
+  const hasEmail = await access(emailPath).then(() => true).catch(() => false)
+
+  const status: RfqStatus = error
+    ? 'BLOQUEADO_CON_MOTIVO'
+    : analysis && hasPdf && hasEmail
+      ? 'COMPLETADO'
+      : 'REVISAR'
 
   return {
     id,
@@ -338,8 +345,8 @@ async function readRfqSummary(id: string): Promise<LocalRfqSummary | null> {
     receivedAtLabel: formatDateTimeLabel(emailDate || createdAt),
     total: numberOrNull(presupuesto?.total),
     complejidad: stringOr(analisis?.complejidad_global, 'N/D'),
-    hasPdf: await access(pdfPath).then(() => true).catch(() => false),
-    hasEmail: await access(emailPath).then(() => true).catch(() => false),
+    hasPdf,
+    hasEmail,
     qualityScore: quality?.score_global ?? null,
     qualityVerdict: quality?.veredicto ?? null,
     qualityIssueCount: quality?.grupos.reduce((sum, group) => sum + group.total, 0) ?? 0,
