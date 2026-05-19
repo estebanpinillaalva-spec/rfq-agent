@@ -122,17 +122,20 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
       )}
 
       {active === 'presupuesto' && (
-        <div className="mt-5 surface-card rounded-lg p-5">
-          <div className="mb-4 flex flex-wrap gap-2">
-            {props.hasPdf && <DocLink href={`/api/local/rfqs/${props.id}/file?name=presupuesto.pdf`}>Abrir PDF</DocLink>}
-            <DocLink href={`/api/local/rfqs/${props.id}/file?name=analisis.json`}>Analisis JSON</DocLink>
-            <DocLink href={`/api/local/rfqs/${props.id}/file?name=presupuesto.md`}>Presupuesto MD</DocLink>
+        <div className="mt-5 grid gap-5">
+          <EditableBudgetPanel id={props.id} lineas={props.presupuestoLineas} />
+          <div className="surface-card rounded-lg p-5">
+            <div className="mb-4 flex flex-wrap gap-2">
+              {props.hasPdf && <DocLink href={`/api/local/rfqs/${props.id}/file?name=presupuesto.pdf`}>Abrir PDF</DocLink>}
+              <DocLink href={`/api/local/rfqs/${props.id}/file?name=analisis.json`}>Analisis JSON</DocLink>
+              <DocLink href={`/api/local/rfqs/${props.id}/file?name=presupuesto.md`}>Presupuesto MD</DocLink>
+            </div>
+            <h2 className="text-lg font-black">Desglose de coste</h2>
+            <BudgetBreakdownPanel lineas={props.presupuestoLineas} />
+            <pre className="mt-3 max-h-[640px] overflow-auto rounded-md border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm leading-6 text-ink">
+              {props.presupuestoMd || 'No hay presupuesto Markdown.'}
+            </pre>
           </div>
-          <h2 className="text-lg font-black">Presupuesto BORRADOR</h2>
-          <BudgetBreakdownPanel lineas={props.presupuestoLineas} />
-          <pre className="mt-3 max-h-[640px] overflow-auto rounded-md border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm leading-6 text-ink">
-            {props.presupuestoMd || 'No hay presupuesto Markdown.'}
-          </pre>
         </div>
       )}
 
@@ -152,6 +155,161 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
         </div>
       )}
     </section>
+  )
+}
+
+function EditableBudgetPanel({ id, lineas }: { id: string; lineas: LocalBudgetLine[] }) {
+  const [prices, setPrices] = useState<Record<number, string>>(() =>
+    Object.fromEntries(lineas.map((l, i) => [i, String(l.pvp_unitario)]))
+  )
+  const [observaciones, setObservaciones] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'ok' | 'error'>('idle')
+  const [saveMsg, setSaveMsg] = useState('')
+
+  const IVA = 0.21
+  const liveLineas = lineas.map((l, i) => {
+    const pvp = parseFloat(prices[i] ?? String(l.pvp_unitario)) || 0
+    const subtotal = Math.round(pvp * (l.cantidad || 1) * 100) / 100
+    return { ...l, pvp_unitario: pvp, subtotal }
+  })
+  const subtotal = Math.round(liveLineas.reduce((s, l) => s + l.subtotal, 0) * 100) / 100
+  const iva = Math.round(subtotal * IVA * 100) / 100
+  const total = Math.round(subtotal * (1 + IVA) * 100) / 100
+
+  const hasChanges = lineas.some((l, i) => {
+    const edited = parseFloat(prices[i] ?? '') || 0
+    return Math.abs(edited - l.pvp_unitario) > 0.001
+  }) || observaciones.trim().length > 0
+
+  async function handleSave() {
+    setSaving(true)
+    setSaveStatus('idle')
+    try {
+      const editedLineas = lineas
+        .map((l, i) => ({ index: i, pvp_unitario: parseFloat(prices[i] ?? String(l.pvp_unitario)) || l.pvp_unitario }))
+        .filter((e, i) => Math.abs(e.pvp_unitario - lineas[i].pvp_unitario) > 0.001)
+      const body: { lineas?: { index: number; pvp_unitario: number }[]; observaciones?: string } = {}
+      if (editedLineas.length > 0) body.lineas = editedLineas
+      if (observaciones.trim()) body.observaciones = observaciones.trim()
+      const res = await fetch(`/api/local/rfqs/${id}/presupuesto`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = (await res.json()) as { ok?: boolean; total?: number; error?: string }
+      if (!res.ok || data.error) throw new Error(data.error ?? 'Error al guardar')
+      setSaveStatus('ok')
+      setSaveMsg(`Guardado. Total: ${formatMoney(data.total ?? total)}`)
+      setObservaciones('')
+    } catch (err) {
+      setSaveStatus('error')
+      setSaveMsg(err instanceof Error ? err.message : 'Error desconocido')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (lineas.length === 0) {
+    return (
+      <div className="surface-card rounded-lg p-5">
+        <h2 className="text-lg font-black">Editar precios</h2>
+        <p className="mt-3 text-sm leading-6 text-steel">Sin lineas de presupuesto. Reprocesa el RFQ para generar desglose.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="surface-card rounded-lg p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-black">Editar precios unitarios</h2>
+          <p className="mt-1 text-sm leading-6 text-steel">Ajusta los precios antes de generar el PDF final. Los totales se recalculan en tiempo real.</p>
+        </div>
+        {saveStatus === 'ok' && <span className="rounded-md bg-[#dff0e8] px-3 py-1.5 text-xs font-black text-ok">{saveMsg}</span>}
+        {saveStatus === 'error' && <span className="rounded-md bg-[#f7dfd8] px-3 py-1.5 text-xs font-black text-danger">{saveMsg}</span>}
+      </div>
+
+      <div className="mt-4 grid gap-3">
+        {liveLineas.map((linea, i) => (
+          <div key={linea.denominacion} className="rounded-md border border-[var(--border)] bg-[var(--surface-2)] p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="break-words font-black text-ink">{linea.denominacion}</div>
+                <div className="mt-1 text-xs text-steel">{linea.cantidad} uds | {linea.operaciones}</div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-[0.1em] text-steel">Precio unitario (EUR)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={prices[i] ?? ''}
+                    onChange={(e) => setPrices((prev) => ({ ...prev, [i]: e.target.value }))}
+                    className="mt-1 w-32 rounded-md border border-[var(--border-strong)] bg-white px-3 py-1.5 text-sm font-black text-ink focus:border-workshop focus:outline-none"
+                  />
+                </div>
+                <div className="text-right">
+                  <div className="text-xs font-bold uppercase tracking-[0.1em] text-steel">Subtotal</div>
+                  <div className="mt-1 text-lg font-black text-ink">{formatMoney(linea.subtotal)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 rounded-md border border-[var(--border)] bg-[var(--surface-2)] p-4">
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.1em] text-steel">Subtotal</div>
+            <div className="mt-1 text-xl font-black text-ink">{formatMoney(subtotal)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.1em] text-steel">IVA (21%)</div>
+            <div className="mt-1 text-xl font-black text-ink">{formatMoney(iva)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.1em] text-steel">Total</div>
+            <div className="mt-1 text-2xl font-black text-workshop">{formatMoney(total)}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-xs font-bold uppercase tracking-[0.1em] text-steel">Observaciones tecnicas (opcional)</label>
+        <textarea
+          rows={3}
+          value={observaciones}
+          onChange={(e) => setObservaciones(e.target.value)}
+          placeholder="Notas adicionales para el presupuesto..."
+          className="mt-1 w-full rounded-md border border-[var(--border-strong)] bg-white px-3 py-2 text-sm leading-6 text-ink focus:border-workshop focus:outline-none"
+        />
+      </div>
+
+      <div className="mt-4 flex gap-3">
+        <button
+          disabled={saving || !hasChanges}
+          onClick={handleSave}
+          className="btn-primary rounded-md px-5 py-2.5 text-sm font-bold disabled:opacity-50"
+        >
+          {saving ? 'Guardando...' : 'Guardar cambios'}
+        </button>
+        {hasChanges && (
+          <button
+            onClick={() => {
+              setPrices(Object.fromEntries(lineas.map((l, i) => [i, String(l.pvp_unitario)])))
+              setObservaciones('')
+              setSaveStatus('idle')
+            }}
+            className="btn-secondary rounded-md px-5 py-2.5 text-sm font-bold"
+          >
+            Descartar
+          </button>
+        )}
+      </div>
+    </div>
   )
 }
 
