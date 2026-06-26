@@ -1,0 +1,23 @@
+{
+  "_nota": "Verdad-terreno de PRUEBA para validar el propio scorer contra la salida mock de ejemplos/rfq-simple. No es un caso real.",
+  "fixture": "rfq-simple-smoke",
+  "descripcion": "1 pieza, eje mecanizado en acero F-114; sirve para comprobar que el scorer puntúa bien.",
+  "piezas": [
+    {
+      "numero_plano": "PL-001",
+      "denominacion": "Eje mecanizado",
+      "revision_plano": "Rev A",
+      "cantidad": 50,
+      "material": "Acero F-114",
+      "dimensiones": "Ø35 x 120 mm",
+      "tolerancias_generales": "ISO 2768-mK",
+      "tolerancias_criticas": ["Ø exterior ±0,02 mm", "Longitud 120 ±0,1"],
+      "gdt": ["concentricidad 0,03 respecto a A"],
+      "acabado": "Ra 1,6",
+      "roscas": ["M10"],
+      "agujeros": ["Taladro axial Ø8"],
+      "tratamientos": [],
+      "recubrimientos": []
+    }
+  ]
+}

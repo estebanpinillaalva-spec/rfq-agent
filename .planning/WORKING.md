@@ -27,3 +27,4 @@
 ## Historial reciente
 <!-- Añadir entradas al terminar cada tarea significativa -->
 - 2026-05-10 — Claude Code: baseline MVP, dark UI polish, iconos sidebar, pipeline mejorado
+- 2026-06-21 — Claude Code: harness de validación de precisión en `validacion/` (protocolo + plantilla verdad-terreno + score-precision.mjs). Verificado end-to-end con salida mock de rfq-simple (74,9%). No toca área de Codex.

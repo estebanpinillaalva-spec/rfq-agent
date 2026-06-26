@@ -1,0 +1,23 @@
+{
+  "_instrucciones": "Rellena por cada pieza del plano SOLO lo que conozcas con certeza. Lo verifica una persona que sabe leer el plano (ingeniero/estimador), NUNCA otra IA. Deja vacíos o borra los campos que no apliquen: el scoring renormaliza los pesos sobre lo que rellenes. Guarda este archivo como 'verdad-terreno.json' dentro de la carpeta del fixture, junto al plano. Anonimiza: sin nombres reales de cliente ni precios propietarios.",
+  "fixture": "rfq-001",
+  "descripcion": "Breve: nº de piezas, material principal, tipo de mecanizado",
+  "piezas": [
+    {
+      "numero_plano": "PL-2024-001",
+      "denominacion": "Eje de transmisión",
+      "revision_plano": "B",
+      "cantidad": 10,
+      "material": "C45 (1.0503)",
+      "dimensiones": "Ø40 x 250 mm",
+      "tolerancias_generales": "ISO 2768-mK",
+      "tolerancias_criticas": ["Ø40 h7", "L 250 ±0.1"],
+      "gdt": ["concentricidad 0.02 respecto a A"],
+      "acabado": "Ra 1.6 en muñones",
+      "roscas": ["M12x1.75 - 20 mm prof."],
+      "agujeros": ["2x Ø8 H7 pasante"],
+      "tratamientos": ["temple y revenido 45-50 HRC"],
+      "recubrimientos": []
+    }
+  ]
+}
