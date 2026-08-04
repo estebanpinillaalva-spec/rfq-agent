@@ -11,7 +11,7 @@ _From email to machining quote in seconds — powered by AI_
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)](https://www.typescriptlang.org)
 [![Gemini](https://img.shields.io/badge/Gemini-2.5%20Pro-orange)](https://deepmind.google/technologies/gemini)
-[![Estado](https://img.shields.io/badge/Estado-Piloto%20activo-brightgreen)](https://github.com/estebanpinillaalva-spec/rfq-agent)
+[![Estado](https://img.shields.io/badge/Estado-Prototipo%20funcional-yellow)](https://github.com/estebanpinillaalva-spec/rfq-agent)
 
 </div>
 
@@ -19,9 +19,25 @@ _From email to machining quote in seconds — powered by AI_
 
 ## ¿Qué es RFQ Agent?
 
-RFQ Agent es un agente local de IA para talleres de mecanizado de precisión. Recibe emails con planos técnicos adjuntos (PDF, PNG, JPG), los analiza automáticamente con visión artificial, y genera un **borrador de presupuesto** listo para revisión humana — en segundos, no horas.
+RFQ Agent es un agente local de IA para talleres de mecanizado de precisión. Recibe emails con planos técnicos adjuntos (PDF, PNG, JPG), los analiza automáticamente con visión artificial, y genera un **borrador de presupuesto** listo para revisión humana.
 
 > **Todos los presupuestos son `BORRADOR` hasta aprobación explícita del técnico. La IA asiste, el técnico decide.**
+
+### Estado real del proyecto
+
+Para que nadie se lleve una impresión equivocada al leer el resto de este documento:
+
+- Es un **prototipo funcional**: el flujo completo está implementado y el código vivo pasa el
+  typecheck. No es un producto y no está desplegado.
+- **Ningún taller lo ha usado todavía.** No hay usuarios, no hay pilotos en marcha y no hay métricas
+  de uso real. Las capacidades descritas más abajo se han probado únicamente con documentos de prueba.
+- **No hay tests automatizados.** Es la deuda técnica más obvia del proyecto.
+- Desarrollo **pausado desde mayo de 2026**.
+- La estimación de tiempos y costes de mecanizado es la parte menos fiable: depende del criterio del
+  técnico y no debe tomarse como buena sin revisar.
+
+Si buscas algo listo para producción, esto no lo es. Si te interesa la arquitectura —local-first,
+visión sobre planos, motor determinista para el documento y revisión humana obligatoria— adelante.
 
 ```
 Cliente envía email con plano CAD
@@ -259,7 +275,13 @@ npm run test:fixtures
 
 ## Contribuir
 
-El proyecto está en fase piloto activo. Si tienes un taller de mecanizado y quieres probarlo o contribuir, abre un issue o un PR.
+El proyecto es un prototipo y el desarrollo está pausado. **Busco justo lo que le falta: un taller de
+mecanizado dispuesto a procesar unos cuantos RFQs reales y decirme dónde falla.** Si tienes uno, o
+quieres contribuir, abre un issue o un PR.
+
+Un aviso si vas a probarlo con planos de tus clientes: el análisis usa la API estándar de Gemini.
+Revisa sus condiciones de uso y de tratamiento de datos antes de enviarle documentación confidencial
+de terceros.
 
 ---
 
