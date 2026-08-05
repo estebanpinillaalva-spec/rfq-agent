@@ -300,3 +300,44 @@ export interface LlmResult<T> {
 }
 
 export type AiProviderName = 'mock' | 'gemini'
+
+export const formaPiezaSchema = z.enum(['prismatica', 'cilindrica'])
+export type FormaPieza = z.infer<typeof formaPiezaSchema>
+
+export const verdadDimensionesSchema = z.object({
+  forma: formaPiezaSchema,
+  cotas_mm: z.array(z.number().positive()).min(2).max(3),
+})
+
+export const verdadPrecioReferenciaSchema = z.object({
+  valor_eur: z.number().positive(),
+  cantidad: z.number().int().positive(),
+  fuente: z.string().min(1),
+  fecha: z.string().min(1),
+})
+
+export const verdadCasoSchema = z
+  .object({
+    version: z.literal('1.0'),
+    caso_id: z.string().min(1),
+    procedencia: z.enum(['cad_publico_plano_generado', 'taller_real_anonimizado']),
+    numero_plano: z.string().min(1),
+    material: z.string().min(1),
+    cantidad: z.number().int().positive(),
+    dimensiones: verdadDimensionesSchema,
+    tolerancia_general: z.string().min(1),
+    acabado: z.string().min(1),
+    plazo_dias: z.number().int().positive().nullable(),
+    precio_referencia: verdadPrecioReferenciaSchema.nullable(),
+  })
+  .superRefine((valor, ctx) => {
+    const esperadas = valor.dimensiones.forma === 'prismatica' ? 3 : 2
+    if (valor.dimensiones.cotas_mm.length !== esperadas) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['dimensiones', 'cotas_mm'],
+        message: `La forma ${valor.dimensiones.forma} exige ${esperadas} cotas`,
+      })
+    }
+  })
+export type VerdadCaso = z.infer<typeof verdadCasoSchema>
