@@ -6,7 +6,9 @@
 **Archivos bloqueados:** —
 **Tarea:** —
 
-Plan `docs/superpowers/plans/2026-08-05-reshape-buzon-medible.md` **completado**: las 8 tareas (f7c490f, 233e214, d156f9a, 6c2925b, cb6ff5f, 609f6c9, daa3fcf). QA visual hecho a 1440x1100 y 390x950.
+Tarea 9 hecha (6cd3ff0): comparador corregido contra planos reales. Bloqueado en el usuario: transcribir las 7 piezas de `benchmark/casos/ejemplo-002/S01 - Piezas adicionales.pdf` a `verdad.json` v2.0. Ningun agente debe escribir ese fichero.
+
+Plan `docs/superpowers/plans/2026-08-05-reshape-buzon-medible.md` **tareas 1-8 completadas**: las 8 tareas (f7c490f, 233e214, d156f9a, 6c2925b, cb6ff5f, 609f6c9, daa3fcf). QA visual hecho a 1440x1100 y 390x950.
 
 Pendiente y bloqueado en el usuario: la "Tarea humana previa" del plan — generar un plano PDF desde CAD publico y pedir precio de referencia a un motor de presupuesto instantaneo, para rellenar `rfq-agent-piloto/benchmark/casos/ejemplo-001/`. Hasta entonces `npm run benchmark` reporta "Sin datos", que es lo correcto.
 
