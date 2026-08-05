@@ -6,7 +6,9 @@
 **Archivos bloqueados:** —
 **Tarea:** —
 
-Plan en curso: `docs/superpowers/plans/2026-08-05-reshape-buzon-medible.md`. Tareas 1-6 hechas (f7c490f, 233e214, d156f9a, 6c2925b, cb6ff5f, 609f6c9). Pendientes las tareas 7 y 8 (UI: `src/lib/local-store.ts` y `rfq-detail-tabs.tsx`), que exigen QA visual.
+Plan `docs/superpowers/plans/2026-08-05-reshape-buzon-medible.md` **completado**: las 8 tareas (f7c490f, 233e214, d156f9a, 6c2925b, cb6ff5f, 609f6c9, daa3fcf). QA visual hecho a 1440x1100 y 390x950.
+
+Pendiente y bloqueado en el usuario: la "Tarea humana previa" del plan — generar un plano PDF desde CAD publico y pedir precio de referencia a un motor de presupuesto instantaneo, para rellenar `rfq-agent-piloto/benchmark/casos/ejemplo-001/`. Hasta entonces `npm run benchmark` reporta "Sin datos", que es lo correcto.
 
 ## Protocolo
 1. Antes de editar, escribe aquí tu nombre (Claude Code / Codex) + archivos que vas a tocar
