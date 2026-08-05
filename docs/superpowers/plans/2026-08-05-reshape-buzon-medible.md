@@ -1380,3 +1380,196 @@ git commit -m "feat(ui): estado por campo (leido / deducido / no encontrado) en 
 2. `npm.cmd run benchmark` produce `benchmark/informes/<fecha>-mock.md` con % de acierto y % de invención por campo, o con el caso listado en errores de dataset si aún no tiene plano.
 3. `npm.cmd run test:fixtures` sigue sin errores nuevos: el refactor de `estimarPesoKg` no movió precios.
 4. En la raíz, `typecheck`, `lint` y `build` en verde, y la ficha de RFQ distingue visualmente un campo leído del plano de uno deducido.
+
+---
+
+# Tarea 9: corregir el comparador contra planos reales
+
+Añadida el 2026-08-05, después de recibir el primer juego de planos reales (`benchmark/casos/ejemplo-002/S01 - Piezas adicionales.pdf`, 7 páginas, conjunto industrial español de 1999). Los datos reales contradicen tres decisiones tomadas cuando no teníamos ninguno. Las tres se corrigen **antes** de medir: sin esto, el primer informe estaría mal en contra del sistema.
+
+## Qué contradicen los planos reales
+
+1. **El acabado se expresa como rugosidad, no como tratamiento.** Los planos traen `N6`, `N7`, `N9`. `clasificarAcabado` los devuelve `NO_CLASIFICABLE`, que cuenta como `FALLO` por diseño. El campo daría 0% de acierto aunque el modelo lo leyera perfecto.
+2. **La tolerancia general no siempre cita ISO.** Aquí es `UNE EN 22768-m`, la adopción española. Funciona por casualidad, porque la cadena contiene `2768-m`. `DIN 7168-m`, la equivalente alemana, devuelve nulos.
+3. **Un RFQ real es un PDF con varias piezas.** Siete páginas, siete piezas, cada una con su número de plano. El comparador asume una pieza por caso. La regla 6 de `AGENTS.md` ya exige tratar cada página como pieza independiente, así que la simplificación era mía y hay que deshacerla. **No se parte el PDF**: partirlo mediría un escenario que no ocurre.
+
+## 9.1 · Normalizadores
+
+**Ficheros:** modificar `rfq-agent-piloto/src/utils/benchmarkNormalize.ts` y su `.test.ts`.
+
+`claseISO2768` pasa a llamarse **`claseToleranciaGeneral`** — con DIN dentro, el nombre anterior miente. Actualizar los usos en `benchmarkCompare.ts`.
+
+```ts
+export function claseToleranciaGeneral(texto: string): ClaseToleranciaGeneral {
+  const compacto = texto.toLowerCase().replace(/\s+/g, '')
+  const match = compacto.match(/(?:2768|7168)-?([fmcv])([hkl])?/)
+  if (!match) return { lineal: null, geometrica: null }
+  return { lineal: match[1], geometrica: match[2] ? match[2].toUpperCase() : null }
+}
+```
+
+En `PATRONES_ACABADO`, añadir al **final** de la lista, después de `mecanizado`:
+
+```ts
+  [/ra\d|rugosidad/, 'mecanizado'],
+  [/n(1[0-2]|[1-9])(?![0-9])/, 'mecanizado'],
+```
+
+Van al final a propósito: un tratamiento declarado gana a una nota de rugosidad. Un plano que diga "anodizado, N7" es anodizado.
+
+Tests nuevos, con los valores literales de los planos reales:
+
+```ts
+it('reconoce la adopcion española UNE EN 22768', () => {
+  expect(claseToleranciaGeneral('Tol. no indicadas UNE EN 22768-m')).toEqual({ lineal: 'm', geometrica: null })
+})
+it('reconoce la equivalente alemana DIN 7168', () => {
+  expect(claseToleranciaGeneral('DIN 7168-m')).toEqual({ lineal: 'm', geometrica: null })
+})
+it('clasifica los grados N de rugosidad como mecanizado', () => {
+  expect(clasificarAcabado('N7')).toBe('mecanizado')
+  expect(clasificarAcabado('N9 (N7)')).toBe('mecanizado')
+})
+it('clasifica valores Ra como mecanizado', () => {
+  expect(clasificarAcabado('Ra 1,6')).toBe('mecanizado')
+})
+it('un tratamiento declarado gana a la nota de rugosidad', () => {
+  expect(clasificarAcabado('anodizado duro, N7')).toBe('anodizado')
+})
+it('sigue marcando NO_CLASIFICABLE lo que no encaja', () => {
+  expect(clasificarAcabado('segun norma interna del cliente')).toBe('NO_CLASIFICABLE')
+})
+```
+
+## 9.2 · `verdad.json` con varias piezas
+
+**Ficheros:** modificar `rfq-agent-piloto/src/types.ts`, `src/utils/verdad.test.ts`, y migrar `benchmark/casos/ejemplo-001/verdad.json`.
+
+Los siete campos núcleo salen del objeto raíz y pasan a un array `piezas`. Sube la versión a `'2.0'`; los ficheros `1.0` dejan de validar a propósito, para que no queden casos a medias sin que nadie se entere.
+
+```ts
+export const verdadPiezaSchema = z.object({
+  numero_plano: z.string().min(1),
+  material: z.string().min(1),
+  cantidad: z.number().int().positive(),
+  dimensiones: verdadDimensionesSchema,
+  tolerancia_general: z.string().min(1),
+  acabado: z.string().min(1),
+  plazo_dias: z.number().int().positive().nullable(),
+  precio_referencia: verdadPrecioReferenciaSchema.nullable(),
+})
+
+export const verdadCasoSchema = z
+  .object({
+    version: z.literal('2.0'),
+    caso_id: z.string().min(1),
+    procedencia: z.enum(['cad_publico_plano_generado', 'taller_real_anonimizado']),
+    piezas: z.array(verdadPiezaSchema).min(1),
+  })
+  .superRefine((valor, ctx) => {
+    valor.piezas.forEach((pieza, indice) => {
+      const esperadas = pieza.dimensiones.forma === 'prismatica' ? 3 : 2
+      if (pieza.dimensiones.cotas_mm.length !== esperadas) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['piezas', indice, 'dimensiones', 'cotas_mm'],
+          message: `La forma ${pieza.dimensiones.forma} exige ${esperadas} cotas`,
+        })
+      }
+    })
+    const numeros = valor.piezas.map((pieza) => pieza.numero_plano.toUpperCase().replace(/[\s\-_.]/g, ''))
+    if (new Set(numeros).size !== numeros.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['piezas'],
+        message: 'Hay numeros de plano repetidos; el comparador casa las piezas por ese campo',
+      })
+    }
+  })
+```
+
+`plazo_dias` se queda **por pieza aunque se repita** en todas. Es redundante, pero mantiene la métrica uniforme en 7 campos por pieza y evita un caso especial en el cálculo de porcentajes.
+
+## 9.3 · Comparador de N piezas y métrica de detección
+
+**Ficheros:** modificar `rfq-agent-piloto/src/utils/benchmarkCompare.ts` y su `.test.ts`.
+
+```ts
+export interface PiezaComparada {
+  numero_plano: string
+  campos: ResultadoCampo[]
+}
+
+export interface MetricasDeteccion {
+  esperadas: number
+  detectadas: number
+  no_detectadas: string[]  // numeros de plano de la verdad sin pareja en el analisis
+  sobrantes: string[]      // piezas del analisis sin pareja en la verdad
+}
+
+export interface ResultadoCaso {
+  caso_id: string
+  piezas: PiezaComparada[]
+  deteccion: MetricasDeteccion
+  errores_dataset: string[]
+}
+
+export function compararCaso(
+  verdad: VerdadCaso,
+  analisis: AnalisisRFQ,
+  biblioteca: MaterialBiblioteca
+): ResultadoCaso
+```
+
+Reglas, y son la sustancia de la tarea:
+
+- El emparejamiento es por `numero_plano` normalizado con `normalizarReferencia` (mayúsculas, sin espacios, guiones ni puntos). No por orden de página: si el modelo baraja las piezas, casarlas por posición inventaría aciertos.
+- Una pieza de la verdad **sin pareja** entra en `no_detectadas` y **no aporta ningún `ResultadoCampo`**. No se cuentan sus siete campos como `FALLO`: eso castigaría dos veces el mismo error y hundiría el `% invención` por un fallo de detección, que es otra cosa.
+- Una pieza del análisis sin pareja entra en `sobrantes`. Importa: si el sistema parte una pieza en tres, ese es un modo de fallo real que hay que ver.
+- `calcularMetricas` sigue operando sobre un array plano de `ResultadoCampo`; el arnés le pasa la concatenación de todas las piezas emparejadas.
+- La detección **nunca** se mezcla con el acierto de campos. Son dos números distintos y se publican por separado: no es lo mismo leer mal un material que no ver la pieza.
+
+Tests nuevos mínimos: emparejamiento correcto de dos piezas; pieza de la verdad no detectada que no genera campos; pieza sobrante del análisis; y emparejamiento correcto aunque el análisis las devuelva en orden inverso.
+
+## 9.4 · Informe
+
+**Fichero:** modificar `rfq-agent-piloto/src/scripts/benchmark.ts`.
+
+Sección nueva **"Deteccion de piezas"**, antes de las métricas de campo:
+
+```
+| Caso | Esperadas | Detectadas | No detectadas | Sobrantes |
+```
+
+Con las listas de números de plano cuando no estén vacías. Y las tablas de campos pasan a desglosarse por caso y pieza, no solo por caso.
+
+## 9.5 · Andamiaje del caso real
+
+**Ficheros:** crear `benchmark/casos/ejemplo-002/email.txt`, `config-taller.json` y `origen.md`.
+
+`config-taller.json`: copia de `ejemplos/rfq-simple/config-taller.json`.
+
+`email.txt`: **sin mencionar cantidad ni material**. El cajetín de estos planos ya trae `Nº Piezas`, así que repetirlo en el correo convertiría la medición de lectura de plano en medición de lectura de castellano. El plazo sí va en el correo, que es donde está en la realidad.
+
+```
+De: compras@cliente-demo.es
+Asunto: Solicitud presupuesto conjunto rueda giro portico
+
+Buenos dias,
+
+Adjuntamos el juego de planos de piezas adicionales para presupuestar.
+Necesitamos la oferta con plazo de entrega de 20 dias.
+
+Un saludo,
+Departamento de Compras
+```
+
+El `verdad.json` de `ejemplo-002` **no lo escribe ningún agente**. Lo rellena el usuario leyendo las siete páginas. Si la verdad la extrae un modelo de visión, el informe mide si dos modelos coinciden, no si aciertan, y todo el ejercicio pierde el sentido.
+
+## Criterio de aceptación de la Tarea 9
+
+1. `npm.cmd run test:unit` en verde, incluidos los tests nuevos de 9.1 y 9.3.
+2. `npm.cmd run typecheck` limpio.
+3. `npm.cmd run benchmark` corre sin excepción y lista `ejemplo-002` en errores de dataset por falta de `verdad.json`, no por un fallo del script.
+4. `clasificarAcabado('N7')` devuelve `mecanizado` y `claseToleranciaGeneral('DIN 7168-m')` devuelve la clase `m`.
+

@@ -1,13 +1,17 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "caso_id": "ejemplo-001",
   "procedencia": "cad_publico_plano_generado",
-  "numero_plano": "PL-0001",
-  "material": "AISI 304",
-  "cantidad": 10,
-  "dimensiones": { "forma": "prismatica", "cotas_mm": [120, 80, 25] },
-  "tolerancia_general": "ISO 2768-mK",
-  "acabado": "mecanizado",
-  "plazo_dias": 15,
-  "precio_referencia": null
+  "piezas": [
+    {
+      "numero_plano": "PL-0001",
+      "material": "AISI 304",
+      "cantidad": 10,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [120, 80, 25] },
+      "tolerancia_general": "ISO 2768-mK",
+      "acabado": "mecanizado",
+      "plazo_dias": 15,
+      "precio_referencia": null
+    }
+  ]
 }

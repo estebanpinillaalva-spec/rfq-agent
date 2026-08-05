@@ -29,10 +29,7 @@ const biblioteca: MaterialBiblioteca = {
   ],
 }
 
-const verdad: VerdadCaso = {
-  version: '1.0',
-  caso_id: 'ejemplo-001',
-  procedencia: 'cad_publico_plano_generado',
+const piezaVerdad: VerdadCaso['piezas'][number] = {
   numero_plano: 'PL-0001',
   material: 'AISI 304',
   cantidad: 10,
@@ -41,6 +38,13 @@ const verdad: VerdadCaso = {
   acabado: 'mecanizado',
   plazo_dias: 15,
   precio_referencia: null,
+}
+
+const verdad: VerdadCaso = {
+  version: '2.0',
+  caso_id: 'ejemplo-001',
+  procedencia: 'cad_publico_plano_generado',
+  piezas: [piezaVerdad],
 }
 
 function pieza(overrides: Partial<PiezaAnalisis>): PiezaAnalisis {
@@ -102,14 +106,14 @@ function analisis(overrides: Partial<PiezaAnalisis>, plazo = '15 dias'): Analisi
 }
 
 function estadoDe(resultado: ReturnType<typeof compararCaso>, campo: string): string {
-  return resultado.campos.find((item) => item.campo === campo)?.estado ?? 'AUSENTE'
+  return resultado.piezas.flatMap((piezaComparada) => piezaComparada.campos).find((item) => item.campo === campo)?.estado ?? 'AUSENTE'
 }
 
 describe('compararCaso', () => {
   it('acierta los siete campos cuando todo coincide', () => {
     const resultado = compararCaso(verdad, analisis({}), biblioteca)
-    expect(resultado.campos).toHaveLength(7)
-    expect(resultado.campos.every((campo) => campo.estado === 'ACIERTO')).toBe(true)
+    expect(resultado.piezas[0].campos).toHaveLength(7)
+    expect(resultado.piezas[0].campos.every((campo) => campo.estado === 'ACIERTO')).toBe(true)
   })
 
   it('acierta el material por alias normalizado', () => {
@@ -147,10 +151,59 @@ describe('compararCaso', () => {
     expect(estadoDe(resultado, 'acabado')).toBe('NO_ENCONTRADO')
   })
 
-  it('anota error de dataset si el analisis trae mas de una pieza', () => {
+  it('compara dos piezas emparejadas por numero de plano', () => {
     const base = analisis({})
-    const conDos: AnalisisRFQ = { ...base, piezas: [base.piezas[0], base.piezas[0]] }
-    expect(compararCaso(verdad, conDos, biblioteca).errores_dataset).toHaveLength(1)
+    const segunda = pieza({ denominacion: 'Tapa', numero_plano: 'PL-0002' })
+    const conDos: AnalisisRFQ = {
+      ...base,
+      cantidades: { 'Placa base': 10, Tapa: 5 },
+      piezas: [base.piezas[0], segunda],
+    }
+    const verdadDos: VerdadCaso = {
+      ...verdad,
+      piezas: [piezaVerdad, { ...piezaVerdad, numero_plano: 'PL-0002', cantidad: 5 }],
+    }
+    const resultado = compararCaso(verdadDos, conDos, biblioteca)
+    expect(resultado.piezas).toHaveLength(2)
+    expect(resultado.deteccion).toEqual({ esperadas: 2, detectadas: 2, no_detectadas: [], sobrantes: [] })
+  })
+
+  it('una pieza no detectada no genera resultados de campo', () => {
+    const verdadDos: VerdadCaso = {
+      ...verdad,
+      piezas: [piezaVerdad, { ...piezaVerdad, numero_plano: 'PL-0002', cantidad: 5 }],
+    }
+    const resultado = compararCaso(verdadDos, analisis({}), biblioteca)
+    expect(resultado.deteccion.no_detectadas).toEqual(['PL-0002'])
+    expect(resultado.piezas.flatMap((item) => item.campos)).toHaveLength(7)
+  })
+
+  it('registra como sobrante una pieza del analisis sin pareja', () => {
+    const base = analisis({})
+    const conSobrante: AnalisisRFQ = {
+      ...base,
+      piezas: [base.piezas[0], pieza({ denominacion: 'Tapa', numero_plano: 'PL-0002' })],
+    }
+    const resultado = compararCaso(verdad, conSobrante, biblioteca)
+    expect(resultado.deteccion.sobrantes).toEqual(['PL-0002'])
+    expect(resultado.piezas).toHaveLength(1)
+  })
+
+  it('empareja por numero de plano aunque el analisis venga en orden inverso', () => {
+    const base = analisis({})
+    const segunda = pieza({ denominacion: 'Tapa', numero_plano: 'PL-0002' })
+    const invertido: AnalisisRFQ = {
+      ...base,
+      cantidades: { 'Placa base': 10, Tapa: 5 },
+      piezas: [segunda, base.piezas[0]],
+    }
+    const verdadDos: VerdadCaso = {
+      ...verdad,
+      piezas: [piezaVerdad, { ...piezaVerdad, numero_plano: 'PL-0002', cantidad: 5 }],
+    }
+    const resultado = compararCaso(verdadDos, invertido, biblioteca)
+    expect(resultado.piezas.map((item) => item.numero_plano)).toEqual(['PL-0001', 'PL-0002'])
+    expect(resultado.piezas.flatMap((item) => item.campos).every((campo) => campo.estado === 'ACIERTO')).toBe(true)
   })
 })
 

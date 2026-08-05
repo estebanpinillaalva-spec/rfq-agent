@@ -318,27 +318,42 @@ export const verdadPrecioReferenciaSchema = z.object({
   fecha: z.string().min(1),
 })
 
+export const verdadPiezaSchema = z.object({
+  numero_plano: z.string().min(1),
+  material: z.string().min(1),
+  cantidad: z.number().int().positive(),
+  dimensiones: verdadDimensionesSchema,
+  tolerancia_general: z.string().min(1),
+  acabado: z.string().min(1),
+  plazo_dias: z.number().int().positive().nullable(),
+  precio_referencia: verdadPrecioReferenciaSchema.nullable(),
+})
+export type VerdadPieza = z.infer<typeof verdadPiezaSchema>
+
 export const verdadCasoSchema = z
   .object({
-    version: z.literal('1.0'),
+    version: z.literal('2.0'),
     caso_id: z.string().min(1),
     procedencia: z.enum(['cad_publico_plano_generado', 'taller_real_anonimizado']),
-    numero_plano: z.string().min(1),
-    material: z.string().min(1),
-    cantidad: z.number().int().positive(),
-    dimensiones: verdadDimensionesSchema,
-    tolerancia_general: z.string().min(1),
-    acabado: z.string().min(1),
-    plazo_dias: z.number().int().positive().nullable(),
-    precio_referencia: verdadPrecioReferenciaSchema.nullable(),
+    piezas: z.array(verdadPiezaSchema).min(1),
   })
   .superRefine((valor, ctx) => {
-    const esperadas = valor.dimensiones.forma === 'prismatica' ? 3 : 2
-    if (valor.dimensiones.cotas_mm.length !== esperadas) {
+    valor.piezas.forEach((pieza, indice) => {
+      const esperadas = pieza.dimensiones.forma === 'prismatica' ? 3 : 2
+      if (pieza.dimensiones.cotas_mm.length !== esperadas) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['piezas', indice, 'dimensiones', 'cotas_mm'],
+          message: `La forma ${pieza.dimensiones.forma} exige ${esperadas} cotas`,
+        })
+      }
+    })
+    const numeros = valor.piezas.map((pieza) => pieza.numero_plano.toUpperCase().replace(/[\s\-_.]/g, ''))
+    if (new Set(numeros).size !== numeros.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['dimensiones', 'cotas_mm'],
-        message: `La forma ${valor.dimensiones.forma} exige ${esperadas} cotas`,
+        path: ['piezas'],
+        message: 'Hay numeros de plano repetidos; el comparador casa las piezas por ese campo',
       })
     }
   })

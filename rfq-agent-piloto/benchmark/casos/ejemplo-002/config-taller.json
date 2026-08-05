@@ -1,0 +1,37 @@
+{
+  "nombre": "Talleres Demo SL",
+  "cif": "B-00000000",
+  "email": "presupuestos@talleres-demo.es",
+  "precios_hora": {
+    "torno_cnc": 45,
+    "centro_mecanizado_3ejes": 55,
+    "fresado": 50,
+    "taladrado": 35,
+    "soldadura_tig": 60
+  },
+  "margen_por_complejidad": {
+    "BAJA": 0.25,
+    "MEDIA": 0.35,
+    "ALTA": 0.45,
+    "MUY_ALTA": 0.6
+  },
+  "plazo_estandar_dias": 15,
+  "condiciones_pago": "50% confirmacion, 50% antes de envio",
+  "iva_porcentaje": 0.21,
+  "validez_dias": 15,
+  "overhead_porcentaje": 0.18,
+  "capacidad_diaria_horas": 7,
+  "materiales_eur_kg": {
+    "Acero F-114": 2.4,
+    "Aluminio 6082": 4.8
+  },
+  "setup_min_por_operacion": {
+    "torno_cnc": 45,
+    "centro_mecanizado_3ejes": 60,
+    "taladrado": 20
+  },
+  "subcontratas": {
+    "anodizado": { "coste_minimo": 90, "plazo_dias": 5 },
+    "tratamiento_termico": { "coste_minimo": 140, "plazo_dias": 7 }
+  }
+}

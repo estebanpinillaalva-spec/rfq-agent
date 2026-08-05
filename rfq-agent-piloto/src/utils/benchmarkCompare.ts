@@ -1,6 +1,6 @@
-import type { AnalisisRFQ, MaterialBiblioteca, PiezaAnalisis, VerdadCaso } from '../types'
+import type { AnalisisRFQ, MaterialBiblioteca, PiezaAnalisis, VerdadCaso, VerdadPieza } from '../types'
 import { buscarMaterial, parseDimensiones } from './materiales'
-import { claseISO2768, clasificarAcabado } from './benchmarkNormalize'
+import { claseToleranciaGeneral, clasificarAcabado } from './benchmarkNormalize'
 import { normalize } from './normalize'
 
 export type EstadoCampo = 'ACIERTO' | 'FALLO' | 'NO_ENCONTRADO'
@@ -23,9 +23,22 @@ export interface ResultadoCampo {
   obtenido: string
 }
 
+export interface PiezaComparada {
+  numero_plano: string
+  campos: ResultadoCampo[]
+}
+
+export interface MetricasDeteccion {
+  esperadas: number
+  detectadas: number
+  no_detectadas: string[]
+  sobrantes: string[]
+}
+
 export interface ResultadoCaso {
   caso_id: string
-  campos: ResultadoCampo[]
+  piezas: PiezaComparada[]
+  deteccion: MetricasDeteccion
   errores_dataset: string[]
 }
 
@@ -55,20 +68,52 @@ export function compararCaso(
   biblioteca: MaterialBiblioteca
 ): ResultadoCaso {
   const errores: string[] = []
-  if (analisis.piezas.length !== 1) {
-    errores.push(`El analisis trae ${analisis.piezas.length} piezas; se compara la primera`)
-  }
-  const pieza = analisis.piezas[0]
-  if (!pieza) {
-    return { caso_id: verdad.caso_id, campos: [], errores_dataset: [...errores, 'El analisis no trae ninguna pieza'] }
+  const usadas = new Set<number>()
+  const piezas: PiezaComparada[] = []
+  const noDetectadas: string[] = []
+
+  for (const piezaVerdad of verdad.piezas) {
+    const indice = analisis.piezas.findIndex(
+      (pieza, posicion) =>
+        !usadas.has(posicion) && normalizarReferencia(pieza.numero_plano) === normalizarReferencia(piezaVerdad.numero_plano)
+    )
+    if (indice === -1) {
+      noDetectadas.push(piezaVerdad.numero_plano)
+      continue
+    }
+    usadas.add(indice)
+    piezas.push({
+      numero_plano: piezaVerdad.numero_plano,
+      campos: compararPieza(piezaVerdad, analisis.piezas[indice], analisis, biblioteca, errores),
+    })
   }
 
+  return {
+    caso_id: verdad.caso_id,
+    piezas,
+    deteccion: {
+      esperadas: verdad.piezas.length,
+      detectadas: piezas.length,
+      no_detectadas: noDetectadas,
+      sobrantes: analisis.piezas.filter((_, indice) => !usadas.has(indice)).map((pieza) => pieza.numero_plano),
+    },
+    errores_dataset: errores,
+  }
+}
+
+function compararPieza(
+  verdad: VerdadPieza,
+  pieza: PiezaAnalisis,
+  analisis: AnalisisRFQ,
+  biblioteca: MaterialBiblioteca,
+  errores: string[]
+): ResultadoCampo[] {
   const materialVerdad = buscarMaterial(verdad.material, biblioteca)
   if (!materialVerdad) {
-    errores.push(`El material "${verdad.material}" de la verdad no resuelve en la biblioteca`)
+    errores.push(`El material "${verdad.material}" de la pieza "${verdad.numero_plano}" no resuelve en la biblioteca`)
   }
 
-  const campos: ResultadoCampo[] = [
+  return [
     evaluar('numero_plano', pieza, verdad.numero_plano, pieza.numero_plano, () =>
       normalizarReferencia(verdad.numero_plano) === normalizarReferencia(pieza.numero_plano)
     ),
@@ -96,8 +141,6 @@ export function compararCaso(
       return obtenido !== null && Math.abs(obtenido - verdad.plazo_dias) <= 1
     }),
   ]
-
-  return { caso_id: verdad.caso_id, campos, errores_dataset: errores }
 }
 
 function evaluar(
@@ -134,7 +177,7 @@ function cantidadDe(analisis: AnalisisRFQ, pieza: PiezaAnalisis): number {
   return valores.length === 1 ? valores[0] : 0
 }
 
-function dimensionesCoinciden(verdad: VerdadCaso, texto: string): boolean {
+function dimensionesCoinciden(verdad: VerdadPieza, texto: string): boolean {
   const obtenido = parseDimensiones(texto)
   if (!obtenido || obtenido.forma !== verdad.dimensiones.forma) return false
   const esperadas = ordenarCotas(verdad.dimensiones.forma, verdad.dimensiones.cotas_mm)
@@ -145,7 +188,7 @@ function dimensionesCoinciden(verdad: VerdadCaso, texto: string): boolean {
 
 // Las prismaticas no tienen orden canonico de cotas; las cilindricas si
 // (diametro y despues longitud), asi que solo se ordenan las primeras.
-function ordenarCotas(forma: VerdadCaso['dimensiones']['forma'], cotas: number[]): number[] {
+function ordenarCotas(forma: VerdadPieza['dimensiones']['forma'], cotas: number[]): number[] {
   return forma === 'prismatica' ? [...cotas].sort((a, b) => b - a) : cotas
 }
 
@@ -155,8 +198,8 @@ function dentroDeBanda(esperado: number, obtenido: number): boolean {
 }
 
 function toleranciasCoinciden(esperado: string, obtenido: string): boolean {
-  const claseEsperada = claseISO2768(esperado)
-  const claseObtenida = claseISO2768(obtenido)
+  const claseEsperada = claseToleranciaGeneral(esperado)
+  const claseObtenida = claseToleranciaGeneral(obtenido)
   if (claseEsperada.lineal === null) return false
   if (claseEsperada.lineal !== claseObtenida.lineal) return false
   if (claseEsperada.geometrica === null) return true

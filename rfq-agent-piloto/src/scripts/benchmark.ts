@@ -1,7 +1,7 @@
 import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
-import { analisisRFQSchema, presupuestoRFQSchema, type VerdadCaso } from '../types'
+import { analisisRFQSchema, presupuestoRFQSchema, type VerdadPieza } from '../types'
 import { cargarBibliotecaMateriales } from '../utils/materiales'
 import { cargarVerdadCaso } from '../utils/verdad'
 import {
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
 
     filas.push({
       resultado: compararCaso(verdad, analisis, biblioteca),
-      desviacionPrecio: desviacion(verdad, presupuesto.lineas[0]?.pvp_unitario ?? null),
+      desviacionPrecio: desviacion(verdad.piezas[0], presupuesto.lineas[0]?.pvp_unitario ?? null),
       durationMs,
     })
   }
@@ -116,7 +116,7 @@ function mensaje(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
 }
 
-function desviacion(verdad: VerdadCaso, pvpUnitario: number | null): number | null {
+function desviacion(verdad: VerdadPieza, pvpUnitario: number | null): number | null {
   if (verdad.precio_referencia === null || pvpUnitario === null) return null
   const unitarioReferencia = verdad.precio_referencia.valor_eur / verdad.precio_referencia.cantidad
   return (pvpUnitario - unitarioReferencia) / unitarioReferencia
@@ -130,7 +130,7 @@ async function escribirInforme(proveedor: string, filas: FilaCaso[], erroresData
       fila.resultado.errores_dataset.map((error) => `${fila.resultado.caso_id}: ${error}`)
     ),
   ]
-  const todosLosCampos = filas.flatMap((fila) => fila.resultado.campos)
+  const todosLosCampos = filas.flatMap((fila) => fila.resultado.piezas.flatMap((pieza) => pieza.campos))
   const metricasPorCampo = Object.fromEntries(
     CAMPOS_NUCLEO.map((campo) => {
       const resultados = todosLosCampos.filter((resultado) => resultado.campo === campo)
@@ -142,7 +142,7 @@ async function escribirInforme(proveedor: string, filas: FilaCaso[], erroresData
     proveedor,
     casos: filas,
     metricas_por_campo: metricasPorCampo,
-    metricas_globales: metricasInforme(calcularMetricas(todosLosCampos), filas.length > 0),
+    metricas_globales: metricasInforme(calcularMetricas(todosLosCampos), todosLosCampos.length > 0),
     precio: resumirPrecio(filas),
     duraciones_ms: filas.map((fila) => ({
       caso_id: fila.resultado.caso_id,
@@ -203,6 +203,10 @@ function markdownInforme(informe: InformeCrudo): string {
     '',
     tablaCasos(informe.casos),
     '',
+    '## Deteccion de piezas',
+    '',
+    tablaDeteccion(informe.casos),
+    '',
     '## Metricas por campo',
     '',
     '| Campo | % acierto | % invencion |',
@@ -256,18 +260,39 @@ function markdownInforme(informe: InformeCrudo): string {
 }
 
 function tablaCasos(filas: FilaCaso[]): string {
-  if (filas.length === 0) {
+  const piezas = filas.flatMap((fila) =>
+    fila.resultado.piezas.map((pieza) => ({ caso_id: fila.resultado.caso_id, pieza }))
+  )
+  if (piezas.length === 0) {
     return 'Sin casos evaluables'
   }
-  const cabecera = `| Campo | ${filas.map((fila) => fila.resultado.caso_id).join(' | ')} |`
-  const separador = `| --- | ${filas.map(() => '---').join(' | ')} |`
+  const cabecera = `| Campo | ${piezas.map(({ caso_id, pieza }) => `${caso_id} / ${pieza.numero_plano}`).join(' | ')} |`
+  const separador = `| --- | ${piezas.map(() => '---').join(' | ')} |`
   const cuerpos = CAMPOS_NUCLEO.map((campo) => {
-    const estados = filas.map((fila) =>
-      fila.resultado.campos.find((resultado) => resultado.campo === campo)?.estado ?? 'NO_ENCONTRADO'
+    const estados = piezas.map(({ pieza }) =>
+      pieza.campos.find((resultado) => resultado.campo === campo)?.estado ?? 'NO_ENCONTRADO'
     )
     return `| ${campo} | ${estados.join(' | ')} |`
   })
   return [cabecera, separador, ...cuerpos].join('\n')
+}
+
+function tablaDeteccion(filas: FilaCaso[]): string {
+  const lineas = [
+    '| Caso | Esperadas | Detectadas | No detectadas | Sobrantes |',
+    '| --- | ---: | ---: | --- | --- |',
+  ]
+  if (filas.length === 0) {
+    lineas.push('| Sin casos evaluables | - | - | - | - |')
+    return lineas.join('\n')
+  }
+  for (const fila of filas) {
+    const deteccion = fila.resultado.deteccion
+    lineas.push(
+      `| ${fila.resultado.caso_id} | ${deteccion.esperadas} | ${deteccion.detectadas} | ${deteccion.no_detectadas.join(', ') || '-'} | ${deteccion.sobrantes.join(', ') || '-'} |`
+    )
+  }
+  return lineas.join('\n')
 }
 
 function porcentaje(valor: number | null): string {
