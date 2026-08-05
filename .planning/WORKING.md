@@ -1,10 +1,12 @@
 # Estado de trabajo activo
 
 ## Quién está trabajando ahora
-**AI:** Claude Code
-**Desde:** 2026-08-05
-**Archivos bloqueados:** `docs/superpowers/specs/2026-08-05-reshape-buzon-medible-design.md`, `.planning/WORKING.md`
-**Tarea:** Escribir el spec del reshape (buzón medible + benchmark). La implementación posterior la hace Codex; los ficheros de código NO están bloqueados todavía.
+**AI:** — (libre)
+**Desde:** —
+**Archivos bloqueados:** —
+**Tarea:** —
+
+Plan en curso: `docs/superpowers/plans/2026-08-05-reshape-buzon-medible.md`. Tareas 1-6 hechas (f7c490f, 233e214, d156f9a, 6c2925b, cb6ff5f, 609f6c9). Pendientes las tareas 7 y 8 (UI: `src/lib/local-store.ts` y `rfq-detail-tabs.tsx`), que exigen QA visual.
 
 ## Protocolo
 1. Antes de editar, escribe aquí tu nombre (Claude Code / Codex) + archivos que vas a tocar
