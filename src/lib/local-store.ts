@@ -54,12 +54,12 @@ export interface PlanoExtractionSummary {
   revisionPlano: string
   escala: string
   cajetinTexto: string
-  materialFuente: string
-  cantidadFuente: string
-  dimensionesFuente: string
-  toleranciasFuente: string
-  acabadoFuente: string
-  revisionFuente: string
+  materialFuente: string | null
+  cantidadFuente: string | null
+  dimensionesFuente: string | null
+  toleranciasFuente: string | null
+  acabadoFuente: string | null
+  revisionFuente: string | null
   material: string
   dimensiones: string
   toleranciasGenerales: string
@@ -139,6 +139,7 @@ export interface LocalBudgetBreakdown {
   precio_material_eur_kg: number | null
   desperdicio_pct: number | null
   estado_material: string
+  fuente_tiempo: string | null
   material_normalizado: string
   material_confianza: string
   avisos_material: string[]
@@ -454,6 +455,12 @@ function stringOr(value: unknown, fallback: string): string {
   return typeof value === 'string' && value.trim() ? value : fallback
 }
 
+// La UI necesita distinguir "el modelo no declaro fuente" de "el campo no
+// esta en el plano"; un texto de relleno aqui borraria esa diferencia.
+function textoONull(valor: unknown): string | null {
+  return typeof valor === 'string' && valor.trim() !== '' ? valor : null
+}
+
 function numberOrNull(value: unknown): number | null {
   return typeof value === 'number' ? value : null
 }
@@ -527,6 +534,7 @@ function buildBudgetLines(value: unknown): LocalBudgetLine[] {
             precio_material_eur_kg: numberOrNull(desglose.precio_material_eur_kg),
             desperdicio_pct: numberOrNull(desglose.desperdicio_pct),
             estado_material: stringOr(desglose.estado_material, 'requiere_revision'),
+            fuente_tiempo: textoONull(desglose.fuente_tiempo),
             material_normalizado: stringOr(desglose.material_normalizado, 'No especificado'),
             material_confianza: stringOr(desglose.material_confianza, 'N/D'),
             avisos_material: stringArray(desglose.avisos_material),
@@ -585,12 +593,12 @@ function buildExtractionSummaries(value: unknown): PlanoExtractionSummary[] {
         revisionPlano: stringOr(pieza.revision_plano, 'No especificado'),
         escala: stringOr(pieza.escala, 'No especificado'),
         cajetinTexto: stringOr(pieza.cajetin_texto, 'No especificado'),
-        materialFuente: stringOr(pieza.material_fuente, 'Sin fuente declarada'),
-        cantidadFuente: stringOr(pieza.cantidad_fuente, 'Sin fuente declarada'),
-        dimensionesFuente: stringOr(pieza.dimensiones_fuente, 'Sin fuente declarada'),
-        toleranciasFuente: stringOr(pieza.tolerancias_fuente, 'Sin fuente declarada'),
-        acabadoFuente: stringOr(pieza.acabado_fuente, 'Sin fuente declarada'),
-        revisionFuente: stringOr(pieza.revision_fuente, 'Sin fuente declarada'),
+        materialFuente: textoONull(pieza.material_fuente),
+        cantidadFuente: textoONull(pieza.cantidad_fuente),
+        dimensionesFuente: textoONull(pieza.dimensiones_fuente),
+        toleranciasFuente: textoONull(pieza.tolerancias_fuente),
+        acabadoFuente: textoONull(pieza.acabado_fuente),
+        revisionFuente: textoONull(pieza.revision_fuente),
         material: stringOr(pieza.material, 'No especificado'),
         dimensiones: stringOr(pieza.dimensiones, 'No especificado'),
         toleranciasGenerales: stringOr(pieza.tolerancias_generales, 'No especificado'),
@@ -626,7 +634,9 @@ function buildCompleteness(summaries: PlanoExtractionSummary[], value: unknown):
   const blockingReasons = [...stringArray(analisis?.blocking_reasons), ...stringArray(presupuesto?.blocking_reasons)]
   const missingTrace = summaries.filter((summary) => summary.archivoOrigen === 'No especificado').map((summary) => summary.pieza)
   const missingMaterial = summaries.filter((summary) => /no especificado/i.test(summary.material)).map((summary) => summary.pieza)
-  const missingMaterialSource = summaries.filter((summary) => /sin fuente|no especificado/i.test(summary.materialFuente)).map((summary) => summary.pieza)
+  const missingMaterialSource = summaries
+    .filter((summary) => summary.materialFuente === null || /sin fuente|no especificado/i.test(summary.materialFuente))
+    .map((summary) => summary.pieza)
   const missingQuantity = summaries.filter((summary) => !summary.cantidad || summary.cantidad <= 0).map((summary) => summary.pieza)
   const weakDimensions = summaries
     .filter((summary) => /no especificado|ver plano|aprox/i.test(summary.dimensiones))

@@ -49,6 +49,9 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
     if (!selectedSummary || selectedSummary.archivoOrigen === 'No especificado') return props.planos[0] ?? null
     return props.planos.find((plano) => plano.name === selectedSummary.archivoOrigen) ?? props.planos[0] ?? null
   }, [props.planos, selectedSummary])
+  const hasEstimatedTimes = props.presupuestoLineas.some(
+    (linea) => linea.desglose?.fuente_tiempo === 'estimacion_modelo'
+  )
 
   return (
     <section className="mt-5">
@@ -69,6 +72,7 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
         <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
           <div className="grid gap-5">
             <QualityHero quality={props.quality} piezas={props.extracciones.length} hasPdf={props.hasPdf} hasEmail={props.hasEmail} />
+            <CoreFieldsPanel summary={selectedSummary} />
             <TopIssuesPanel quality={props.quality} />
             <IssueGroupGrid groups={props.quality?.grupos ?? []} compact />
           </div>
@@ -124,6 +128,11 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
 
       {active === 'presupuesto' && (
         <div className="mt-5 grid gap-5">
+          {hasEstimatedTimes && (
+            <div className="rounded-md border border-workshop/25 bg-[#f8e7d8] p-4 text-sm font-semibold leading-6 text-[#8a4a20]">
+              Los tiempos de operación son estimación del modelo, sin validar contra la tabla del taller
+            </div>
+          )}
           <EditableBudgetPanel id={props.id} lineas={props.presupuestoLineas} />
           <div className="surface-card rounded-lg p-5">
             <div className="mb-4 flex flex-wrap gap-2">
@@ -155,6 +164,79 @@ export function RfqDetailTabs(props: RfqDetailTabsProps) {
           </div>
         </div>
       )}
+    </section>
+  )
+}
+
+function CoreFieldsPanel({ summary }: { summary: PlanoExtractionSummary | null }) {
+  if (!summary) {
+    return (
+      <section className="surface-card rounded-lg p-5">
+        <h2 className="text-lg font-black text-ink">Campos núcleo</h2>
+        <p className="mt-2 text-sm leading-6 text-steel">Sin extracción estructurada para evaluar los campos.</p>
+      </section>
+    )
+  }
+
+  const cantidad = summary.cantidad === null ? 'No especificado' : String(summary.cantidad)
+
+  return (
+    <section className="surface-card rounded-lg p-5">
+      <div>
+        <h2 className="text-lg font-black text-ink">Campos núcleo</h2>
+        <p className="mt-1 text-sm leading-6 text-steel">Procedencia de los datos usados para revisar {summary.pieza}.</p>
+      </div>
+      <dl className="mt-4 grid gap-3 md:grid-cols-2">
+        <FieldConEstado
+          label="Número de plano"
+          valor={summary.numeroPlano}
+          fuente={null}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['numero_plano', 'numero de plano', 'referencia', 'plano']}
+        />
+        <FieldConEstado
+          label="Material"
+          valor={summary.material}
+          fuente={summary.materialFuente}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['material']}
+        />
+        <FieldConEstado
+          label="Cantidad"
+          valor={cantidad}
+          fuente={summary.cantidadFuente}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['cantidad', 'unidades']}
+        />
+        <FieldConEstado
+          label="Dimensiones"
+          valor={summary.dimensiones}
+          fuente={summary.dimensionesFuente}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['dimensiones', 'medidas', 'cotas']}
+        />
+        <FieldConEstado
+          label="Tolerancia general"
+          valor={summary.toleranciasGenerales}
+          fuente={summary.toleranciasFuente}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['tolerancia_general', 'tolerancias generales', 'tolerancia']}
+        />
+        <FieldConEstado
+          label="Acabado"
+          valor={summary.acabado}
+          fuente={summary.acabadoFuente}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['acabado', 'tratamiento', 'recubrimiento']}
+        />
+        <FieldConEstado
+          label="Plazo"
+          valor={summary.plazo}
+          fuente={null}
+          camposNoEncontrados={summary.camposNoEncontrados}
+          alias={['plazo_dias', 'plazo', 'entrega']}
+        />
+      </dl>
     </section>
   )
 }
@@ -889,11 +971,73 @@ function AttachmentLinks({ id, planos }: { id: string; planos: LocalPlano[] }) {
   )
 }
 
-function Field({ label, value }: { label: string; value: string }) {
+type EstadoCampo = 'LEIDO_DEL_PLANO' | 'DEDUCIDO' | 'NO_ENCONTRADO'
+
+function estadoCampo(valor: string, fuente: string | null, camposNoEncontrados: string[], alias: string[]): EstadoCampo {
+  const declarados = camposNoEncontrados.map((campo) => campo.toLowerCase())
+  if (alias.some((clave) => declarados.some((campo) => campo.includes(clave)))) return 'NO_ENCONTRADO'
+  if (!valor || valor === 'No especificado') return 'NO_ENCONTRADO'
+  return fuente ? 'LEIDO_DEL_PLANO' : 'DEDUCIDO'
+}
+
+function FieldConEstado({
+  label,
+  valor,
+  fuente,
+  camposNoEncontrados,
+  alias,
+}: {
+  label: string
+  valor: string
+  fuente: string | null
+  camposNoEncontrados: string[]
+  alias: string[]
+}) {
+  const estado = estadoCampo(valor, fuente, camposNoEncontrados, alias)
+  const containerClass =
+    estado === 'LEIDO_DEL_PLANO'
+      ? 'border-ok/25 bg-[#eef7f2]'
+      : estado === 'DEDUCIDO'
+        ? 'border-dashed border-workshop/25 bg-[#f8e7d8]'
+        : 'border-2 border-danger/25 bg-[#f7dfd8]'
+  const badgeClass =
+    estado === 'LEIDO_DEL_PLANO'
+      ? 'bg-[#dff0e8] text-ok'
+      : estado === 'DEDUCIDO'
+        ? 'bg-white/70 text-[#8a4a20]'
+        : 'rounded-full bg-white/70 text-danger'
+  const estadoLabel =
+    estado === 'LEIDO_DEL_PLANO'
+      ? 'Leído del plano'
+      : estado === 'DEDUCIDO'
+        ? 'Deducido · sin fuente en el plano'
+        : 'No encontrado'
+
+  return (
+    <div className={`min-w-0 rounded-md border p-4 ${containerClass}`}>
+      <dt className="text-xs font-bold uppercase tracking-[0.12em] text-steel">{label}</dt>
+      <dd className="mt-1 break-words font-black leading-6 text-ink">{valor}</dd>
+      <span className={`mt-3 inline-flex rounded-md px-2.5 py-1 text-xs font-black ${badgeClass}`}>{estadoLabel}</span>
+      {estado === 'LEIDO_DEL_PLANO' && fuente && (
+        <p className="mt-2 break-words text-xs leading-5 text-steel">Fuente: {fuente}</p>
+      )}
+    </div>
+  )
+}
+
+function Field({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="min-w-0">
       <dt className="text-xs font-bold uppercase tracking-[0.12em] text-steel">{label}</dt>
-      <dd className="mt-1 break-words font-semibold leading-6 text-ink">{value}</dd>
+      <dd className="mt-1 break-words font-semibold leading-6 text-ink">
+        {value === null ? (
+          <span className="inline-flex rounded-md border border-workshop/25 bg-[#f8e7d8] px-2.5 py-1 text-xs font-black text-[#8a4a20]">
+            No declarada por el modelo
+          </span>
+        ) : (
+          value
+        )}
+      </dd>
     </div>
   )
 }
