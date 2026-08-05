@@ -1,10 +1,10 @@
 # Estado de trabajo activo
 
 ## Quién está trabajando ahora
-**AI:** — (libre)
-**Desde:** —
-**Archivos bloqueados:** —
-**Tarea:** —
+**AI:** Claude Code
+**Desde:** 2026-08-05
+**Archivos bloqueados:** `docs/superpowers/specs/2026-08-05-reshape-buzon-medible-design.md`, `.planning/WORKING.md`
+**Tarea:** Escribir el spec del reshape (buzón medible + benchmark). La implementación posterior la hace Codex; los ficheros de código NO están bloqueados todavía.
 
 ## Protocolo
 1. Antes de editar, escribe aquí tu nombre (Claude Code / Codex) + archivos que vas a tocar
