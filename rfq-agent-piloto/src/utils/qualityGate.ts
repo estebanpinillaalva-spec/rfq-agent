@@ -42,6 +42,15 @@ export function evaluarCalidadRFQ(params: {
     })
   }
 
+  if (params.presupuesto.lineas.some((linea) => linea.desglose?.fuente_tiempo === 'estimacion_modelo')) {
+    globalIssues.push({
+      categoria: 'Coste/plazo',
+      severidad: 'AVISO',
+      campo: 'fuente_tiempo',
+      mensaje: 'Los tiempos de operacion son estimacion del modelo, sin validar contra la tabla del taller',
+    })
+  }
+
   const piezas = params.analisis.piezas.map((pieza): QualityPieceScore => {
     const issues: QualityIssue[] = []
     addIf(issues, isMissing(pieza.material), 'Plano/cajetin', 'CRITICO', pieza.denominacion, 'Material', 'Falta material claro para cotizar con seguridad.')

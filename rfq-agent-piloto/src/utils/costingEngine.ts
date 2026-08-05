@@ -17,7 +17,10 @@ export function generarPresupuestoDeterminista(analisis: AnalisisRFQ, config: Co
     }
 
     const precioHora = precioHoraParaOperaciones(config, pieza.operaciones)
-    const costeOperaciones = (pieza.tiempo_estimado_min / 60) * precioHora
+    const minutosTabla = minutosDeTabla(config, pieza.operaciones)
+    const minutos = minutosTabla ?? pieza.tiempo_estimado_min
+    const fuenteTiempo = minutosTabla === null ? 'estimacion_modelo' : 'tabla_taller'
+    const costeOperaciones = (minutos / 60) * precioHora
     const costeSetupTotal = costeSetup(config, pieza.operaciones)
     const costeSetupUnitario = costeSetupTotal / cantidadSegura
     const costeSubcontratasTotal = costeSubcontratas(config, [...pieza.subcontratas, ...pieza.tratamientos, ...pieza.recubrimientos])
@@ -48,6 +51,7 @@ export function generarPresupuestoDeterminista(analisis: AnalisisRFQ, config: Co
         precio_material_eur_kg: material.precioEurKg,
         desperdicio_pct: material.desperdicioPct,
         estado_material: material.estado,
+        fuente_tiempo: fuenteTiempo,
         material_normalizado: material.material?.nombre ?? pieza.material,
         material_confianza: material.material?.confianza,
         avisos_material: material.avisos,
@@ -103,6 +107,16 @@ function precioHoraOperacion(config: ConfigTaller, operacion: string): number | 
   ]
   const match = candidates.find(([pattern]) => pattern.test(normalized))
   return match ? config.precios_hora[match[1]] ?? null : null
+}
+
+// Devuelve null cuando ninguna operacion de la pieza tiene minutos en la
+// config; en ese caso el tiempo sigue viniendo del modelo y se declara.
+function minutosDeTabla(config: ConfigTaller, operaciones: string[]): number | null {
+  const entradas = Object.entries(config.minutos_por_operacion)
+  const minutos = operaciones
+    .map((operacion) => entradas.find(([key]) => normalize(key) === normalize(operacion))?.[1])
+    .filter((valor): valor is number => typeof valor === 'number')
+  return minutos.length === 0 ? null : minutos.reduce((sum, valor) => sum + valor, 0)
 }
 
 function costeSetup(config: ConfigTaller, operaciones: string[]): number {

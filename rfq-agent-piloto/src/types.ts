@@ -124,6 +124,7 @@ export const lineaPresupuestoSchema = z.object({
       precio_material_eur_kg: z.number().nullable().optional(),
       desperdicio_pct: z.number().optional(),
       estado_material: z.enum(['calculado', 'orientativo', 'requiere_revision']).optional(),
+      fuente_tiempo: z.enum(['estimacion_modelo', 'tabla_taller']).optional(),
       material_normalizado: z.string().optional(),
       material_confianza: z.enum(['ALTA', 'MEDIA', 'BAJA']).optional(),
       avisos_material: z.array(z.string()).optional(),
@@ -252,6 +253,7 @@ export const configTallerSchema = z.object({
   capacidad_diaria_horas: z.number().default(7),
   materiales_eur_kg: z.record(z.number()).default({}),
   setup_min_por_operacion: z.record(z.number()).default({}),
+  minutos_por_operacion: z.record(z.number()).default({}),
   subcontratas: z.record(z.object({ coste_minimo: z.number(), plazo_dias: z.number() })).default({}),
 })
 export type ConfigTaller = z.infer<typeof configTallerSchema>
