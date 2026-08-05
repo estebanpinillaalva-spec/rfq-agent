@@ -1,0 +1,73 @@
+{
+  "fecha": "2026-08-05",
+  "proveedor": "mock",
+  "casos": [],
+  "metricas_por_campo": {
+    "numero_plano": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "material": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "cantidad": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "dimensiones": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "tolerancia_general": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "acabado": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "plazo_dias": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    }
+  },
+  "metricas_globales": {
+    "aciertos": 0,
+    "fallos": 0,
+    "no_encontrados": 0,
+    "acierto_pct": null,
+    "invencion_pct": null
+  },
+  "precio": {
+    "mediana": null,
+    "peor_caso": null,
+    "casos_incluidos": 0,
+    "casos_excluidos": 0
+  },
+  "duraciones_ms": [],
+  "errores_dataset": [
+    "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+  ]
+}

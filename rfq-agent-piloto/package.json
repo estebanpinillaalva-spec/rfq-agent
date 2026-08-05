@@ -9,6 +9,7 @@
     "test": "ts-node src/scripts/smokeTest.ts",
     "test:fixtures": "ts-node src/scripts/testFixtures.ts",
     "send:test": "ts-node src/scripts/sendTestEmail.ts",
+    "benchmark": "ts-node src/scripts/benchmark.ts",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },
