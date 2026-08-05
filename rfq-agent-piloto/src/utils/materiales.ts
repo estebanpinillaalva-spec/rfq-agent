@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { normalize } from './normalize'
 import {
   materialBibliotecaSchema,
+  type FormaPieza,
   type MaterialBiblioteca,
   type MaterialBibliotecaItem,
   type PiezaAnalisis,
@@ -111,29 +112,39 @@ export function buscarMaterial(texto: string, biblioteca: MaterialBiblioteca): M
   return partial[0]?.material ?? null
 }
 
-export function estimarPesoKg(dimensiones: string, densidadGCm3: number): number | null {
-  const normalized = dimensiones.toLowerCase().replace(/,/g, '.').replace(/ø/g, 'diametro')
-  const peso = normalized.match(/(?:peso|weight)\s*[:=]?\s*(\d+(?:\.\d+)?)\s*kg/)
-  if (peso) return Number(peso[1])
-
-  const numbers = Array.from(normalized.matchAll(/(\d+(?:\.\d+)?)/g)).map((match) => Number(match[1])).filter((value) => Number.isFinite(value))
-  if (numbers.length < 2) return null
+export function parseDimensiones(texto: string): { forma: FormaPieza; cotas_mm: number[] } | null {
+  const normalized = texto.toLowerCase().replace(/,/g, '.').replace(/ø/g, 'diametro')
+  const numbers = Array.from(normalized.matchAll(/(\d+(?:\.\d+)?)/g))
+    .map((match) => Number(match[1]))
+    .filter((value) => Number.isFinite(value) && value > 0)
 
   if (/diam|d[=\s]|\bradio\b|cilind|barra redonda/.test(normalized)) {
-    const diameter = numbers[0]
-    const length = numbers[1]
-    if (diameter <= 0 || length <= 0) return null
-    const volumeMm3 = Math.PI * (diameter / 2) ** 2 * length
-    return volumeToKg(volumeMm3, densidadGCm3)
+    if (numbers.length < 2) return null
+    return { forma: 'cilindrica', cotas_mm: [numbers[0], numbers[1]] }
   }
 
   if (numbers.length >= 3) {
-    const [a, b, c] = numbers
-    if (a <= 0 || b <= 0 || c <= 0) return null
-    return volumeToKg(a * b * c, densidadGCm3)
+    return { forma: 'prismatica', cotas_mm: [numbers[0], numbers[1], numbers[2]] }
   }
 
   return null
+}
+
+export function estimarPesoKg(dimensiones: string, densidadGCm3: number): number | null {
+  const normalized = dimensiones.toLowerCase().replace(/,/g, '.')
+  const peso = normalized.match(/(?:peso|weight)\s*[:=]?\s*(\d+(?:\.\d+)?)\s*kg/)
+  if (peso) return Number(peso[1])
+
+  const parsed = parseDimensiones(dimensiones)
+  if (!parsed) return null
+
+  if (parsed.forma === 'cilindrica') {
+    const [diametro, longitud] = parsed.cotas_mm
+    return volumeToKg(Math.PI * (diametro / 2) ** 2 * longitud, densidadGCm3)
+  }
+
+  const [a, b, c] = parsed.cotas_mm
+  return volumeToKg(a * b * c, densidadGCm3)
 }
 
 function volumeToKg(volumeMm3: number, densidadGCm3: number): number {
