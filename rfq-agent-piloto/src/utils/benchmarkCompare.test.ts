@@ -151,6 +151,26 @@ describe('compararCaso', () => {
     expect(estadoDe(resultado, 'acabado')).toBe('NO_ENCONTRADO')
   })
 
+  it('no marca numero_plano cuando el modelo declara que falta la revision', () => {
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Revisión del plano'] }), biblioteca)
+    expect(estadoDe(resultado, 'numero_plano')).toBe('ACIERTO')
+  })
+
+  it('marca numero_plano cuando el modelo declara que falta el numero de plano', () => {
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Número de plano'] }), biblioteca)
+    expect(estadoDe(resultado, 'numero_plano')).toBe('NO_ENCONTRADO')
+  })
+
+  it('marca acabado con una etiqueta compuesta en lenguaje natural', () => {
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Acabado superficial'] }), biblioteca)
+    expect(estadoDe(resultado, 'acabado')).toBe('NO_ENCONTRADO')
+  })
+
+  it('marca cantidad con una etiqueta compuesta en lenguaje natural', () => {
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Cantidad específica por pieza'] }), biblioteca)
+    expect(estadoDe(resultado, 'cantidad')).toBe('NO_ENCONTRADO')
+  })
+
   it('compara dos piezas emparejadas por numero de plano', () => {
     const base = analisis({})
     const segunda = pieza({ denominacion: 'Tapa', numero_plano: 'PL-0002' })
