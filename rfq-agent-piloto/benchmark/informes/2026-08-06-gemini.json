@@ -17,9 +17,9 @@
               },
               {
                 "campo": "material",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "F-1120",
-                "obtenido": "F-1120"
+                "obtenido": "S235JR (asumido)"
               },
               {
                 "campo": "cantidad",
@@ -31,13 +31,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "424 x 340 x 40",
-                "obtenido": "424 mm x 340 mm x 184 mm"
+                "obtenido": "424 mm x 340 mm x 308 mm"
               },
               {
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m (asumido)"
+                "obtenido": "UNE EN 22768-m (asumido 'm')"
               },
               {
                 "campo": "acabado",
@@ -64,9 +64,9 @@
               },
               {
                 "campo": "material",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "F-1280",
-                "obtenido": "F-1280"
+                "obtenido": "S235JR (asumido)"
               },
               {
                 "campo": "cantidad",
@@ -84,7 +84,7 @@
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m (asumido)"
+                "obtenido": "UNE EN 22768-m (asumido 'm')"
               },
               {
                 "campo": "acabado",
@@ -111,9 +111,9 @@
               },
               {
                 "campo": "material",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "F-1250",
-                "obtenido": "F-1250"
+                "obtenido": "F-114 (C45) (asumido)"
               },
               {
                 "campo": "cantidad",
@@ -125,13 +125,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "216 x 284",
-                "obtenido": "284 mm x Ø95 mm"
+                "obtenido": "Ø130 mm x 284 mm"
               },
               {
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m (asumido)"
+                "obtenido": "UNE EN 22768-m (asumido 'm')"
               },
               {
                 "campo": "acabado",
@@ -158,9 +158,9 @@
               },
               {
                 "campo": "material",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "F-1150",
-                "obtenido": "F-1150"
+                "obtenido": "S235JR (asumido)"
               },
               {
                 "campo": "cantidad",
@@ -172,13 +172,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "300 x 24",
-                "obtenido": "Ø300 mm x 40 mm"
+                "obtenido": "Ø300 mm x 14 mm"
               },
               {
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m (asumido)"
+                "obtenido": "UNE EN 22768-m (asumido 'm')"
               },
               {
                 "campo": "acabado",
@@ -205,9 +205,9 @@
               },
               {
                 "campo": "material",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "F-1150",
-                "obtenido": "F-1150"
+                "obtenido": "S235JR (asumido)"
               },
               {
                 "campo": "cantidad",
@@ -225,7 +225,7 @@
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m (asumido)"
+                "obtenido": "No especificada"
               },
               {
                 "campo": "acabado",
@@ -252,9 +252,9 @@
               },
               {
                 "campo": "material",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "C-6440",
-                "obtenido": "C-6440"
+                "obtenido": "S235JR (asumido)"
               },
               {
                 "campo": "cantidad",
@@ -264,15 +264,15 @@
               },
               {
                 "campo": "dimensiones",
-                "estado": "FALLO",
+                "estado": "ACIERTO",
                 "esperado": "148 x 76.5",
-                "obtenido": "Ø130 mm x 76.5 mm"
+                "obtenido": "Ø148 mm x 76.5 mm"
               },
               {
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m (asumido)"
+                "obtenido": "No especificada"
               },
               {
                 "campo": "acabado",
@@ -301,15 +301,11 @@
           ]
         },
         "errores_dataset": [
-          "El material \"F-1120\" de la pieza \"11.01\" no resuelve en la biblioteca",
-          "El material \"F-1280\" de la pieza \"11.02\" no resuelve en la biblioteca",
-          "El material \"F-1150\" de la pieza \"11.04\" no resuelve en la biblioteca",
-          "El material \"F-1150\" de la pieza \"11.05\" no resuelve en la biblioteca",
           "El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
         ]
       },
       "desviacionPrecio": null,
-      "durationMs": 32691
+      "durationMs": 51384
     }
   ],
   "metricas_por_campo": {
@@ -321,11 +317,11 @@
       "invencion_pct": 0
     },
     "material": {
-      "aciertos": 1,
-      "fallos": 5,
-      "no_encontrados": 0,
-      "acierto_pct": 16.666666666666664,
-      "invencion_pct": 83.33333333333334
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 6,
+      "acierto_pct": 0,
+      "invencion_pct": 0
     },
     "cantidad": {
       "aciertos": 0,
@@ -335,11 +331,11 @@
       "invencion_pct": 0
     },
     "dimensiones": {
-      "aciertos": 0,
-      "fallos": 6,
+      "aciertos": 1,
+      "fallos": 5,
       "no_encontrados": 0,
-      "acierto_pct": 0,
-      "invencion_pct": 100
+      "acierto_pct": 16.666666666666664,
+      "invencion_pct": 83.33333333333334
     },
     "tolerancia_general": {
       "aciertos": 0,
@@ -365,10 +361,10 @@
   },
   "metricas_globales": {
     "aciertos": 13,
-    "fallos": 11,
-    "no_encontrados": 18,
+    "fallos": 5,
+    "no_encontrados": 24,
     "acierto_pct": 30.952380952380953,
-    "invencion_pct": 45.83333333333333
+    "invencion_pct": 27.77777777777778
   },
   "precio": {
     "mediana": null,
@@ -379,15 +375,11 @@
   "duraciones_ms": [
     {
       "caso_id": "ejemplo-002",
-      "durationMs": 32691
+      "durationMs": 51384
     }
   ],
   "errores_dataset": [
     "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
-    "ejemplo-002: El material \"F-1120\" de la pieza \"11.01\" no resuelve en la biblioteca",
-    "ejemplo-002: El material \"F-1280\" de la pieza \"11.02\" no resuelve en la biblioteca",
-    "ejemplo-002: El material \"F-1150\" de la pieza \"11.04\" no resuelve en la biblioteca",
-    "ejemplo-002: El material \"F-1150\" de la pieza \"11.05\" no resuelve en la biblioteca",
     "ejemplo-002: El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
   ]
 }
