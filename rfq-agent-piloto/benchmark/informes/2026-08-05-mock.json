@@ -69,6 +69,6 @@
   "duraciones_ms": [],
   "errores_dataset": [
     "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
-    "ejemplo-002: sin verdad.json"
+    "ejemplo-002: verdad.json invalido (57 problemas)\npiezas[0].numero_plano: String must contain at least 1 character(s)\npiezas[0].material: String must contain at least 1 character(s)\npiezas[0].cantidad: Number must be greater than 0\npiezas[0].dimensiones.cotas_mm[0]: Number must be greater than 0\npiezas[0].dimensiones.cotas_mm[1]: Number must be greater than 0\npiezas[0].dimensiones.cotas_mm[2]: Number must be greater than 0\npiezas[0].tolerancia_general: String must contain at least 1 character(s)\npiezas[0].acabado: String must contain at least 1 character(s)\npiezas[1].numero_plano: String must contain at least 1 character(s)\npiezas[1].material: String must contain at least 1 character(s)\npiezas[1].cantidad: Number must be greater than 0\npiezas[1].dimensiones.cotas_mm[0]: Number must be greater than 0\n... y 45 problemas mas"
   ]
 }

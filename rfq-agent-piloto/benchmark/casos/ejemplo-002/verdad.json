@@ -1,0 +1,84 @@
+{
+  "version": "2.0",
+  "caso_id": "ejemplo-002",
+  "procedencia": "taller_real_anonimizado",
+  "piezas": [
+    {
+      "_pagina": 1,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    },
+    {
+      "_pagina": 2,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    },
+    {
+      "_pagina": 3,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    },
+    {
+      "_pagina": 4,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    },
+    {
+      "_pagina": 5,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    },
+    {
+      "_pagina": 6,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    },
+    {
+      "_pagina": 7,
+      "numero_plano": "",
+      "material": "",
+      "cantidad": 0,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [0, 0, 0] },
+      "tolerancia_general": "",
+      "acabado": "",
+      "plazo_dias": 20,
+      "precio_referencia": null
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { z } from 'zod'
 import { analisisRFQSchema, presupuestoRFQSchema, type VerdadPieza } from '../types'
 import { cargarBibliotecaMateriales } from '../utils/materiales'
 import { cargarVerdadCaso } from '../utils/verdad'
@@ -57,7 +58,11 @@ async function main(): Promise<void> {
     try {
       verdad = await cargarVerdadCaso(carpeta)
     } catch (error) {
-      erroresDataset.push(`${nombre}: verdad.json invalido - ${mensaje(error)}`)
+      if (error instanceof z.ZodError) {
+        erroresDataset.push(formatearErrorVerdad(nombre, error))
+      } else {
+        erroresDataset.push(`${nombre}: verdad.json invalido - ${mensaje(error)}`)
+      }
       continue
     }
     if (!verdad) {
@@ -114,6 +119,18 @@ async function salidaNueva(antes: string[]): Promise<string | null> {
 
 function mensaje(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
+}
+
+function formatearErrorVerdad(nombre: string, error: z.ZodError): string {
+  const limite = 12
+  const problemas = error.issues.slice(0, limite).map((issue) => {
+    const ruta = issue.path
+      .map((segmento, indice) => typeof segmento === 'number' ? `[${segmento}]` : `${indice === 0 ? '' : '.'}${segmento}`)
+      .join('')
+    return `${ruta}: ${issue.message}`
+  })
+  if (error.issues.length > limite) problemas.push(`... y ${error.issues.length - limite} problemas mas`)
+  return [`${nombre}: verdad.json invalido (${error.issues.length} problemas)`, ...problemas].join('\n')
 }
 
 function desviacion(verdad: VerdadPieza, pvpUnitario: number | null): number | null {
