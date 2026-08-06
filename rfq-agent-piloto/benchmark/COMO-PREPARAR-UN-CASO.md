@@ -65,26 +65,35 @@ Si añades la tabla opcional `minutos_por_operacion`, el motor calcula el tiempo
 
 El contrato lo valida `verdadCasoSchema` (`src/types.ts`).
 
+Un caso lleva **un array de piezas**, porque un RFQ real es un PDF con varias. Una entrada por página.
+
 ```json
 {
-  "version": "1.0",
+  "version": "2.0",
   "caso_id": "cad-publico-002",
   "procedencia": "cad_publico_plano_generado",
-  "numero_plano": "PL-0002",
-  "material": "AISI 304",
-  "cantidad": 10,
-  "dimensiones": { "forma": "prismatica", "cotas_mm": [120, 80, 25] },
-  "tolerancia_general": "ISO 2768-mK",
-  "acabado": "mecanizado",
-  "plazo_dias": 15,
-  "precio_referencia": {
-    "valor_eur": 480,
-    "cantidad": 10,
-    "fuente": "Xometry instant quote",
-    "fecha": "2026-08-05"
-  }
+  "piezas": [
+    {
+      "_pagina": 1,
+      "numero_plano": "PL-0002",
+      "material": "AISI 304",
+      "cantidad": 10,
+      "dimensiones": { "forma": "prismatica", "cotas_mm": [120, 80, 25] },
+      "tolerancia_general": "ISO 2768-mK",
+      "acabado": "mecanizado",
+      "plazo_dias": 15,
+      "precio_referencia": {
+        "valor_eur": 480,
+        "cantidad": 10,
+        "fuente": "Xometry instant quote",
+        "fecha": "2026-08-05"
+      }
+    }
+  ]
 }
 ```
+
+`_pagina` es tu marcador para saber cuál transcribes; Zod lo descarta al validar. El comparador empareja las piezas **por número de plano**, nunca por orden de página, así que dos piezas no pueden repetir número: el schema lo rechaza.
 
 Reglas que el schema rechaza si incumples:
 
@@ -116,6 +125,14 @@ Sale con `mock` por defecto para no gastar cuota. Para medir de verdad contra vi
 ```powershell
 $env:RFQ_BENCHMARK_PROVIDER = "gemini"; npm.cmd run benchmark
 ```
+
+**Una sola corrida no es una medición.** El modelo no es determinista ni con la temperatura a 0: se han visto corridas idénticas dando 308 y 184 para un mismo espesor, y un campo pasando del 83% al 0%. Para sacar conclusiones, repite:
+
+```powershell
+$env:RFQ_BENCHMARK_PROVIDER = "gemini"; $env:RFQ_BENCHMARK_REPETICIONES = "3"; npm.cmd run benchmark
+```
+
+Con más de una repetición el informe muestra la mediana y el rango por campo, y cada celda de la tabla lleva el recuento `aciertos/fallos/no encontrados`. Un `3/0/0` es estable; un `1/2/0` te está diciendo que ese campo no es fiable aunque la mediana parezca decente.
 
 Los informes van a `benchmark/informes/<fecha>-<proveedor>.md` y `.json`.
 

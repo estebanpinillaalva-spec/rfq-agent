@@ -1,8 +1,26 @@
 {
   "fecha": "2026-08-06",
   "proveedor": "mock",
-  "casos": [
+  "repeticiones_solicitadas": 3,
+  "repeticiones": [
     {
+      "repeticion": 1,
+      "caso_id": "ejemplo-001",
+      "error": "el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+    },
+    {
+      "repeticion": 2,
+      "caso_id": "ejemplo-001",
+      "error": "el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+    },
+    {
+      "repeticion": 3,
+      "caso_id": "ejemplo-001",
+      "error": "el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+    },
+    {
+      "repeticion": 1,
+      "caso_id": "ejemplo-002",
       "resultado": {
         "caso_id": "ejemplo-002",
         "piezas": [],
@@ -28,80 +46,240 @@
         "errores_dataset": []
       },
       "desviacionPrecio": null,
-      "durationMs": 3609
+      "durationMs": 3880
+    },
+    {
+      "repeticion": 2,
+      "caso_id": "ejemplo-002",
+      "resultado": {
+        "caso_id": "ejemplo-002",
+        "piezas": [],
+        "deteccion": {
+          "esperadas": 7,
+          "detectadas": 0,
+          "no_detectadas": [
+            "11.01",
+            "11.02",
+            "11.03",
+            "11.04",
+            "11.05",
+            "11.06",
+            "11.07"
+          ],
+          "sobrantes": [
+            "PL-001",
+            "PL-002",
+            "PL-003",
+            "PL-004"
+          ]
+        },
+        "errores_dataset": []
+      },
+      "desviacionPrecio": null,
+      "durationMs": 4106
+    },
+    {
+      "repeticion": 3,
+      "caso_id": "ejemplo-002",
+      "resultado": {
+        "caso_id": "ejemplo-002",
+        "piezas": [],
+        "deteccion": {
+          "esperadas": 7,
+          "detectadas": 0,
+          "no_detectadas": [
+            "11.01",
+            "11.02",
+            "11.03",
+            "11.04",
+            "11.05",
+            "11.06",
+            "11.07"
+          ],
+          "sobrantes": [
+            "PL-001",
+            "PL-002",
+            "PL-003",
+            "PL-004"
+          ]
+        },
+        "errores_dataset": []
+      },
+      "desviacionPrecio": null,
+      "durationMs": 5307
     }
   ],
   "metricas_por_campo": {
     "numero_plano": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     },
     "material": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     },
     "cantidad": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     },
     "dimensiones": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     },
     "tolerancia_general": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     },
     "acabado": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     },
     "plazo_dias": {
-      "aciertos": 0,
-      "fallos": 0,
-      "no_encontrados": 0,
+      "aciertos": null,
+      "fallos": null,
+      "no_encontrados": null,
       "acierto_pct": null,
       "invencion_pct": null
     }
   },
   "metricas_globales": {
-    "aciertos": 0,
-    "fallos": 0,
-    "no_encontrados": 0,
+    "aciertos": null,
+    "fallos": null,
+    "no_encontrados": null,
     "acierto_pct": null,
     "invencion_pct": null
+  },
+  "varianza_por_campo": {
+    "numero_plano": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    },
+    "material": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    },
+    "cantidad": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    },
+    "dimensiones": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    },
+    "tolerancia_general": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    },
+    "acabado": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    },
+    "plazo_dias": {
+      "acierto": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      },
+      "invencion": {
+        "mediana": null,
+        "minimo": null,
+        "maximo": null
+      }
+    }
   },
   "precio": {
     "mediana": null,
     "peor_caso": null,
     "casos_incluidos": 0,
-    "casos_excluidos": 1
+    "casos_excluidos": 3
   },
   "duraciones_ms": [
     {
       "caso_id": "ejemplo-002",
-      "durationMs": 3609
+      "repeticion": 1,
+      "durationMs": 3880
+    },
+    {
+      "caso_id": "ejemplo-002",
+      "repeticion": 2,
+      "durationMs": 4106
+    },
+    {
+      "caso_id": "ejemplo-002",
+      "repeticion": 3,
+      "durationMs": 5307
     }
   ],
   "errores_dataset": [
-    "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+    "ejemplo-001 repeticion 1: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
+    "ejemplo-001 repeticion 2: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
+    "ejemplo-001 repeticion 3: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
+    "ejemplo-001: todas las repeticiones fallaron"
   ]
 }
