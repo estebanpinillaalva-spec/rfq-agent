@@ -50,32 +50,6 @@ export interface Metricas {
   invencion_pct: number
 }
 
-// Las etiquetas de campos_no_encontrados vienen en lenguaje natural, asi que
-// se comparan por palabras completas: "Revision del plano" no debe activar
-// numero_plano solo porque contenga la palabra "plano".
-const ALIAS_CAMPO: Record<CampoNucleo, string[][]> = {
-  numero_plano: [
-    ['numero', 'plano'],
-    ['plano', 'numero'],
-    ['referencia', 'plano'],
-  ],
-  material: [['material']],
-  cantidad: [['cantidad'], ['numero', 'piezas'], ['unidades']],
-  dimensiones: [['dimensiones'], ['medidas'], ['cotas']],
-  tolerancia_general: [
-    ['tolerancia', 'general'],
-    ['tolerancias', 'generales'],
-    ['tolerancia', 'no', 'indicada'],
-    ['tolerancias', 'no', 'indicadas'],
-  ],
-  acabado: [['acabado'], ['rugosidad'], ['tratamiento'], ['recubrimiento']],
-  plazo_dias: [['plazo']],
-}
-
-// Etiquetas como "tolerancia_general_especifica" o "cantidad de agujeros" hablan
-// de otra cosa. Si aparece un calificador, la coincidencia no cuenta.
-const CALIFICADORES_AJENOS = ['especifica', 'especificas', 'especifico', 'especificos', 'revision', 'critica', 'criticas']
-
 export function compararCaso(
   verdad: VerdadCaso,
   analisis: AnalisisRFQ,
@@ -170,26 +144,9 @@ function evaluar(
   return { campo, estado: acierta() ? 'ACIERTO' : 'FALLO', esperado, obtenido }
 }
 
-function palabras(texto: string): string[] {
-  return texto
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .split(/[^a-z0-9]+/)
-    .filter(Boolean)
-}
-
 function declaradoNoEncontrado(campo: CampoNucleo, pieza: PiezaAnalisis): boolean {
-  const declarados = pieza.campos_no_encontrados
-    .map(palabras)
-    .filter(
-      (declarado) =>
-        (campo === 'cantidad' && declarado.some((palabra) => palabra === 'pieza' || palabra === 'piezas')) ||
-        !declarado.some((palabra) => CALIFICADORES_AJENOS.includes(palabra))
-    )
-  return ALIAS_CAMPO[campo].some((alias) =>
-    declarados.some((declarado) => alias.every((palabra) => declarado.includes(palabra)))
-  )
+  const clave = campo === 'plazo_dias' ? 'plazo' : campo
+  return pieza.campos_no_encontrados.includes(clave)
 }
 
 function esVacio(valor: string): boolean {

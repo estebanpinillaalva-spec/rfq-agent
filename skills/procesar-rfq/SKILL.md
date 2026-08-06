@@ -74,6 +74,10 @@ Extrae sistemáticamente:
 
 **REGLA DE HONESTIDAD (prevalece sobre cualquier otra):** es preferible declarar que no sabes leer un campo a rellenarlo con un valor plausible. Un hueco declarado en `campos_no_encontrados` lo resuelve un humano en diez segundos; un valor inventado se cuela en un presupuesto y le cuesta dinero al taller. Nunca uses los ejemplos de este documento como valores de salida.
 
+`campos_no_encontrados` debe contener EXCLUSIVAMENTE claves de esta lista, en minúscula y sin acentos, una por campo, sin frases ni matices entre paréntesis: `numero_plano`, `material`, `cantidad`, `dimensiones`, `tolerancia_general`, `acabado`, `plazo`, `revision`, `escala`, `gdt`, `tolerancias_criticas`, `roscas`, `agujeros`, `tratamientos`, `recubrimientos`, `rugosidades`.
+
+Si declaras un campo en `campos_no_encontrados`, su valor correspondiente debe ir vacío. Nunca declares que falta un campo y a la vez rellenes su valor. Nunca escribas "(asumido)", "(supuesto)" ni equivalentes en ningún valor.
+
 **UNA PIEZA POR PLANO:** cada página de un PDF multipágina es como máximo una pieza. No dupliques una pieza aunque aparezca en varias vistas o secciones de la misma página.
 
 Para cada plano, extrae las 7 dimensiones de análisis:

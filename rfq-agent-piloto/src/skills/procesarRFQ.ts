@@ -1,6 +1,7 @@
 import type { AiClient } from '../llm/aiClient'
 import { analisisRFQSchema, type AnalisisRFQ, type LlmResult, type PlanoEntrada, type ValidacionPlano } from '../types'
 import { parseJsonDefensivo, RETRY_JSON_SUFFIX } from '../utils/json'
+import { reconciliarHonestidad } from '../utils/honestidad'
 import { buscarMaterial, cargarBibliotecaMateriales } from '../utils/materiales'
 import { normalize } from '../utils/normalize'
 import { cargarPromptSkill, cargarReferencia } from '../utils/prompts'
@@ -13,7 +14,8 @@ export async function procesarRFQ(
   validacion: ValidacionPlano
 ): Promise<LlmResult<AnalisisRFQ>> {
   if (ai.provider === 'mock') {
-    const data = analisisRFQSchema.parse(mockAnalisis(email, planos)) as AnalisisRFQ
+    const parsed = analisisRFQSchema.parse(mockAnalisis(email, planos)) as AnalisisRFQ
+    const data = reconciliarHonestidad(parsed)
     return { data, raw: JSON.stringify(data, null, 2), usage: mockUsage() }
   }
 
@@ -143,7 +145,7 @@ Devuelve SOLO JSON valido que cumpla este contrato:
     const retryResponse = await ai.visionJson(prompt + RETRY_JSON_SUFFIX, planos)
     parsed = parseJsonDefensivo(retryResponse.raw, analisisRFQSchema, 'procesarRFQ') as AnalisisRFQ
   }
-  const data = validarMateriales(normalizarAnalisis(parsed))
+  const data = validarMateriales(normalizarAnalisis(reconciliarHonestidad(parsed)))
   return { ...response, data }
 }
 
@@ -234,4 +236,3 @@ function validarMateriales(analisis: AnalisisRFQ): AnalisisRFQ {
     }),
   }
 }
-

@@ -141,13 +141,8 @@ describe('compararCaso', () => {
     expect(estadoDe(resultado, 'tolerancia_general')).toBe('FALLO')
   })
 
-  it('no marca tolerancia_general cuando faltan las tolerancias especificas', () => {
-    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['tolerancia_general_especifica'] }), biblioteca)
-    expect(estadoDe(resultado, 'tolerancia_general')).toBe('ACIERTO')
-  })
-
   it('sigue marcando tolerancia_general cuando falta la general', () => {
-    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['tolerancia general'] }), biblioteca)
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['tolerancia_general'] }), biblioteca)
     expect(estadoDe(resultado, 'tolerancia_general')).toBe('NO_ENCONTRADO')
   })
 
@@ -159,26 +154,6 @@ describe('compararCaso', () => {
   it('marca NO_ENCONTRADO lo que el modelo declara no haber encontrado', () => {
     const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['acabado'] }), biblioteca)
     expect(estadoDe(resultado, 'acabado')).toBe('NO_ENCONTRADO')
-  })
-
-  it('no marca numero_plano cuando el modelo declara que falta la revision', () => {
-    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Revisión del plano'] }), biblioteca)
-    expect(estadoDe(resultado, 'numero_plano')).toBe('ACIERTO')
-  })
-
-  it('marca numero_plano cuando el modelo declara que falta el numero de plano', () => {
-    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Número de plano'] }), biblioteca)
-    expect(estadoDe(resultado, 'numero_plano')).toBe('NO_ENCONTRADO')
-  })
-
-  it('marca acabado con una etiqueta compuesta en lenguaje natural', () => {
-    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Acabado superficial'] }), biblioteca)
-    expect(estadoDe(resultado, 'acabado')).toBe('NO_ENCONTRADO')
-  })
-
-  it('marca cantidad con una etiqueta compuesta en lenguaje natural', () => {
-    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['Cantidad específica por pieza'] }), biblioteca)
-    expect(estadoDe(resultado, 'cantidad')).toBe('NO_ENCONTRADO')
   })
 
   it('compara dos piezas emparejadas por numero de plano', () => {
