@@ -72,13 +72,29 @@ Extrae sistemáticamente:
 7. **Secciones y detalles ampliados**: lee las cotas específicas de cada detalle. Suelen contener las tolerancias más ajustadas.
 8. **Tabla de revisiones** (si existe): verifica que estás leyendo la revisión más reciente (letra o número más alto).
 
+**REGLA DE HONESTIDAD (prevalece sobre cualquier otra):** es preferible declarar que no sabes leer un campo a rellenarlo con un valor plausible. Un hueco declarado en `campos_no_encontrados` lo resuelve un humano en diez segundos; un valor inventado se cuela en un presupuesto y le cuesta dinero al taller. Nunca uses los ejemplos de este documento como valores de salida.
+
+**UNA PIEZA POR PLANO:** cada página de un PDF multipágina es como máximo una pieza. No dupliques una pieza aunque aparezca en varias vistas o secciones de la misma página.
+
 Para cada plano, extrae las 7 dimensiones de análisis:
 
-**A. Identificación**: denominación, número de plano, revisión (VERIFICAR ES LA ULTIMA), escala, empresa emisora. Si no hay cajetín visible → marcar ⚠️ y documentar como asunción.
+**A. Identificación**: denominación, número de plano, revisión (VERIFICAR ES LA ULTIMA), escala, empresa emisora.
 
-**B. Material**: con designación normalizada (F-114, AISI 304L, EN AW-6082, etc.). Si aparece en formato no estándar (p.ej. "acero inox", "aluminio"), busca en tabla-materiales.md la equivalencia más probable y documenta la asunción. Si no hay material en el plano → marcar ⚠️ OBLIGATORIO.
+- `numero_plano` sale EXCLUSIVAMENTE de la celda rotulada "Plano Nº", "Plano N.", "Drawing No.", "Dwg No." o equivalente. NUNCA de la celda de material, ni del código de conjunto, ni del nombre del fichero. Si la celda del número de plano no es legible, deja el campo vacío y añade "numero_plano" a `campos_no_encontrados`.
+- Si el cajetín distingue "Conjunto Nº" y "Plano Nº", el que va en `numero_plano` es el de la pieza, no el del conjunto.
 
-**C. Dimensiones**: generales (largo×ancho×alto o ø×longitud) tomadas de las vistas principales. Incluye cotas de agujeros, profundidades y geometrías interiores si son relevantes para el mecanizado.
+**B. Material**: transcribe la designación EXACTAMENTE como aparece en el plano, sin traducir ni normalizar. Si el plano dice "F-1120", escribe "F-1120".
+
+- PROHIBIDO inferir el material a partir del tipo de pieza, de la aplicación o de lo que sea habitual. PROHIBIDO usar los ejemplos de este documento como valor.
+- Si no encuentras material en el cajetín ni en las notas, deja `material` vacío y añade "material" a `campos_no_encontrados`. No escribas una asunción.
+- Solo si el plano da una designación no normalizada (p.ej. "acero inox") puedes anotar la equivalencia probable en `material_fuente`, dejando en `material` el texto literal del plano.
+
+**C. Dimensiones**: SOLO la envolvente del material de partida, es decir el taco o redondo que habría que comprar para mecanizar la pieza.
+
+- Prismática: largo × ancho × espesor del contorno exterior.
+- Cilíndrica: diámetro exterior máximo × longitud total.
+- NO metas aquí diámetros de agujeros, profundidades, cotas interiores, chaveteros ni cotas de detalles. Esas van a sus campos propios (`agujeros`, `roscas`, `ajustes`, `caracteristicas_criticas`).
+- Si la pieza es un disco o brida, la envolvente es el diámetro exterior y el espesor, aunque tenga un agujero central grande.
 
 **REGLA DE UNIDADES (obligatoria):** Toda cota numérica DEBE ir acompañada de su unidad.
 - Si el plano indica unidades en el cajetín o notas → úsalas.
@@ -90,9 +106,11 @@ Para cada plano, extrae las 7 dimensiones de análisis:
 - Tolerancia general (ISO 2768 clase m/f/c/v o equivalente DIN/ASME)
 - Tolerancias específicas cota a cota (H7, k6, f7, etc. o ±0.0x mm)
 - GD&T detectado en marcos rectangulares: símbolo + valor + datum si existe
-- Si no aparece tolerancia general → asumir ISO 2768-m y marcar como asunción
+- Si no aparece tolerancia general, deja `tolerancias_generales` vacío y añade "tolerancia_general" a `campos_no_encontrados`. No asumas ISO 2768-m.
 
-**E. Acabado superficial**: rugosidad Ra de cada superficie (busca símbolo √). Si no aparece → Ra 3.2 como asunción general, documentar. Recubrimientos y tratamientos térmicos de las notas.
+**E. Acabado superficial**: rugosidad Ra de cada superficie (busca símbolo √). Recubrimientos y tratamientos térmicos de las notas.
+
+- Si no aparece ningún símbolo de rugosidad ni tratamiento, deja `acabado` vacío y añade "acabado" a `campos_no_encontrados`. No asumas Ra 3.2.
 
 **F. Operaciones requeridas (CRÍTICO)**: lista todas las operaciones en orden lógico de fabricación (preparacion → desbaste → semiacabado → acabado → tratamientos → inspeccion). Ver `references/tabla-operaciones.md` para nomenclatura completa. NO omitir operaciones implícitas (p.ej. si hay roscas → incluir roscado; si hay Ra<0.8 → incluir rectificado o bruñido).
 

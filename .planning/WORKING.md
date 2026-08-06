@@ -1,10 +1,10 @@
 # Estado de trabajo activo
 
 ## Quién está trabajando ahora
-**AI:** — (libre)
-**Desde:** —
-**Archivos bloqueados:** —
-**Tarea:** —
+**AI:** Codex (dirigido por Claude Code)
+**Desde:** 2026-08-06
+**Archivos bloqueados:** `skills/procesar-rfq/SKILL.md`
+**Tarea:** Corregir el prompt de extraccion tras la primera medicion real: deja de inventar material/tolerancia/acabado, separa envolvente de cotas de detalle, y fija que numero_plano sale de la celda "Plano N", no de la de material.
 
 Tarea 9 hecha (6cd3ff0): comparador corregido contra planos reales. Bloqueado en el usuario: transcribir las 7 piezas de `benchmark/casos/ejemplo-002/S01 - Piezas adicionales.pdf` a `verdad.json` v2.0. Ningun agente debe escribir ese fichero.
 

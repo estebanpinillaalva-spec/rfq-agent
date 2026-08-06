@@ -5,93 +5,370 @@
     {
       "resultado": {
         "caso_id": "ejemplo-002",
-        "piezas": [],
+        "piezas": [
+          {
+            "numero_plano": "11.01",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "11.01",
+                "obtenido": "11.01"
+              },
+              {
+                "campo": "material",
+                "estado": "FALLO",
+                "esperado": "F-1120",
+                "obtenido": "F-1120"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "2",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "424 x 340 x 40",
+                "obtenido": "424 mm x 340 mm x 308 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m (asumida)"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": "No especificado"
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.02",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "11.02",
+                "obtenido": "11.02"
+              },
+              {
+                "campo": "material",
+                "estado": "FALLO",
+                "esperado": "F-1280",
+                "obtenido": "F-1280"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "536 x 108",
+                "obtenido": "Ø515 mm x 108 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m (asumida)"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N9",
+                "obtenido": "No especificado"
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.03",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "11.03",
+                "obtenido": "11.03"
+              },
+              {
+                "campo": "material",
+                "estado": "ACIERTO",
+                "esperado": "F-1250",
+                "obtenido": "F-1250"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "216 x 284",
+                "obtenido": "Ø130 mm x 284 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m (asumida)"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N9",
+                "obtenido": "No especificado"
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.04",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "11.04",
+                "obtenido": "11.04"
+              },
+              {
+                "campo": "material",
+                "estado": "FALLO",
+                "esperado": "F-1150",
+                "obtenido": "F-1150"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "2",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "300 x 24",
+                "obtenido": "Ø300 mm x 40 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m (asumida)"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": "No especificado"
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.05",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "11.05",
+                "obtenido": "11.05"
+              },
+              {
+                "campo": "material",
+                "estado": "FALLO",
+                "esperado": "F-1150",
+                "obtenido": "F-1150"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "212 x 26",
+                "obtenido": "Ø95 mm x 26 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m (asumida)"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": "No especificado"
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.06",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "11.06",
+                "obtenido": "11.06"
+              },
+              {
+                "campo": "material",
+                "estado": "FALLO",
+                "esperado": "C-6440",
+                "obtenido": "C-6440"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "ACIERTO",
+                "esperado": "148 x 76.5",
+                "obtenido": "Ø148 mm x 76.5 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m (asumida)"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": "No especificado"
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          }
+        ],
         "deteccion": {
           "esperadas": 7,
-          "detectadas": 0,
+          "detectadas": 6,
           "no_detectadas": [
-            "11.01",
-            "11.02",
-            "11.03",
-            "11.04",
-            "11.05",
-            "11.06",
             "11.07"
           ],
           "sobrantes": [
-            "F-1120",
-            "F-1280",
-            "F-1250",
-            "F-1150",
-            "F-1150",
-            "C-6440",
-            "F-1120",
-            "F-1120"
+            "11.08",
+            "11.08"
           ]
         },
-        "errores_dataset": []
+        "errores_dataset": [
+          "El material \"F-1120\" de la pieza \"11.01\" no resuelve en la biblioteca",
+          "El material \"F-1280\" de la pieza \"11.02\" no resuelve en la biblioteca",
+          "El material \"F-1150\" de la pieza \"11.04\" no resuelve en la biblioteca",
+          "El material \"F-1150\" de la pieza \"11.05\" no resuelve en la biblioteca",
+          "El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
+        ]
       },
       "desviacionPrecio": null,
-      "durationMs": 52587
+      "durationMs": 58183
     }
   ],
   "metricas_por_campo": {
     "numero_plano": {
       "aciertos": 0,
       "fallos": 0,
-      "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "no_encontrados": 6,
+      "acierto_pct": 0,
+      "invencion_pct": 0
     },
     "material": {
-      "aciertos": 0,
-      "fallos": 0,
+      "aciertos": 1,
+      "fallos": 5,
       "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "acierto_pct": 16.666666666666664,
+      "invencion_pct": 83.33333333333334
     },
     "cantidad": {
       "aciertos": 0,
       "fallos": 0,
-      "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "no_encontrados": 6,
+      "acierto_pct": 0,
+      "invencion_pct": 0
     },
     "dimensiones": {
-      "aciertos": 0,
-      "fallos": 0,
+      "aciertos": 1,
+      "fallos": 5,
       "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "acierto_pct": 16.666666666666664,
+      "invencion_pct": 83.33333333333334
     },
     "tolerancia_general": {
-      "aciertos": 0,
+      "aciertos": 6,
       "fallos": 0,
       "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "acierto_pct": 100,
+      "invencion_pct": 0
     },
     "acabado": {
       "aciertos": 0,
       "fallos": 0,
-      "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "no_encontrados": 6,
+      "acierto_pct": 0,
+      "invencion_pct": 0
     },
     "plazo_dias": {
-      "aciertos": 0,
+      "aciertos": 6,
       "fallos": 0,
       "no_encontrados": 0,
-      "acierto_pct": null,
-      "invencion_pct": null
+      "acierto_pct": 100,
+      "invencion_pct": 0
     }
   },
   "metricas_globales": {
-    "aciertos": 0,
-    "fallos": 0,
-    "no_encontrados": 0,
-    "acierto_pct": null,
-    "invencion_pct": null
+    "aciertos": 14,
+    "fallos": 10,
+    "no_encontrados": 18,
+    "acierto_pct": 33.33333333333333,
+    "invencion_pct": 41.66666666666667
   },
   "precio": {
     "mediana": null,
@@ -102,10 +379,15 @@
   "duraciones_ms": [
     {
       "caso_id": "ejemplo-002",
-      "durationMs": 52587
+      "durationMs": 58183
     }
   ],
   "errores_dataset": [
-    "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+    "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
+    "ejemplo-002: El material \"F-1120\" de la pieza \"11.01\" no resuelve en la biblioteca",
+    "ejemplo-002: El material \"F-1280\" de la pieza \"11.02\" no resuelve en la biblioteca",
+    "ejemplo-002: El material \"F-1150\" de la pieza \"11.04\" no resuelve en la biblioteca",
+    "ejemplo-002: El material \"F-1150\" de la pieza \"11.05\" no resuelve en la biblioteca",
+    "ejemplo-002: El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
   ]
 }
