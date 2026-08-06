@@ -23,7 +23,7 @@
               },
               {
                 "campo": "cantidad",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "2",
                 "obtenido": "1"
               },
@@ -31,13 +31,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "424 x 340 x 40",
-                "obtenido": "424 mm x 340 mm x 308 mm (aproximado envolvente)"
+                "obtenido": "424 mm x 340 mm x 184 mm"
               },
               {
                 "campo": "tolerancia_general",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
+                "obtenido": "UNE EN 22768-m (asumido)"
               },
               {
                 "campo": "acabado",
@@ -70,7 +70,7 @@
               },
               {
                 "campo": "cantidad",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "1",
                 "obtenido": "1"
               },
@@ -78,13 +78,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "536 x 108",
-                "obtenido": "Ø515 mm x 108 mm (aproximado envolvente)"
+                "obtenido": "Ø515 mm x 108 mm"
               },
               {
                 "campo": "tolerancia_general",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
+                "obtenido": "UNE EN 22768-m (asumido)"
               },
               {
                 "campo": "acabado",
@@ -117,7 +117,7 @@
               },
               {
                 "campo": "cantidad",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "1",
                 "obtenido": "1"
               },
@@ -125,13 +125,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "216 x 284",
-                "obtenido": "Ø130k5 x 284 mm (aproximado envolvente)"
+                "obtenido": "284 mm x Ø95 mm"
               },
               {
                 "campo": "tolerancia_general",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
+                "obtenido": "UNE EN 22768-m (asumido)"
               },
               {
                 "campo": "acabado",
@@ -164,7 +164,7 @@
               },
               {
                 "campo": "cantidad",
-                "estado": "FALLO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "2",
                 "obtenido": "1"
               },
@@ -172,13 +172,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "300 x 24",
-                "obtenido": "Ø300 mm x 40 mm (aproximado envolvente)"
+                "obtenido": "Ø300 mm x 40 mm"
               },
               {
                 "campo": "tolerancia_general",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
+                "obtenido": "UNE EN 22768-m (asumido)"
               },
               {
                 "campo": "acabado",
@@ -211,7 +211,7 @@
               },
               {
                 "campo": "cantidad",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "1",
                 "obtenido": "1"
               },
@@ -219,13 +219,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "212 x 26",
-                "obtenido": "Ø95 mm x 26 mm (aproximado envolvente)"
+                "obtenido": "Ø95 mm x 26 mm"
               },
               {
                 "campo": "tolerancia_general",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
+                "obtenido": "UNE EN 22768-m (asumido)"
               },
               {
                 "campo": "acabado",
@@ -258,7 +258,7 @@
               },
               {
                 "campo": "cantidad",
-                "estado": "ACIERTO",
+                "estado": "NO_ENCONTRADO",
                 "esperado": "1",
                 "obtenido": "1"
               },
@@ -266,13 +266,13 @@
                 "campo": "dimensiones",
                 "estado": "FALLO",
                 "esperado": "148 x 76.5",
-                "obtenido": "Ø148h8 x 76.5 mm (aproximado envolvente)"
+                "obtenido": "Ø130 mm x 76.5 mm"
               },
               {
                 "campo": "tolerancia_general",
                 "estado": "NO_ENCONTRADO",
                 "esperado": "UNE EN 22768-m",
-                "obtenido": "No especificado"
+                "obtenido": "UNE EN 22768-m (asumido)"
               },
               {
                 "campo": "acabado",
@@ -309,7 +309,7 @@
         ]
       },
       "desviacionPrecio": null,
-      "durationMs": 32329
+      "durationMs": 32691
     }
   ],
   "metricas_por_campo": {
@@ -328,11 +328,11 @@
       "invencion_pct": 83.33333333333334
     },
     "cantidad": {
-      "aciertos": 4,
-      "fallos": 2,
-      "no_encontrados": 0,
-      "acierto_pct": 66.66666666666666,
-      "invencion_pct": 33.33333333333333
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 6,
+      "acierto_pct": 0,
+      "invencion_pct": 0
     },
     "dimensiones": {
       "aciertos": 0,
@@ -342,10 +342,10 @@
       "invencion_pct": 100
     },
     "tolerancia_general": {
-      "aciertos": 5,
+      "aciertos": 0,
       "fallos": 0,
-      "no_encontrados": 1,
-      "acierto_pct": 83.33333333333334,
+      "no_encontrados": 6,
+      "acierto_pct": 0,
       "invencion_pct": 0
     },
     "acabado": {
@@ -364,11 +364,11 @@
     }
   },
   "metricas_globales": {
-    "aciertos": 22,
-    "fallos": 13,
-    "no_encontrados": 7,
-    "acierto_pct": 52.38095238095239,
-    "invencion_pct": 37.142857142857146
+    "aciertos": 13,
+    "fallos": 11,
+    "no_encontrados": 18,
+    "acierto_pct": 30.952380952380953,
+    "invencion_pct": 45.83333333333333
   },
   "precio": {
     "mediana": null,
@@ -379,7 +379,7 @@
   "duraciones_ms": [
     {
       "caso_id": "ejemplo-002",
-      "durationMs": 32329
+      "durationMs": 32691
     }
   ],
   "errores_dataset": [

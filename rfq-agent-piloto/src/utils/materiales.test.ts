@@ -18,6 +18,30 @@ describe('parseDimensiones', () => {
     expect(parseDimensiones('120,5 x 80 x 25')).toEqual({ forma: 'prismatica', cotas_mm: [120.5, 80, 25] })
   })
 
+  it('ignora el ajuste ISO pegado a la cota', () => {
+    expect(parseDimensiones('Ø148h8 x 76.5 mm')).toEqual({ forma: 'cilindrica', cotas_mm: [148, 76.5] })
+  })
+
+  it('ignora el ajuste ISO con espacio', () => {
+    expect(parseDimensiones('Ø130 k5 x 284 mm')).toEqual({ forma: 'cilindrica', cotas_mm: [130, 284] })
+  })
+
+  it('ignora el ajuste ISO en mayuscula', () => {
+    expect(parseDimensiones('120 H7 x 80 x 25')).toEqual({ forma: 'prismatica', cotas_mm: [120, 80, 25] })
+  })
+
+  it('no confunde la x de separacion con una clase de ajuste', () => {
+    expect(parseDimensiones('120x80x25')).toEqual({ forma: 'prismatica', cotas_mm: [120, 80, 25] })
+  })
+
+  it('no destroza una designacion de rosca', () => {
+    // Comportamiento conocido, no deseado: la rosca todavia contamina las cotas.
+    expect(parseDimensiones('Placa con roscas M12x1.75, envolvente 200 x 100 x 20')).toEqual({
+      forma: 'prismatica',
+      cotas_mm: [12, 1.75, 200],
+    })
+  })
+
   it('devuelve null si no hay cotas suficientes', () => {
     expect(parseDimensiones('pieza pequena')).toBeNull()
   })

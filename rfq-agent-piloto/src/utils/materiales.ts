@@ -113,7 +113,10 @@ export function buscarMaterial(texto: string, biblioteca: MaterialBiblioteca): M
 }
 
 export function parseDimensiones(texto: string): { forma: FormaPieza; cotas_mm: number[] } | null {
-  const normalized = texto.toLowerCase().replace(/,/g, '.').replace(/ø/g, 'diametro')
+  // Las cotas con ajuste ISO ("148h8", "130 k5", "30H7") meterian el grado de
+  // tolerancia como si fuera una cota mas. Se quita la clase y se deja el numero.
+  const AJUSTE_ISO = /(\d+(?:\.\d+)?)\s?(?:js|[a-hj-np-uy-z])(\d{1,2})(?![\d.])/gi
+  const normalized = texto.toLowerCase().replace(/,/g, '.').replace(/ø/g, 'diametro').replace(AJUSTE_ISO, '$1')
   const numbers = Array.from(normalized.matchAll(/(\d+(?:\.\d+)?)/g))
     .map((match) => Number(match[1]))
     .filter((value) => Number.isFinite(value) && value > 0)

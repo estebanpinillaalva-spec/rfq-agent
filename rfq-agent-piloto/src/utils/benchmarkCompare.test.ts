@@ -141,6 +141,16 @@ describe('compararCaso', () => {
     expect(estadoDe(resultado, 'tolerancia_general')).toBe('FALLO')
   })
 
+  it('no marca tolerancia_general cuando faltan las tolerancias especificas', () => {
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['tolerancia_general_especifica'] }), biblioteca)
+    expect(estadoDe(resultado, 'tolerancia_general')).toBe('ACIERTO')
+  })
+
+  it('sigue marcando tolerancia_general cuando falta la general', () => {
+    const resultado = compararCaso(verdad, analisis({ campos_no_encontrados: ['tolerancia general'] }), biblioteca)
+    expect(estadoDe(resultado, 'tolerancia_general')).toBe('NO_ENCONTRADO')
+  })
+
   it('falla si el acabado no es clasificable', () => {
     const resultado = compararCaso(verdad, analisis({ acabado: 'segun norma interna' }), biblioteca)
     expect(estadoDe(resultado, 'acabado')).toBe('FALLO')

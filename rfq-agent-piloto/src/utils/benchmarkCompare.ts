@@ -72,6 +72,10 @@ const ALIAS_CAMPO: Record<CampoNucleo, string[][]> = {
   plazo_dias: [['plazo']],
 }
 
+// Etiquetas como "tolerancia_general_especifica" o "cantidad de agujeros" hablan
+// de otra cosa. Si aparece un calificador, la coincidencia no cuenta.
+const CALIFICADORES_AJENOS = ['especifica', 'especificas', 'especifico', 'especificos', 'revision', 'critica', 'criticas']
+
 export function compararCaso(
   verdad: VerdadCaso,
   analisis: AnalisisRFQ,
@@ -176,7 +180,13 @@ function palabras(texto: string): string[] {
 }
 
 function declaradoNoEncontrado(campo: CampoNucleo, pieza: PiezaAnalisis): boolean {
-  const declarados = pieza.campos_no_encontrados.map(palabras)
+  const declarados = pieza.campos_no_encontrados
+    .map(palabras)
+    .filter(
+      (declarado) =>
+        (campo === 'cantidad' && declarado.some((palabra) => palabra === 'pieza' || palabra === 'piezas')) ||
+        !declarado.some((palabra) => CALIFICADORES_AJENOS.includes(palabra))
+    )
   return ALIAS_CAMPO[campo].some((alias) =>
     declarados.some((declarado) => alias.every((palabra) => declarado.includes(palabra)))
   )
