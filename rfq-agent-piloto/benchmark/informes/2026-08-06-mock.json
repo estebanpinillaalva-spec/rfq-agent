@@ -1,0 +1,107 @@
+{
+  "fecha": "2026-08-06",
+  "proveedor": "mock",
+  "casos": [
+    {
+      "resultado": {
+        "caso_id": "ejemplo-002",
+        "piezas": [],
+        "deteccion": {
+          "esperadas": 7,
+          "detectadas": 0,
+          "no_detectadas": [
+            "11.01",
+            "11.02",
+            "11.03",
+            "11.04",
+            "11.05",
+            "11.06",
+            "11.07"
+          ],
+          "sobrantes": [
+            "PL-001",
+            "PL-002",
+            "PL-003",
+            "PL-004"
+          ]
+        },
+        "errores_dataset": []
+      },
+      "desviacionPrecio": null,
+      "durationMs": 3609
+    }
+  ],
+  "metricas_por_campo": {
+    "numero_plano": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "material": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "cantidad": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "dimensiones": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "tolerancia_general": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "acabado": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    },
+    "plazo_dias": {
+      "aciertos": 0,
+      "fallos": 0,
+      "no_encontrados": 0,
+      "acierto_pct": null,
+      "invencion_pct": null
+    }
+  },
+  "metricas_globales": {
+    "aciertos": 0,
+    "fallos": 0,
+    "no_encontrados": 0,
+    "acierto_pct": null,
+    "invencion_pct": null
+  },
+  "precio": {
+    "mediana": null,
+    "peor_caso": null,
+    "casos_incluidos": 0,
+    "casos_excluidos": 1
+  },
+  "duraciones_ms": [
+    {
+      "caso_id": "ejemplo-002",
+      "durationMs": 3609
+    }
+  ],
+  "errores_dataset": [
+    "ejemplo-001: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+  ]
+}
