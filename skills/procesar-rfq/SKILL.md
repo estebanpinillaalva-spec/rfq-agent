@@ -93,6 +93,15 @@ Para cada plano, extrae las 7 dimensiones de análisis:
 - Si no encuentras material en el cajetín ni en las notas, deja `material` vacío y añade "material" a `campos_no_encontrados`. No escribas una asunción.
 - Solo si el plano da una designación no normalizada (p.ej. "acero inox") puedes anotar la equivalencia probable en `material_fuente`, dejando en `material` el texto literal del plano.
 
+**Dónde está cada dato en un cajetín español típico:** el cajetín suele ser una rejilla de celdas rotuladas. Busca activamente estas etiquetas y lee la celda contigua:
+
+- Material: "Material", "Material y medidas", "Materia", "Norma", "Werkstoff", "Matière". En planos españoles antiguos el valor tiene forma `F-1120`, `F-1250`, `C-6440`, `A-42`.
+- Número de plano: "Plano Nº", "Plano N.", "Nº Plano", "Drawing No.".
+- Cantidad: "Nº Piezas", "N. Piezas", "Cant.", "Cantidad", a menudo junto a "Marca".
+- Tolerancia general: suele ser una línea de texto dentro del cajetín, con forma "Tol. no indicadas UNE EN 22768-m", "ISO 2768-mK" o "DIN 7168-m".
+
+Declarar un campo en `campos_no_encontrados` es SOLO para cuando la celda no existe o es ilegible. NO lo uses porque dudes de cómo interpretar un valor que sí ves: en ese caso transcribe lo que pone y anota tu duda en el campo `*_fuente` correspondiente.
+
 **C. Dimensiones**: SOLO la envolvente del material de partida, es decir el taco o redondo que habría que comprar para mecanizar la pieza.
 
 - Prismática: largo × ancho × espesor del contorno exterior.
@@ -113,6 +122,8 @@ Para cada plano, extrae las 7 dimensiones de análisis:
 - Si no aparece tolerancia general, deja `tolerancias_generales` vacío y añade "tolerancia_general" a `campos_no_encontrados`. No asumas ISO 2768-m.
 
 **E. Acabado superficial**: rugosidad Ra de cada superficie (busca símbolo √). Recubrimientos y tratamientos térmicos de las notas.
+
+Los símbolos de rugosidad suelen estar **fuera de las vistas, en una esquina del marco del plano** (con frecuencia arriba a la izquierda), en forma de triángulos con un grado `N6`, `N7`, `N9` o un valor `Ra`. Búscalos ahí antes de declarar que no hay acabado.
 
 - Si no aparece ningún símbolo de rugosidad ni tratamiento, deja `acabado` vacío y añade "acabado" a `campos_no_encontrados`. No asumas Ra 3.2.
 
