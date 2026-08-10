@@ -21,7 +21,309 @@
     {
       "repeticion": 1,
       "caso_id": "ejemplo-002",
-      "error": "el pipeline fallo - Error: Gemini vision fallo tras 3 intentos: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
+      "resultado": {
+        "caso_id": "ejemplo-002",
+        "piezas": [
+          {
+            "numero_plano": "11.01",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "ACIERTO",
+                "esperado": "11.01",
+                "obtenido": "11.01"
+              },
+              {
+                "campo": "material",
+                "estado": "ACIERTO",
+                "esperado": "F-1120",
+                "obtenido": "F-1120"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "FALLO",
+                "esperado": "2",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "424 x 340 x 40",
+                "obtenido": "424 mm x 340 mm x 184 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": ""
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.02",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "ACIERTO",
+                "esperado": "11.02",
+                "obtenido": "11.02"
+              },
+              {
+                "campo": "material",
+                "estado": "ACIERTO",
+                "esperado": "F-1280",
+                "obtenido": "F-1280"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "ACIERTO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "ACIERTO",
+                "esperado": "515 x 108",
+                "obtenido": "Ø515 mm x 108 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N9",
+                "obtenido": ""
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.03",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "ACIERTO",
+                "esperado": "11.03",
+                "obtenido": "11.03"
+              },
+              {
+                "campo": "material",
+                "estado": "ACIERTO",
+                "esperado": "F-1250",
+                "obtenido": "F-1250"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "ACIERTO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "216 x 284",
+                "obtenido": "Ø130k5 x 284 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N9",
+                "obtenido": ""
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.04",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "ACIERTO",
+                "esperado": "11.04",
+                "obtenido": "11.04"
+              },
+              {
+                "campo": "material",
+                "estado": "ACIERTO",
+                "esperado": "F-1150",
+                "obtenido": "F-1150"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "FALLO",
+                "esperado": "2",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "ACIERTO",
+                "esperado": "300 x 40",
+                "obtenido": "Ø300 mm x 40 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": ""
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.05",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "ACIERTO",
+                "esperado": "11.05",
+                "obtenido": "11.05"
+              },
+              {
+                "campo": "material",
+                "estado": "ACIERTO",
+                "esperado": "F-1150",
+                "obtenido": "F-1150"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "ACIERTO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "FALLO",
+                "esperado": "212 x 26",
+                "obtenido": "Ø95 mm x 26 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": ""
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          },
+          {
+            "numero_plano": "11.06",
+            "campos": [
+              {
+                "campo": "numero_plano",
+                "estado": "ACIERTO",
+                "esperado": "11.06",
+                "obtenido": "11.06"
+              },
+              {
+                "campo": "material",
+                "estado": "FALLO",
+                "esperado": "C-6440",
+                "obtenido": "C-6440"
+              },
+              {
+                "campo": "cantidad",
+                "estado": "ACIERTO",
+                "esperado": "1",
+                "obtenido": "1"
+              },
+              {
+                "campo": "dimensiones",
+                "estado": "ACIERTO",
+                "esperado": "148 x 76.5",
+                "obtenido": "Ø148h8 x 76.5 mm"
+              },
+              {
+                "campo": "tolerancia_general",
+                "estado": "ACIERTO",
+                "esperado": "UNE EN 22768-m",
+                "obtenido": "UNE EN 22768-m"
+              },
+              {
+                "campo": "acabado",
+                "estado": "NO_ENCONTRADO",
+                "esperado": "N7",
+                "obtenido": ""
+              },
+              {
+                "campo": "plazo_dias",
+                "estado": "ACIERTO",
+                "esperado": "20",
+                "obtenido": "20 dias"
+              }
+            ]
+          }
+        ],
+        "deteccion": {
+          "esperadas": 7,
+          "detectadas": 6,
+          "no_detectadas": [
+            "11.07"
+          ],
+          "sobrantes": [
+            "11.08",
+            "11.08"
+          ]
+        },
+        "errores_dataset": [
+          "El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
+        ]
+      },
+      "desviacionPrecio": null,
+      "durationMs": 44411
     },
     {
       "repeticion": 2,
@@ -99,8 +401,8 @@
               },
               {
                 "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "536 x 108",
+                "estado": "ACIERTO",
+                "esperado": "515 x 108",
                 "obtenido": "Ø515 mm x 108 mm"
               },
               {
@@ -193,8 +495,8 @@
               },
               {
                 "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "300 x 24",
+                "estado": "ACIERTO",
+                "esperado": "300 x 40",
                 "obtenido": "Ø300 mm x 40 mm"
               },
               {
@@ -328,314 +630,12 @@
         ]
       },
       "desviacionPrecio": null,
-      "durationMs": 29434
+      "durationMs": 39426
     },
     {
       "repeticion": 3,
       "caso_id": "ejemplo-002",
-      "resultado": {
-        "caso_id": "ejemplo-002",
-        "piezas": [
-          {
-            "numero_plano": "11.01",
-            "campos": [
-              {
-                "campo": "numero_plano",
-                "estado": "ACIERTO",
-                "esperado": "11.01",
-                "obtenido": "11.01"
-              },
-              {
-                "campo": "material",
-                "estado": "ACIERTO",
-                "esperado": "F-1120",
-                "obtenido": "F-1120"
-              },
-              {
-                "campo": "cantidad",
-                "estado": "FALLO",
-                "esperado": "2",
-                "obtenido": "1"
-              },
-              {
-                "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "424 x 340 x 40",
-                "obtenido": "424 mm x 340 mm x 184 mm"
-              },
-              {
-                "campo": "tolerancia_general",
-                "estado": "ACIERTO",
-                "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
-              },
-              {
-                "campo": "acabado",
-                "estado": "NO_ENCONTRADO",
-                "esperado": "N7",
-                "obtenido": ""
-              },
-              {
-                "campo": "plazo_dias",
-                "estado": "ACIERTO",
-                "esperado": "20",
-                "obtenido": "20 dias"
-              }
-            ]
-          },
-          {
-            "numero_plano": "11.02",
-            "campos": [
-              {
-                "campo": "numero_plano",
-                "estado": "ACIERTO",
-                "esperado": "11.02",
-                "obtenido": "11.02"
-              },
-              {
-                "campo": "material",
-                "estado": "ACIERTO",
-                "esperado": "F-1280",
-                "obtenido": "F-1280"
-              },
-              {
-                "campo": "cantidad",
-                "estado": "ACIERTO",
-                "esperado": "1",
-                "obtenido": "1"
-              },
-              {
-                "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "536 x 108",
-                "obtenido": "Ø515 mm x 108 mm"
-              },
-              {
-                "campo": "tolerancia_general",
-                "estado": "ACIERTO",
-                "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
-              },
-              {
-                "campo": "acabado",
-                "estado": "NO_ENCONTRADO",
-                "esperado": "N9",
-                "obtenido": ""
-              },
-              {
-                "campo": "plazo_dias",
-                "estado": "ACIERTO",
-                "esperado": "20",
-                "obtenido": "20 dias"
-              }
-            ]
-          },
-          {
-            "numero_plano": "11.03",
-            "campos": [
-              {
-                "campo": "numero_plano",
-                "estado": "ACIERTO",
-                "esperado": "11.03",
-                "obtenido": "11.03"
-              },
-              {
-                "campo": "material",
-                "estado": "ACIERTO",
-                "esperado": "F-1250",
-                "obtenido": "F-1250"
-              },
-              {
-                "campo": "cantidad",
-                "estado": "ACIERTO",
-                "esperado": "1",
-                "obtenido": "1"
-              },
-              {
-                "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "216 x 284",
-                "obtenido": "Ø130k5 x 284 mm"
-              },
-              {
-                "campo": "tolerancia_general",
-                "estado": "ACIERTO",
-                "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
-              },
-              {
-                "campo": "acabado",
-                "estado": "NO_ENCONTRADO",
-                "esperado": "N9",
-                "obtenido": ""
-              },
-              {
-                "campo": "plazo_dias",
-                "estado": "ACIERTO",
-                "esperado": "20",
-                "obtenido": "20 dias"
-              }
-            ]
-          },
-          {
-            "numero_plano": "11.04",
-            "campos": [
-              {
-                "campo": "numero_plano",
-                "estado": "ACIERTO",
-                "esperado": "11.04",
-                "obtenido": "11.04"
-              },
-              {
-                "campo": "material",
-                "estado": "ACIERTO",
-                "esperado": "F-1150",
-                "obtenido": "F-1150"
-              },
-              {
-                "campo": "cantidad",
-                "estado": "FALLO",
-                "esperado": "2",
-                "obtenido": "1"
-              },
-              {
-                "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "300 x 24",
-                "obtenido": "Ø300 mm x 40 mm"
-              },
-              {
-                "campo": "tolerancia_general",
-                "estado": "ACIERTO",
-                "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
-              },
-              {
-                "campo": "acabado",
-                "estado": "NO_ENCONTRADO",
-                "esperado": "N7",
-                "obtenido": ""
-              },
-              {
-                "campo": "plazo_dias",
-                "estado": "ACIERTO",
-                "esperado": "20",
-                "obtenido": "20 dias"
-              }
-            ]
-          },
-          {
-            "numero_plano": "11.05",
-            "campos": [
-              {
-                "campo": "numero_plano",
-                "estado": "ACIERTO",
-                "esperado": "11.05",
-                "obtenido": "11.05"
-              },
-              {
-                "campo": "material",
-                "estado": "ACIERTO",
-                "esperado": "F-1150",
-                "obtenido": "F-1150"
-              },
-              {
-                "campo": "cantidad",
-                "estado": "ACIERTO",
-                "esperado": "1",
-                "obtenido": "1"
-              },
-              {
-                "campo": "dimensiones",
-                "estado": "FALLO",
-                "esperado": "212 x 26",
-                "obtenido": "Ø95 mm x 26 mm"
-              },
-              {
-                "campo": "tolerancia_general",
-                "estado": "ACIERTO",
-                "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
-              },
-              {
-                "campo": "acabado",
-                "estado": "NO_ENCONTRADO",
-                "esperado": "N7",
-                "obtenido": ""
-              },
-              {
-                "campo": "plazo_dias",
-                "estado": "ACIERTO",
-                "esperado": "20",
-                "obtenido": "20 dias"
-              }
-            ]
-          },
-          {
-            "numero_plano": "11.06",
-            "campos": [
-              {
-                "campo": "numero_plano",
-                "estado": "ACIERTO",
-                "esperado": "11.06",
-                "obtenido": "11.06"
-              },
-              {
-                "campo": "material",
-                "estado": "FALLO",
-                "esperado": "C-6440",
-                "obtenido": "C-6440"
-              },
-              {
-                "campo": "cantidad",
-                "estado": "ACIERTO",
-                "esperado": "1",
-                "obtenido": "1"
-              },
-              {
-                "campo": "dimensiones",
-                "estado": "ACIERTO",
-                "esperado": "148 x 76.5",
-                "obtenido": "Ø148h8 x 76.5 mm"
-              },
-              {
-                "campo": "tolerancia_general",
-                "estado": "ACIERTO",
-                "esperado": "UNE EN 22768-m",
-                "obtenido": "UNE EN 22768-m"
-              },
-              {
-                "campo": "acabado",
-                "estado": "NO_ENCONTRADO",
-                "esperado": "N7",
-                "obtenido": ""
-              },
-              {
-                "campo": "plazo_dias",
-                "estado": "ACIERTO",
-                "esperado": "20",
-                "obtenido": "20 dias"
-              }
-            ]
-          }
-        ],
-        "deteccion": {
-          "esperadas": 7,
-          "detectadas": 6,
-          "no_detectadas": [
-            "11.07"
-          ],
-          "sobrantes": [
-            "11.08",
-            "11.08"
-          ]
-        },
-        "errores_dataset": [
-          "El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
-        ]
-      },
-      "desviacionPrecio": null,
-      "durationMs": 30961
+      "error": "el pipeline fallo - Please retry in 16.103336882s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.5-flash-lite\",\"location\":\"global\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"16s\"}] Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. "
     }
   ],
   "metricas_por_campo": {
@@ -661,11 +661,11 @@
       "invencion_pct": 33.33333333333333
     },
     "dimensiones": {
-      "aciertos": 1,
-      "fallos": 5,
+      "aciertos": 3,
+      "fallos": 3,
       "no_encontrados": 0,
-      "acierto_pct": 16.666666666666664,
-      "invencion_pct": 83.33333333333334
+      "acierto_pct": 50,
+      "invencion_pct": 50
     },
     "tolerancia_general": {
       "aciertos": 6,
@@ -690,11 +690,11 @@
     }
   },
   "metricas_globales": {
-    "aciertos": 28,
-    "fallos": 8,
+    "aciertos": 30,
+    "fallos": 6,
     "no_encontrados": 6,
-    "acierto_pct": 66.66666666666666,
-    "invencion_pct": 22.22222222222222
+    "acierto_pct": 71.42857142857143,
+    "invencion_pct": 16.666666666666664
   },
   "varianza_por_campo": {
     "numero_plano": {
@@ -735,14 +735,14 @@
     },
     "dimensiones": {
       "acierto": {
-        "mediana": 16.666666666666664,
-        "minimo": 16.666666666666664,
-        "maximo": 16.666666666666664
+        "mediana": 50,
+        "minimo": 50,
+        "maximo": 50
       },
       "invencion": {
-        "mediana": 83.33333333333334,
-        "minimo": 83.33333333333334,
-        "maximo": 83.33333333333334
+        "mediana": 50,
+        "minimo": 50,
+        "maximo": 50
       }
     },
     "tolerancia_general": {
@@ -791,13 +791,13 @@
   "duraciones_ms": [
     {
       "caso_id": "ejemplo-002",
-      "repeticion": 2,
-      "durationMs": 29434
+      "repeticion": 1,
+      "durationMs": 44411
     },
     {
       "caso_id": "ejemplo-002",
-      "repeticion": 3,
-      "durationMs": 30961
+      "repeticion": 2,
+      "durationMs": 39426
     }
   ],
   "errores_dataset": [
@@ -805,8 +805,8 @@
     "ejemplo-001 repeticion 2: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
     "ejemplo-001 repeticion 3: el pipeline fallo - Error: Falta email.txt en C:\\Users\\esteb\\Desktop\\claude code curso\\rfq-agent\\rfq-agent-piloto\\benchmark\\casos\\ejemplo-001. Crea un archivo con el correo del cliente. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
     "ejemplo-001: todas las repeticiones fallaron",
-    "ejemplo-002 repeticion 1: el pipeline fallo - Error: Gemini vision fallo tras 3 intentos: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later. Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
-    "ejemplo-002 repeticion 2: El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca",
-    "ejemplo-002 repeticion 3: El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
+    "ejemplo-002 repeticion 3: el pipeline fallo - Please retry in 16.103336882s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.5-flash-lite\",\"location\":\"global\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"16s\"}] Solucion: revisa la carpeta de entrada, .env.local o ejecuta npm run dev desde rfq-agent-piloto/. ",
+    "ejemplo-002 repeticion 1: El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca",
+    "ejemplo-002 repeticion 2: El material \"C-6440\" de la pieza \"11.06\" no resuelve en la biblioteca"
   ]
 }
