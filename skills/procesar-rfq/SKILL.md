@@ -121,9 +121,20 @@ Declarar un campo en `campos_no_encontrados` es SOLO para cuando la celda no exi
 - GD&T detectado en marcos rectangulares: símbolo + valor + datum si existe
 - Si no aparece tolerancia general, deja `tolerancias_generales` vacío y añade "tolerancia_general" a `campos_no_encontrados`. No asumas ISO 2768-m.
 
-**E. Acabado superficial**: rugosidad Ra de cada superficie (busca símbolo √). Recubrimientos y tratamientos térmicos de las notas.
+**E. Acabado superficial**: hay dos sistemas de notación y debes reconocer los dos.
 
-Los símbolos de rugosidad suelen estar **fuera de las vistas, en una esquina del marco del plano** (con frecuencia arriba a la izquierda), en forma de triángulos con un grado `N6`, `N7`, `N9` o un valor `Ra`. Búscalos ahí antes de declarar que no hay acabado.
+- **Grados N (planos antiguos, muy comunes en planos españoles y europeos anteriores a 2002):** un triángulo con `N1` a `N12` dentro o al lado. `N6`, `N7` y `N9` son los más frecuentes.
+- **Valores Ra (planos modernos):** un símbolo `√` o `▽` con un número, por ejemplo `Ra 1,6` o `1.6`.
+
+**Bloque de rugosidad general (ISO 1302):** casi todos los planos declaran la rugosidad general de la pieza en un bloque suelto, fuera de las vistas, con esta forma:
+
+```
+N9/▽  ( N7/▽ , N6/▽ )
+```
+
+El grado que va **fuera del paréntesis es el acabado general de la pieza**; los que van dentro son las excepciones que se aplican solo a las superficies marcadas. Ese bloque suele estar en una esquina del marco, con frecuencia arriba a la izquierda, y **no está entre las notas generales**: si solo miras las notas no lo vas a encontrar.
+
+En `acabado` pon el grado general (el de fuera del paréntesis, p. ej. `N9`). En `rugosidades` lista todos los grados que veas, incluidos los del paréntesis. Si además hay recubrimiento o tratamiento térmico en las notas, indícalo también en `acabado`.
 
 - Si no aparece ningún símbolo de rugosidad ni tratamiento, deja `acabado` vacío y añade "acabado" a `campos_no_encontrados`. No asumas Ra 3.2.
 
