@@ -67,7 +67,9 @@ class GeminiClient implements AiClient {
         inlineData: { data: plano.base64, mimeType: plano.mimeType },
       })),
       { text: contextoCad ? `${prompt}\n\n---\nCONTEXTO CAD NO COTADO:\n${contextoCad}` : prompt },
-    ]), 120000), 'Gemini vision')
+    // 300s y no 120s: un PDF de varias paginas con el servicio cargado supera
+    // el minuto largo, y abortar por lento falla el RFQ entero sin necesidad.
+    ]), 300000), 'Gemini vision')
     const text = result.response.text()
     return {
       data: text,
