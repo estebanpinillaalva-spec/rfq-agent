@@ -192,49 +192,49 @@ function CoreFieldsPanel({ summary }: { summary: PlanoExtractionSummary | null }
           valor={summary.numeroPlano}
           fuente={null}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['numero_plano', 'numero de plano', 'referencia', 'plano']}
+          clave="numero_plano"
         />
         <FieldConEstado
           label="Material"
           valor={summary.material}
           fuente={summary.materialFuente}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['material']}
+          clave="material"
         />
         <FieldConEstado
           label="Cantidad"
           valor={cantidad}
           fuente={summary.cantidadFuente}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['cantidad', 'unidades']}
+          clave="cantidad"
         />
         <FieldConEstado
           label="Dimensiones"
           valor={summary.dimensiones}
           fuente={summary.dimensionesFuente}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['dimensiones', 'medidas', 'cotas']}
+          clave="dimensiones"
         />
         <FieldConEstado
           label="Tolerancia general"
           valor={summary.toleranciasGenerales}
           fuente={summary.toleranciasFuente}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['tolerancia_general', 'tolerancias generales', 'tolerancia']}
+          clave="tolerancia_general"
         />
         <FieldConEstado
           label="Acabado"
           valor={summary.acabado}
           fuente={summary.acabadoFuente}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['acabado', 'tratamiento', 'recubrimiento']}
+          clave="acabado"
         />
         <FieldConEstado
           label="Plazo"
           valor={summary.plazo}
           fuente={null}
           camposNoEncontrados={summary.camposNoEncontrados}
-          alias={['plazo_dias', 'plazo', 'entrega']}
+          clave="plazo"
         />
       </dl>
     </section>
@@ -841,7 +841,11 @@ function CompletenessPanel({ checks, compact = false }: { checks: CompletenessCh
               <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${check.ok ? 'bg-ok' : 'bg-danger'}`} />
               <span className="text-sm font-black text-ink">{check.label}</span>
             </div>
-            <p className="mt-1 text-xs leading-5 text-steel">{check.detail || 'Sin detalle'}</p>
+            {check.detalles && check.detalles.length > 0 ? (
+              <TokenList title="Motivos" values={check.detalles} tone="danger" limit={6} />
+            ) : (
+              <p className="mt-1 text-xs leading-5 text-steel">{check.detail || 'Sin detalle'}</p>
+            )}
           </div>
         ))}
         {compact && checks.length > visible.length && <p className="text-xs font-bold text-steel">+{checks.length - visible.length} comprobaciones en Calidad</p>}
@@ -973,9 +977,8 @@ function AttachmentLinks({ id, planos }: { id: string; planos: LocalPlano[] }) {
 
 type EstadoCampo = 'LEIDO_DEL_PLANO' | 'DEDUCIDO' | 'NO_ENCONTRADO'
 
-function estadoCampo(valor: string, fuente: string | null, camposNoEncontrados: string[], alias: string[]): EstadoCampo {
-  const declarados = camposNoEncontrados.map((campo) => campo.toLowerCase())
-  if (alias.some((clave) => declarados.some((campo) => campo.includes(clave)))) return 'NO_ENCONTRADO'
+function estadoCampo(valor: string, fuente: string | null, camposNoEncontrados: string[], clave: string): EstadoCampo {
+  if (camposNoEncontrados.includes(clave)) return 'NO_ENCONTRADO'
   if (!valor || valor === 'No especificado') return 'NO_ENCONTRADO'
   return fuente ? 'LEIDO_DEL_PLANO' : 'DEDUCIDO'
 }
@@ -985,15 +988,15 @@ function FieldConEstado({
   valor,
   fuente,
   camposNoEncontrados,
-  alias,
+  clave,
 }: {
   label: string
   valor: string
   fuente: string | null
   camposNoEncontrados: string[]
-  alias: string[]
+  clave: string
 }) {
-  const estado = estadoCampo(valor, fuente, camposNoEncontrados, alias)
+  const estado = estadoCampo(valor, fuente, camposNoEncontrados, clave)
   const containerClass =
     estado === 'LEIDO_DEL_PLANO'
       ? 'border-ok/25 bg-[#eef7f2]'
@@ -1016,7 +1019,9 @@ function FieldConEstado({
   return (
     <div className={`min-w-0 rounded-md border p-4 ${containerClass}`}>
       <dt className="text-xs font-bold uppercase tracking-[0.12em] text-steel">{label}</dt>
-      <dd className="mt-1 break-words font-black leading-6 text-ink">{valor}</dd>
+      <dd className={`mt-1 break-words font-black leading-6 ${estado === 'NO_ENCONTRADO' ? 'text-steel' : 'text-ink'}`}>
+        {estado === 'NO_ENCONTRADO' ? '—' : valor}
+      </dd>
       <span className={`mt-3 inline-flex rounded-md px-2.5 py-1 text-xs font-black ${badgeClass}`}>{estadoLabel}</span>
       {estado === 'LEIDO_DEL_PLANO' && fuente && (
         <p className="mt-2 break-words text-xs leading-5 text-steel">Fuente: {fuente}</p>
@@ -1081,7 +1086,7 @@ function TokenList({
           </span>
         ))}
         {values.length > visible.length && (
-          <span className="rounded-md border border-[var(--border)] bg-[#f1f5f9] px-2.5 py-1 text-xs font-black text-steel">+{values.length - visible.length} mas</span>
+          <span className="rounded-md border border-[var(--border)] bg-[#f1f5f9] px-2.5 py-1 text-xs font-black text-steel">+{values.length - visible.length} más</span>
         )}
       </div>
     </div>

@@ -89,6 +89,7 @@ export interface CompletenessCheck {
   label: string
   ok: boolean
   detail: string
+  detalles?: string[]
 }
 
 export interface LocalQualityIssue {
@@ -631,7 +632,11 @@ function buildCompleteness(summaries: PlanoExtractionSummary[], value: unknown):
   const root = asRecord(value)
   const analisis = asRecord(root?.analisis)
   const presupuesto = asRecord(root?.presupuesto)
-  const blockingReasons = [...stringArray(analisis?.blocking_reasons), ...stringArray(presupuesto?.blocking_reasons)]
+  const blockingReasons = Array.from(new Set(
+    [...stringArray(analisis?.blocking_reasons), ...stringArray(presupuesto?.blocking_reasons)]
+      .map((reason) => reason.trim())
+      .filter(Boolean),
+  ))
   const missingTrace = summaries.filter((summary) => summary.archivoOrigen === 'No especificado').map((summary) => summary.pieza)
   const missingMaterial = summaries.filter((summary) => /no especificado/i.test(summary.material)).map((summary) => summary.pieza)
   const missingMaterialSource = summaries
@@ -657,7 +662,12 @@ function buildCompleteness(summaries: PlanoExtractionSummary[], value: unknown):
     { label: 'Tolerancias', ok: weakTolerances.length === 0, detail: weakTolerances.length ? `Faltan en: ${weakTolerances.join(', ')}` : 'Tolerancias detectadas o asumidas' },
     { label: 'Acabado/tratamientos', ok: missingFinish.length === 0, detail: missingFinish.length ? `Falta en: ${missingFinish.join(', ')}` : 'Acabado/tratamiento informado' },
     { label: 'Operaciones', ok: weakOperations.length === 0, detail: weakOperations.length ? `Incompletas en: ${weakOperations.join(', ')}` : 'Ruta de fabricacion definida' },
-    { label: 'Ambiguedades bloqueantes', ok: blockingReasons.length === 0, detail: blockingReasons.join('; ') || 'Sin bloqueos' },
+    {
+      label: 'Ambiguedades bloqueantes',
+      ok: blockingReasons.length === 0,
+      detail: blockingReasons.length > 0 ? `${blockingReasons.length} motivo(s) bloqueante(s)` : 'Sin bloqueos',
+      detalles: blockingReasons,
+    },
   ]
 }
 
