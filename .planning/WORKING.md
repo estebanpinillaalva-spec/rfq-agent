@@ -6,6 +6,23 @@
 **Archivos bloqueados:** —
 **Tarea:** —
 
+## Estado del benchmark (2026-08-11)
+
+Bloqueado en terceros: cuota diaria de Gemini agotada (429). Pendiente de medir la
+version compacta de la seccion E del prompt, que esta aplicada pero SIN VERIFICAR.
+
+Lo ultimo medido y estable a 3 repeticiones: la version LARGA de la seccion E era
+net-negativa (acabado 0/6 -> 6/6, pero material, cantidad y tolerancia de 15 aciertos
+a 0). La compacta es una hipotesis razonada, no un hecho.
+
+Con la cache ya montada, en cuanto vuelva la cuota una sola corrida contesta la
+pregunta, y a partir de ahi cualquier cambio en comparador, verdad o motor de coste
+se puntua gratis.
+
+Pendiente del usuario: corregir `verdad.json` de ejemplo-002 (la pagina 7 es el plano
+11.08 con dos marcas, no 11.07 con una) y conseguir el dato de `C-6440`. Ver
+`rfq-agent-piloto/benchmark/casos/ejemplo-002/origen.md`.
+
 Bloqueado en terceros: Gemini devuelve 503 por sobrecarga, asi que la medicion real con repeticiones esta pendiente de que se recupere su API. Pendiente del usuario: el dato de `C-6440`, que no existe en fuentes publicas.
 
 Tarea 9 hecha (6cd3ff0): comparador corregido contra planos reales. Bloqueado en el usuario: transcribir las 7 piezas de `benchmark/casos/ejemplo-002/S01 - Piezas adicionales.pdf` a `verdad.json` v2.0. Ningun agente debe escribir ese fichero.
