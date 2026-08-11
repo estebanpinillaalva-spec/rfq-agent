@@ -293,6 +293,7 @@ export interface LlmUsage {
   outputTokens: number
   estimatedCostEur: number
   durationMs: number
+  desdeCache?: boolean
 }
 
 export interface LlmResult<T> {

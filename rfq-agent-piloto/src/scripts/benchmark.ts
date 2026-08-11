@@ -2,6 +2,7 @@ import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { z } from 'zod'
+import { LLM_CACHE_HIT_MARKER, LLM_CACHE_MISS_MARKER } from '../llm/cache'
 import { analisisRFQSchema, presupuestoRFQSchema, type VerdadCaso, type VerdadPieza } from '../types'
 import {
   agregarMetricasRepeticiones,
@@ -51,6 +52,7 @@ interface InformeCrudo {
   precio: ResumenPrecio
   duraciones_ms: Array<{ caso_id: string; durationMs: number }>
   errores_dataset: string[]
+  cache: CacheInforme
 }
 
 interface InformeRepetido {
@@ -64,6 +66,12 @@ interface InformeRepetido {
   precio: ResumenPrecio
   duraciones_ms: Array<{ caso_id: string; repeticion: number; durationMs: number }>
   errores_dataset: string[]
+  cache: CacheInforme
+}
+
+interface CacheInforme {
+  servidas: number
+  total: number
 }
 
 interface ConfigRepeticiones {
@@ -89,6 +97,7 @@ async function main(): Promise<void> {
   const repeticiones: RepeticionBenchmark[] = []
   const repeticionesCrudas: RepeticionCruda[] = []
   const erroresDataset: string[] = configRepeticiones.error ? [configRepeticiones.error] : []
+  const cache: CacheInforme = { servidas: 0, total: 0 }
 
   for (const nombre of nombres) {
     const carpeta = join(casosDir, nombre)
@@ -111,6 +120,8 @@ async function main(): Promise<void> {
     let exitosas = 0
     for (let repeticion = 1; repeticion <= configRepeticiones.cantidad; repeticion += 1) {
       const ejecucion = await ejecutarRepeticion(carpeta, nombre, repeticion, proveedor, verdad, biblioteca)
+      if (ejecucion.usoCache) cache.total += 1
+      if (ejecucion.desdeCache) cache.servidas += 1
       if ('error' in ejecucion) {
         const prefijo = configRepeticiones.cantidad === 1 ? `${nombre}:` : `${nombre} repeticion ${repeticion}:`
         erroresDataset.push(`${prefijo} ${ejecucion.error}`)
@@ -133,14 +144,15 @@ async function main(): Promise<void> {
       desviacionPrecio,
       durationMs,
     }))
-    await escribirInforme(proveedor, filas, erroresDataset)
+    await escribirInforme(proveedor, filas, erroresDataset, cache)
   } else {
     await escribirInformeRepetido(
       proveedor,
       configRepeticiones.cantidad,
       repeticiones,
       repeticionesCrudas,
-      erroresDataset
+      erroresDataset,
+      cache
     )
   }
 }
@@ -152,23 +164,32 @@ async function ejecutarRepeticion(
   proveedor: string,
   verdad: VerdadCaso,
   biblioteca: ReturnType<typeof cargarBibliotecaMateriales>
-): Promise<{ repeticion: RepeticionBenchmark } | { error: string }> {
+): Promise<({ repeticion: RepeticionBenchmark } | { error: string }) & { desdeCache: boolean; usoCache: boolean }> {
   try {
     const antes = await listarSalidas()
     const inicio = Date.now()
     const proceso = spawnSync(process.execPath, ['-r', 'ts-node/register', 'src/index.ts', carpeta], {
       cwd: process.cwd(),
       encoding: 'utf8',
-      env: { ...process.env, RFQ_AI_PROVIDER: proveedor },
+      env: {
+        ...process.env,
+        RFQ_AI_PROVIDER: proveedor,
+        RFQ_LLM_CACHE: process.env.RFQ_BENCHMARK_SIN_CACHE === '1' ? '0' : '1',
+        RFQ_LLM_CACHE_SUFIJO: String(repeticion),
+      },
     })
     const durationMs = Date.now() - inicio
+    const estadoCache = estadoCacheRepeticion(proceso.stdout)
 
     if (proceso.status !== 0) {
-      return { error: `el pipeline fallo - ${(proceso.stderr || proceso.stdout).split(/\r?\n/).slice(-3).join(' ')}` }
+      return {
+        error: `el pipeline fallo - ${(proceso.stderr || proceso.stdout).split(/\r?\n/).slice(-3).join(' ')}`,
+        ...estadoCache,
+      }
     }
 
     const salida = await salidaNueva(antes)
-    if (!salida) return { error: 'no se detecto salida nueva' }
+    if (!salida) return { error: 'no se detecto salida nueva', ...estadoCache }
 
     const crudo = await readFile(join(resolve('salidas'), salida, 'analisis.json'), 'utf8')
     const contenido = JSON.parse(crudo) as { analisis: unknown; presupuesto: unknown }
@@ -182,9 +203,19 @@ async function ejecutarRepeticion(
         desviacionPrecio: desviacion(verdad.piezas[0], presupuesto.lineas[0]?.pvp_unitario ?? null),
         durationMs,
       },
+      ...estadoCache,
     }
   } catch (error) {
-    return { error: mensaje(error) }
+    return { error: mensaje(error), desdeCache: false, usoCache: false }
+  }
+}
+
+function estadoCacheRepeticion(stdout: string): { desdeCache: boolean; usoCache: boolean } {
+  const hits = stdout.split(LLM_CACHE_HIT_MARKER).length - 1
+  const misses = stdout.split(LLM_CACHE_MISS_MARKER).length - 1
+  return {
+    desdeCache: hits > 0 && misses === 0,
+    usoCache: hits + misses > 0,
   }
 }
 
@@ -235,7 +266,12 @@ function desviacion(verdad: VerdadPieza, pvpUnitario: number | null): number | n
   return (pvpUnitario - unitarioReferencia) / unitarioReferencia
 }
 
-async function escribirInforme(proveedor: string, filas: FilaCaso[], erroresDataset: string[]): Promise<void> {
+async function escribirInforme(
+  proveedor: string,
+  filas: FilaCaso[],
+  erroresDataset: string[],
+  cache: CacheInforme
+): Promise<void> {
   const fecha = new Date().toISOString().slice(0, 10)
   const errores = [
     ...erroresDataset,
@@ -262,6 +298,7 @@ async function escribirInforme(proveedor: string, filas: FilaCaso[], erroresData
       durationMs: fila.durationMs,
     })),
     errores_dataset: errores,
+    cache,
   }
 
   const directorio = resolve('benchmark', 'informes')
@@ -277,7 +314,8 @@ async function escribirInformeRepetido(
   repeticionesSolicitadas: number,
   repeticiones: RepeticionBenchmark[],
   repeticionesCrudas: RepeticionCruda[],
-  erroresDataset: string[]
+  erroresDataset: string[],
+  cache: CacheInforme
 ): Promise<void> {
   const fecha = new Date().toISOString().slice(0, 10)
   const metricas = agregarMetricasRepeticiones(repeticiones)
@@ -304,6 +342,7 @@ async function escribirInformeRepetido(
       durationMs: repeticion.durationMs,
     })),
     errores_dataset: errores,
+    cache,
   }
 
   const directorio = resolve('benchmark', 'informes')
@@ -353,6 +392,7 @@ function markdownInforme(informe: InformeCrudo): string {
     '',
     `Fecha: ${informe.fecha}`,
     `Proveedor: ${informe.proveedor}`,
+    lineaCache(informe.cache),
     '',
     '## Resultado por campo y caso',
     '',
@@ -426,6 +466,7 @@ function markdownInformeRepetido(informe: InformeRepetido): string {
     `Fecha: ${informe.fecha}`,
     `Proveedor: ${informe.proveedor}`,
     `Repeticiones: ${informe.repeticiones_solicitadas}`,
+    lineaCache(informe.cache),
     '',
     '## Resultado por campo y caso',
     '',
@@ -610,6 +651,11 @@ function rangoPorcentaje(rango: VarianzaCampo['acierto']): string {
 function numero(valor: number | null): string {
   if (valor === null) return 'Sin datos'
   return Number.isInteger(valor) ? String(valor) : valor.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
+}
+
+function lineaCache(cache: CacheInforme): string {
+  if (cache.servidas === 0) return 'Cache: sin usar'
+  return `Cache: ${cache.servidas} de ${cache.total} repeticiones servidas desde cache`
 }
 
 main().catch((error: unknown) => {

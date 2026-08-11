@@ -1,5 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import type { AiProviderName, LlmResult, LlmUsage, PlanoEntrada } from '../types'
+import { conCacheLlm } from './cache'
+import { mockAnalisis, mockValidacion } from '../skills/mock'
 
 export interface AiClient {
   readonly provider: AiProviderName
@@ -9,8 +11,9 @@ export interface AiClient {
 
 export function createAiClient(): AiClient {
   const provider = parseProvider(process.env.RFQ_AI_PROVIDER)
-  if (provider === 'gemini') return new GeminiClient()
-  return new MockClient()
+  const cliente = provider === 'gemini' ? new GeminiClient() : new MockClient()
+  const model = provider === 'gemini' ? process.env.GEMINI_MODEL ?? 'gemini-2.5-pro' : 'mock'
+  return conCacheLlm(cliente, { model })
 }
 
 function parseProvider(value: string | undefined): AiProviderName {
@@ -22,8 +25,11 @@ function parseProvider(value: string | undefined): AiProviderName {
 class MockClient implements AiClient {
   readonly provider = 'mock' as const
 
-  async visionJson(prompt: string): Promise<LlmResult<string>> {
-    return makeMockResult(prompt)
+  async visionJson(prompt: string, planos: PlanoEntrada[]): Promise<LlmResult<string>> {
+    const data = prompt.includes('VALIDACION PREVIA:')
+      ? JSON.stringify(mockAnalisis(extraerEmailPrompt(prompt), planos))
+      : JSON.stringify(mockValidacion(planos))
+    return makeMockResult(data)
   }
 
   async textJson(prompt: string): Promise<LlmResult<string>> {
@@ -124,6 +130,11 @@ function makeMockResult(prompt: string): LlmResult<string> {
       durationMs: 25,
     },
   }
+}
+
+function extraerEmailPrompt(prompt: string): string {
+  const contenido = prompt.match(/EMAIL DEL CLIENTE:\s*([\s\S]*?)\n\n(?:VALIDACION PREVIA|ARCHIVOS):/i)?.[1]
+  return contenido?.trim() ?? prompt
 }
 
 function usageFromGemini(

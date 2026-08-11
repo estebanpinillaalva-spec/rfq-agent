@@ -13,6 +13,7 @@ inbound-debug/*
 fixtures/reales-anonimizados/*
 !fixtures/reales-anonimizados/.gitkeep
 data/
+benchmark/cache/
 
 # Evita commitear archivos creados accidentalmente con nombres de claves API.
 AIza*

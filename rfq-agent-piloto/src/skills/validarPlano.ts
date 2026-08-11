@@ -2,7 +2,6 @@ import type { AiClient } from '../llm/aiClient'
 import { validacionPlanoSchema, type LlmResult, type PlanoEntrada, type ValidacionPlano } from '../types'
 import { parseJsonDefensivo, RETRY_JSON_SUFFIX } from '../utils/json'
 import { cargarPromptSkill } from '../utils/prompts'
-import { mockUsage, mockValidacion } from './mock'
 
 export async function validarPlano(
   ai: AiClient,
@@ -21,11 +20,6 @@ export async function validarPlano(
       blocking_reasons: ['Falta plano 2D cotado'],
     }) as ValidacionPlano
     return { data, raw: JSON.stringify(data, null, 2), usage: { provider: ai.provider, inputTokens: 0, outputTokens: 0, estimatedCostEur: 0, durationMs: 0 } }
-  }
-
-  if (ai.provider === 'mock') {
-    const data = validacionPlanoSchema.parse(mockValidacion(planos)) as ValidacionPlano
-    return { data, raw: JSON.stringify(data, null, 2), usage: mockUsage() }
   }
 
   const prompt = `${cargarPromptSkill('validar-plano')}

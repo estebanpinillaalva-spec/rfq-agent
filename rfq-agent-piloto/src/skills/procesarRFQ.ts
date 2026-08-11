@@ -5,7 +5,6 @@ import { reconciliarHonestidad } from '../utils/honestidad'
 import { buscarMaterial, cargarBibliotecaMateriales } from '../utils/materiales'
 import { normalize } from '../utils/normalize'
 import { cargarPromptSkill, cargarReferencia } from '../utils/prompts'
-import { mockAnalisis, mockUsage } from './mock'
 
 export async function procesarRFQ(
   ai: AiClient,
@@ -13,12 +12,6 @@ export async function procesarRFQ(
   planos: PlanoEntrada[],
   validacion: ValidacionPlano
 ): Promise<LlmResult<AnalisisRFQ>> {
-  if (ai.provider === 'mock') {
-    const parsed = analisisRFQSchema.parse(mockAnalisis(email, planos)) as AnalisisRFQ
-    const data = reconciliarHonestidad(parsed)
-    return { data, raw: JSON.stringify(data, null, 2), usage: mockUsage() }
-  }
-
   if (validacion.resultado === 'NO_PROCESABLE') {
     throw new Error('La validacion marco NO_PROCESABLE. No se debe procesar el RFQ.')
   }
