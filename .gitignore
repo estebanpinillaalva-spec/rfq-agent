@@ -45,3 +45,6 @@ Thumbs.db
 # QA screenshots (regenerables con Puppeteer)
 qa-screenshots/
 temporary screenshots/
+
+# Planos de terceros del benchmark: no se redistribuyen (ver origen.md de cada caso)
+rfq-agent-piloto/benchmark/casos/*/*.pdf

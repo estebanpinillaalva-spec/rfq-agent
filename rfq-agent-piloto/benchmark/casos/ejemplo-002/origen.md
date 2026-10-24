@@ -1,7 +1,8 @@
 # ejemplo-002
 
 - Origen: juego de planos industrial real aportado por el usuario
-- Documento: `S01 - Piezas adicionales.pdf`
+- Documento: `S01 - Piezas adicionales.pdf`. **No se incluye en el repositorio**: los planos son de
+  un tercero. Para reproducir el caso hay que colocar el PDF en esta carpeta con ese nombre
 - Paginas: 7
 - Fecha del juego de planos: 1999
 - Empresa: MAPIPU. Conjunto `RUEDA GIRO PORTICO`, conjunto n.º 11.00
